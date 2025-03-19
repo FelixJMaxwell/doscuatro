@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "24.sln"
+    "dotnet.defaultSolution": "doscuatro.sln"
 }
