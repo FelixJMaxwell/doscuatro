@@ -4,7 +4,7 @@ using UnityEngine;
 public class PulsarBehaviour : MonoBehaviour
 {
     public Transform Objetivo;
-    public float VelocidadMovimiento = 1;
+    public float VelocidadMovimiento = 2;
 
     // Update is called once per frame
     void Update()

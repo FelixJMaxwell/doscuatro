@@ -122,4 +122,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Objetivo: {fileID: 0}
-  VelocidadMovimiento: 1
+  VelocidadMovimiento: 2

@@ -13,5 +13,11 @@ public class PoblarMapa : Editor
             ConstruirMapa construirMapa = (ConstruirMapa)target;
             construirMapa.PoblarMapaMini();
         }
+
+        if (GUILayout.Button("Borrar mapa"))
+        {
+            ConstruirMapa construirMapa = (ConstruirMapa)target;
+            construirMapa.BorrarLista();
+        }
     }
 }

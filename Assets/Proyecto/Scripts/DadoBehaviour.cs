@@ -5,13 +5,14 @@ using UnityEngine.InputSystem;
 using System.Collections.Specialized;
 using UnityEngine.AI;
 using System.Transactions;
+using UnityEngine.Rendering;
 
 public class DadoBehaviour : MonoBehaviour
 {
     public float ValorActual;
     public int CantCaras;
     public float LimiteTicker;
-    public float RadioDeteccion = 1;
+    public float RadioDeteccion;
 
     [Header("Configuraciones")]
     public Transform Ligado;
@@ -21,7 +22,7 @@ public class DadoBehaviour : MonoBehaviour
     public bool DadoEstablecido;
     public Vector3 offset;
     
-    private LineRenderer lineRenderer;
+    public LineRenderer lineRenderer;
 
     private void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -43,23 +44,19 @@ public class DadoBehaviour : MonoBehaviour
             Clicked = false;
         }
 
-        if (!DadoEstablecido)
+        if (!DadoEstablecido && gameManager.DadoActual)
         {
-            Vector3 newPos = GetMouseWorldPosition() + offset;
-            transform.position = new Vector3(Mathf.Round(newPos.x), transform.position.y, Mathf.Round(newPos.z));
-
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, RadioDeteccion);
 
-            for (int i = 0; i < hitColliders.Length; i++)
+            float distancia = Vector3.Distance(transform.position, gameManager.Monolito.transform.position);
+
+            if (distancia <= RadioDeteccion)
             {
-                if (hitColliders[i].name == "Monolito")
-                {
-                    lineRenderer.gameObject.SetActive(true);
-                    lineRenderer.SetPosition(1, transform.position + new Vector3(0,1,0));
-                    lineRenderer.SetPosition(0, hitColliders[i].transform.position + new Vector3(0,2,0));
-                } else {
-                    lineRenderer.gameObject.SetActive(false);
-                }
+                lineRenderer.gameObject.SetActive(true);
+                lineRenderer.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
+                lineRenderer.SetPosition(0, new Vector3(gameManager.Monolito.transform.position.x, 0.1f, gameManager.Monolito.transform.position.z));
+            } else {
+                lineRenderer.gameObject.SetActive(false);
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -74,11 +71,12 @@ public class DadoBehaviour : MonoBehaviour
                 }
 
                 DadoEstablecido = true;
+                gameManager.DadoActual = null;
             }
         }
     }
 
-    private Vector3 GetMouseWorldPosition()
+    /* private Vector3 GetMouseWorldPosition()
     {
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -90,7 +88,7 @@ public class DadoBehaviour : MonoBehaviour
         }
 
         return Vector3.zero;
-    }
+    } */
 
     private void OnMouseOver() {
         if (Input.GetMouseButtonDown(0))
