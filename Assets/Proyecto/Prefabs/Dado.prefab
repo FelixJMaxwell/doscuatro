@@ -56,7 +56,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
+  - {fileID: 2100000, guid: cecc2a2260f37ff408ec4ec19fc3eda7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,7 +136,7 @@ LineRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_MaskInteraction: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &1039582517923782329
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 4449749699832132476}
   - component: {fileID: 2866417130740108832}
   - component: {fileID: 4602115330792183254}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Dado
   m_TagString: Dado
   m_Icon: {fileID: 0}
@@ -264,11 +264,13 @@ MonoBehaviour:
   ValorActual: 0
   CantCaras: 0
   LimiteTicker: 1
-  RadioDeteccion: 3
+  RadioDeteccion: 4
   Ligado: {fileID: 0}
   ticker: 0
-  Clicked: 0
   gameManager: {fileID: 0}
   DadoEstablecido: 0
+  Selected: 0
   offset: {x: 0, y: 0, z: 0}
-  lineRenderer: {fileID: 0}
+  Clicked: 0
+  DelayScroll: 0.2
+  Elementos: []

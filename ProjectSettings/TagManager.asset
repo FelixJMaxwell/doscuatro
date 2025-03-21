@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Dado
+  - Monolito
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Objetos
   - Water
   - UI
   - 

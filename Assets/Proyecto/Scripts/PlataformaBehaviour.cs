@@ -11,9 +11,9 @@ public class PlataformaBehaviour : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (gameManager.DadoActual)
+        if (gameManager.DadoConstruyendo && !gameManager.DadoConstruyendo.GetComponent<DadoBehaviour>().DadoEstablecido)
         {
-            gameManager.DadoActual.transform.position = transform.position + new Vector3(0,0.6f,0);
+            gameManager.DadoConstruyendo.transform.position = transform.position + new Vector3(0,0.6f,0);
         }
     }
 }

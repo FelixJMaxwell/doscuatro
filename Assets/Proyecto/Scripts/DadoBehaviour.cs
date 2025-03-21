@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using UnityEngine.AI;
 using System.Transactions;
 using UnityEngine.Rendering;
+using System.Collections.Generic;
 
 public class DadoBehaviour : MonoBehaviour
 {
@@ -17,12 +18,18 @@ public class DadoBehaviour : MonoBehaviour
     [Header("Configuraciones")]
     public Transform Ligado;
     public float ticker;
-    public bool Clicked;
     public GameManager gameManager;
     public bool DadoEstablecido;
+    public bool Selected;
     public Vector3 offset;
+    public bool Clicked;
     
-    public LineRenderer lineRenderer;
+    private LineRenderer lineRenderer;
+    
+    private int IndiceActual = 0;
+    public float DelayScroll = 0.2f;
+    private float TiempoUltimoScroll;
+    public List<GameObject> Elementos;
 
     private void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -44,54 +51,96 @@ public class DadoBehaviour : MonoBehaviour
             Clicked = false;
         }
 
-        if (!DadoEstablecido && gameManager.DadoActual)
+        if (!DadoEstablecido && gameManager.DadoConstruyendo)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                DadoEstablecido = true;
+                gameManager.DadoConstruyendo = null;
+            }
+        }
+
+        if (Selected)
         {
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, RadioDeteccion);
-
-            float distancia = Vector3.Distance(transform.position, gameManager.Monolito.transform.position);
-
-            if (distancia <= RadioDeteccion)
+            
+            foreach (Collider item in hitColliders)
             {
-                lineRenderer.gameObject.SetActive(true);
-                lineRenderer.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
-                lineRenderer.SetPosition(0, new Vector3(gameManager.Monolito.transform.position.x, 0.1f, gameManager.Monolito.transform.position.z));
-            } else {
-                lineRenderer.gameObject.SetActive(false);
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                for (int i = 0; i < hitColliders.Length; i++)
+                if (item.CompareTag("Monolito"))
                 {
-                    if (hitColliders[i].name == "Monolito")
+                    if (!Elementos.Contains(item.gameObject))
                     {
-                        Ligado = hitColliders[i].transform;
-                        Ligado.GetComponent<MonolitoBehaviour>().ObjetosConectados.Add(transform.gameObject);
+                        Elementos.Add(item.gameObject);
                     }
                 }
-
-                DadoEstablecido = true;
-                gameManager.DadoActual = null;
+                if (item.CompareTag("Dado"))
+                {
+                    if (!Elementos.Contains(item.gameObject) && item != transform.GetComponent<Collider>())
+                    {
+                        Elementos.Add(item.gameObject);
+                    }
+                }
             }
+
+            float ScrollInput = Input.GetAxis("Mouse ScrollWheel");
+
+            if (Time.time - TiempoUltimoScroll > DelayScroll)
+            {
+                if (ScrollInput > 0)
+                {
+                    IndiceActual = Elementos.Count - 1;
+                }
+
+                ActualizarSeleccion();
+            } else if (ScrollInput < 0) // Scroll hacia abajo
+            {
+                IndiceActual++;
+                if (IndiceActual >= Elementos.Count)
+                {
+                    IndiceActual = 0; // Volver al primero si se pasa del final
+                }
+                ActualizarSeleccion();
+            }
+
+            TiempoUltimoScroll = Time.time;
         }
     }
 
-    /* private Vector3 GetMouseWorldPosition()
+    void ActualizarSeleccion()
     {
-        Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Plane plane = new Plane(Vector3.up, Vector3.zero);
-        
-        if (plane.Raycast(ray, out float distance))
+        for (int i = 0; i < Elementos.Count; i++)
         {
-            return ray.GetPoint(distance);
+            if (i == IndiceActual)
+            {
+                float distance = Vector3.Distance(transform.position, Elementos[i].transform.position);
+
+                if (distance <= RadioDeteccion)
+                {
+                    lineRenderer.gameObject.SetActive(true);
+                    lineRenderer.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
+                    lineRenderer.SetPosition(0, new Vector3(gameManager.Monolito.transform.position.x, 0.1f, gameManager.Monolito.transform.position.z));
+                }
+            } else {
+                lineRenderer.gameObject.SetActive(false);
+            }
         }
 
-        return Vector3.zero;
-    } */
+        Debug.Log("Elemento actual: " + Elementos[IndiceActual].name);
+    }
 
     private void OnMouseOver() {
+        if (gameManager.DadoConstruyendo == transform.gameObject) return;
+
         if (Input.GetMouseButtonDown(0))
+        {
+            if (!gameManager.DadoSeleccionado)
+            {
+                gameManager.DadoSeleccionado = transform.gameObject;
+                Selected = true;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
         {
             if (Clicked)
             {
@@ -103,7 +152,6 @@ public class DadoBehaviour : MonoBehaviour
     }
 
     public void EstablecerValorActual(){
-        Clicked = true;
         ValorActual = UnityEngine.Random.Range(1,CantCaras);
     }
 
