@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
     public GameObject DadoConstruyendo;
     public GameObject DadoSeleccionado;
     public GameObject DadoGO;
+    public Transform DadoHolder;
+
+    [Space(10)]
+    public GameObject PlataformaActual;
 
     public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto){
         ElementoUI.text = texto;
@@ -21,6 +25,8 @@ public class GameManager : MonoBehaviour
     public void ComprarDado(){
         GameObject tempDado = Instantiate(DadoGO, new Vector3(0,-10,0), quaternion.identity);
         DadoConstruyendo = tempDado;
+        tempDado.transform.SetParent(DadoHolder);
+        tempDado.name = "Dado_" + DadoHolder.childCount;
     }
 
     void Update()

@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1583188
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -274,6 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &6285533
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -396,6 +398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &11378671
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -518,6 +521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &21637922
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -776,6 +780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &52350250
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -898,6 +903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &52631977
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1020,6 +1026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &64335742
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1142,6 +1149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &80332970
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1264,6 +1272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &85202266
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1386,6 +1395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &108074390
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1508,6 +1518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &111376950
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1630,6 +1641,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &124512208
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1752,6 +1764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &126934427
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1874,6 +1887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &127945301
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2098,6 +2112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &134697192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2220,6 +2235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &134902437
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2342,6 +2358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &136429487
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2464,6 +2481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &148583387
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2586,6 +2604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &156019452
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2708,6 +2727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &160942505
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2830,6 +2850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &161106287
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2952,6 +2973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &165621884
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3074,6 +3096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &178242052
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3196,6 +3219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &179575019
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3749,6 +3773,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &182577500
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3871,6 +3896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &190576287
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3993,6 +4019,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &190644921
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4115,6 +4142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &192698133
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4237,6 +4265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &195789819
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4359,6 +4388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &202930165
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4481,6 +4511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &209868974
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4603,6 +4634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &210751814
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4725,6 +4757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &217218026
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4847,6 +4880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &217756321
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4969,6 +5003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &218851785
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5091,6 +5126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &219508178
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5213,6 +5249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &222798693
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5335,6 +5372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &230188177
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5457,6 +5495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &235313887
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5579,6 +5618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &237719390
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5780,6 +5820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &242950842
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5902,6 +5943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &244179024
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6024,6 +6066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &246727323
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6146,6 +6189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &248698028
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6268,6 +6312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &250879764
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6390,6 +6435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &252952779
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6512,6 +6558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &261737665
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6634,6 +6681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &270493303
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6756,6 +6804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &283763391
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6878,6 +6927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &291488969
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7000,6 +7050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &293413183
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7122,6 +7173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &299459494
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7244,6 +7296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &312027662
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7366,6 +7419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &320156958
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7625,6 +7679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &333707882
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7747,6 +7802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &358719593
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7869,6 +7925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &359361139
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7991,6 +8048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &362334686
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8113,6 +8171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &373423366
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8235,6 +8294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &373629040
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8357,6 +8417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &379541641
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8479,6 +8540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &383227403
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8601,6 +8663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &385401576
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8723,6 +8786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &386285453
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8966,6 +9030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &413094694
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9088,6 +9153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &415846967
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9210,6 +9276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &415894627
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9332,6 +9399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &418617785
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9454,6 +9522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &419242532
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9576,6 +9645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &421766065
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9698,6 +9768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &424096991
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9820,6 +9891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &424338342
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9942,6 +10014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &426563027
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10064,6 +10137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &432881250
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10186,6 +10260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &436306300
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10308,6 +10383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &444288797
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10430,6 +10506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &445710539
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10552,6 +10629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &461313158
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10674,6 +10752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &472220649
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10796,6 +10875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &473246948
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10918,6 +10998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &481112464
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11040,6 +11121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &493212876
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11162,6 +11244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &494328769
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11284,6 +11367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &501223216
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11406,6 +11490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &510645689
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11528,6 +11613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &512312862
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11650,6 +11736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &515784121
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11772,6 +11859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &527555083
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11894,6 +11982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &530743581
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12016,6 +12105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &543891607
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12138,6 +12228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &549061412
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12260,6 +12351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &550018506
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12382,6 +12474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &550598235
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12504,6 +12597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &550767362
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12626,6 +12720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &551293837
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12748,6 +12843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &557707195
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12870,6 +12966,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &557755339
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12992,6 +13089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &591856389
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13114,6 +13212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &596795442
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13236,6 +13335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &605866117
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13358,6 +13458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &606415078
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13480,6 +13581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &607230281
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13602,6 +13704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &607756340
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13724,6 +13827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &607905736
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13846,6 +13950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &617687824
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13968,6 +14073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &621900118
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14090,6 +14196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &622875767
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14212,6 +14319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &624009803
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14334,6 +14442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &625114113
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14456,6 +14565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &631658082
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14578,6 +14688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &632461610
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14700,6 +14811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &648632484
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14822,6 +14934,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &659036858
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14944,6 +15057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &661091789
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15066,6 +15180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &665305007
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15188,6 +15303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &665546464
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15389,6 +15505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &675174116
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15511,6 +15628,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &678604252
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15633,6 +15751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &680438966
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15755,6 +15874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &681404298
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15880,7 +16000,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 143.0458, y: -27.399994}
+  m_AnchoredPosition: {x: 143.04578, y: -27.400024}
   m_SizeDelta: {x: 87.1763, y: 35.6982}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &683385044
@@ -16010,6 +16130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &685027409
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16132,6 +16253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &689225709
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16254,6 +16376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &700049532
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16376,6 +16499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &700514623
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16498,6 +16622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &701631437
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16620,6 +16745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &724445986
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16742,6 +16868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &740832170
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16864,6 +16991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &747145600
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16986,6 +17114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &747629831
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17108,6 +17237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &748706093
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17230,6 +17360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &750352376
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17352,6 +17483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &755547932
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17474,6 +17606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &766392429
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17596,6 +17729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &770541576
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17718,6 +17852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &772001815
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17840,6 +17975,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &774834439
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17962,6 +18098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &775983947
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18084,6 +18221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &780805133
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18206,6 +18344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &783219161
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18328,6 +18467,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &793270902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18450,6 +18590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &797343498
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18572,6 +18713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &815998536
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18694,6 +18836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &830639488
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18865,6 +19008,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &835590749
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18987,6 +19131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &836489897
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19109,6 +19254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &837746012
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19231,6 +19377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &856927577
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19353,6 +19500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &863977594
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19475,6 +19623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &868392721
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19597,6 +19746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &876222045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19719,6 +19869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &893883047
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19841,6 +19992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &900449276
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19963,6 +20115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &901357895
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20085,6 +20238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &906229694
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20207,6 +20361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &912077405
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20329,6 +20484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &917350179
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20451,6 +20607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &918225989
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20573,6 +20730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &920985395
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20695,6 +20853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &923426040
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20817,6 +20976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &928276450
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20939,6 +21099,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &930663534
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21061,6 +21222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &932933549
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21183,6 +21345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &933684606
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21305,6 +21468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &933917829
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21427,6 +21591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &934397884
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21549,6 +21714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &937862024
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21671,6 +21837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &945887548
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21793,6 +21960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &951236395
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21915,6 +22083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &961403614
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22037,6 +22206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &966744074
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22159,6 +22329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &983019988
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22281,6 +22452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &985566948
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22403,6 +22575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &988600102
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22525,6 +22698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1001081593
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22647,6 +22821,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1002510026
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22769,6 +22944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1005365860
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22891,6 +23067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1012193591
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23013,6 +23190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1013518588
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23135,6 +23313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1014324138
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23257,6 +23436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1014626451
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23379,6 +23559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1014684680
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23501,6 +23682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1020806544
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23623,6 +23805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1023555923
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23745,6 +23928,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1025396929
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23867,6 +24051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1026469641
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23989,6 +24174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1026619824
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24111,6 +24297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1033791449
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24233,6 +24420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1034444392
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24355,6 +24543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1037026922
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24477,6 +24666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1045487795
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24599,6 +24789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1053349916
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24721,6 +24912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1059855134
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24843,6 +25035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1060300707
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24965,6 +25158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1065495866
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25087,6 +25281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1079382451
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25209,6 +25404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1083990831
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25331,6 +25527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1089216250
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25453,6 +25650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1092896548
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25575,6 +25773,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1096932795
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25697,6 +25896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1097415140
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25819,6 +26019,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1113800374
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25941,6 +26142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1118680474
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26063,6 +26265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1121596267
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26185,6 +26388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1123248967
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26307,6 +26511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1130823474
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26565,6 +26770,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1137202599
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26687,6 +26893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1150108700
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26809,6 +27016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1163254853
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26931,6 +27139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1163671812
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27162,6 +27371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1167039127
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27284,6 +27494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1169869446
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27406,6 +27617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1177678665
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27528,6 +27740,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1180007980
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27650,6 +27863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1185245998
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27772,6 +27986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1186303755
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27894,6 +28109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1187718438
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28016,6 +28232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1200386109
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28138,6 +28355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1206835449
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28260,6 +28478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1210047573
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28382,6 +28601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1211323628
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28504,6 +28724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1221680999
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28626,6 +28847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1222451899
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28748,6 +28970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1224222325
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28870,6 +29093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1224814618
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28992,6 +29216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1228230313
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29114,6 +29339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1243722252
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29236,6 +29462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1251408911
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29358,6 +29585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1256337074
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29480,6 +29708,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1257310971
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29602,6 +29831,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1259088570
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29724,6 +29954,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1259108909
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29846,6 +30077,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1259644088
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29968,6 +30200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1265905046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30090,6 +30323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1268277209
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30212,6 +30446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1273867564
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30334,6 +30569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1276796267
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30456,6 +30692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1281382884
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30578,6 +30815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1289088066
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30700,6 +30938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1290083164
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30822,6 +31061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1290515342
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30944,6 +31184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1294428349
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31066,6 +31307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1294507709
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31188,6 +31430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1294659192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31310,6 +31553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1296852918
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31432,6 +31676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1298673356
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31554,6 +31799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1300529340
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31676,6 +31922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1302463469
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31798,6 +32045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1302895678
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31920,6 +32168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1305338041
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32042,6 +32291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1305705612
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32164,6 +32414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1309922141
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32286,6 +32537,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1317201522
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32408,6 +32660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1323539949
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32530,6 +32783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1336456650
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32652,6 +32906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1338056485
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32774,6 +33029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1356927661
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32896,6 +33152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1361975082
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33018,6 +33275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1362006474
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33140,6 +33398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1362783981
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33262,6 +33521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1366385869
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33384,6 +33644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1368135782
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33506,6 +33767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1370711954
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33628,6 +33890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1381331922
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33750,6 +34013,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1385512303
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33872,6 +34136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1390073832
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33994,6 +34259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1402385297
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34116,6 +34382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1404976977
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34238,6 +34505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1405420465
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34360,6 +34628,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1418387882
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34482,6 +34751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1423007978
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34604,6 +34874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1435590976
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34726,6 +34997,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1438137503
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34848,6 +35120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1438860774
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34970,6 +35243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1446771540
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35092,6 +35366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1451002763
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35214,6 +35489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1458850856
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35336,6 +35612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1460086685
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35458,6 +35735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1462448209
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35580,6 +35858,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1473789755
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35702,6 +35981,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1478427746
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35824,6 +36104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1482474720
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35946,6 +36227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1484600047
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36068,6 +36350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1486415971
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36190,6 +36473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1494103741
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36330,6 +36614,8 @@ MonoBehaviour:
   DadoConstruyendo: {fileID: 0}
   DadoSeleccionado: {fileID: 0}
   DadoGO: {fileID: 1039582517923782329, guid: ff04976207417a347949ae6d84a08ba7, type: 3}
+  DadoHolder: {fileID: 1832994016}
+  PlataformaActual: {fileID: 0}
 --- !u!114 &1495065924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36781,6 +37067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1496180038
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36903,6 +37190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1515621767
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37025,6 +37313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1516647327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37147,6 +37436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1521256665
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37269,6 +37559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1537422614
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37527,6 +37818,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1545029138
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37649,6 +37941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1548269922
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37771,6 +38064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1559448873
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37893,6 +38187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1562834882
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38015,6 +38310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1565658372
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38137,6 +38433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1567473817
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38259,6 +38556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1568659605
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38381,6 +38679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1569246872
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38503,6 +38802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1570862452
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38625,6 +38925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1575547391
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38883,6 +39184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1596235094
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39005,6 +39307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1596740016
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39127,6 +39430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1598661598
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39249,6 +39553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1601915174
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39371,6 +39676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1602479663
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39493,6 +39799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1603289995
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39615,6 +39922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1608481398
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39737,6 +40045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1615518676
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39859,6 +40168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1636832214
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39981,6 +40291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1641016818
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40103,6 +40414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1652872278
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40225,6 +40537,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1655662723
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40347,6 +40660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1666606984
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40469,6 +40783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1667065894
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40591,6 +40906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1667592823
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40713,6 +41029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1668104568
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40835,6 +41152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1668516326
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40957,6 +41275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1669331987
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41079,6 +41398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1669617228
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41201,6 +41521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1670329033
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41323,6 +41644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1671736035
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41445,6 +41767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1675687659
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41567,6 +41890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1678870602
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41825,7 +42149,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 47.3, y: -27.4}
+  m_AnchoredPosition: {x: 47.299988, y: -27.400024}
   m_SizeDelta: {x: 72.0847, y: 35.698196}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1680550447
@@ -41955,6 +42279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1682337718
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42077,6 +42402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1683167381
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42199,6 +42525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1687108292
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42321,6 +42648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1691114836
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42443,6 +42771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1692217867
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42565,6 +42894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1695080335
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42687,6 +43017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1703933883
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42809,6 +43140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1707703622
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42931,6 +43263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1709144414
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43053,6 +43386,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1717918363
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43175,6 +43509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1721148066
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43297,6 +43632,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1737837958
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43419,6 +43755,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1738203396
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43541,6 +43878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1760046037
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43663,6 +44001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1762482135
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43785,6 +44124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1763496049
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43907,6 +44247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1780944735
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44029,6 +44370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1787391231
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44151,6 +44493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1788271857
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44273,6 +44616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1792212789
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44395,6 +44739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1793149051
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44517,6 +44862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1794059026
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44639,6 +44985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1795009464
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44761,6 +45108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1800495026
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44883,6 +45231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1806226138
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45005,6 +45354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1809630540
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45127,6 +45477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1811979605
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45249,6 +45600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1816512159
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45402,6 +45754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1835213640
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45524,6 +45877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1836974690
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45646,6 +46000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1838363878
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45768,6 +46123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1844838873
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45890,6 +46246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1855362284
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46012,6 +46369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1856436495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46139,6 +46497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1863071299
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46261,6 +46620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1870317548
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46383,6 +46743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1874812645
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46505,6 +46866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1887437508
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46627,6 +46989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1889567478
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46749,6 +47112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1905927883
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46871,6 +47235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1916942224
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46993,6 +47358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1920144295
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47115,6 +47481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1931625114
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47237,6 +47604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1934455666
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47359,6 +47727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1936241451
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47486,6 +47855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1953833482
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47608,6 +47978,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1957761705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47730,6 +48101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1964079372
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47852,6 +48224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1969032407
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47974,6 +48347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1977013035
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48096,6 +48470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &1991251722
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48218,6 +48593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2006804270
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48340,6 +48716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2008982770
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48462,6 +48839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2011792825
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48584,6 +48962,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2013469685
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48706,6 +49085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2014835888
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48828,6 +49208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2018742809
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48950,6 +49331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2022979030
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49072,6 +49454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2028147128
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49194,6 +49577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2030318149
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49316,6 +49700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2032239485
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49438,6 +49823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2040996658
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49560,6 +49946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2047640221
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49682,6 +50069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2062568679
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49804,6 +50192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2065564528
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49926,6 +50315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2066590173
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50048,6 +50438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2070498309
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50170,6 +50561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2078349892
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50292,6 +50684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2079204194
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50414,6 +50807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2087658105
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50570,6 +50964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2090566284
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50692,6 +51087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2097993785
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50814,6 +51210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2103305450
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50936,6 +51333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2104364528
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51058,6 +51456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2104807974
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51180,6 +51579,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2131484655
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51302,6 +51702,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2134702728
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51424,6 +51825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  DadoAsignado: {fileID: 0}
 --- !u!65 &2136850807
 BoxCollider:
   m_ObjectHideFlags: 0

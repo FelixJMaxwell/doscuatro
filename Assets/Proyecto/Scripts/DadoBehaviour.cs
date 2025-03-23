@@ -30,6 +30,7 @@ public class DadoBehaviour : MonoBehaviour
     public float DelayScroll = 0.2f;
     private float TiempoUltimoScroll;
     public List<GameObject> Elementos;
+    public GameObject LigadoA;
 
     private void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -57,6 +58,7 @@ public class DadoBehaviour : MonoBehaviour
             {
                 DadoEstablecido = true;
                 gameManager.DadoConstruyendo = null;
+                gameManager.PlataformaActual.GetComponent<PlataformaBehaviour>().DadoAsignado = gameObject;
             }
         }
 
@@ -108,24 +110,20 @@ public class DadoBehaviour : MonoBehaviour
 
     void ActualizarSeleccion()
     {
-        for (int i = 0; i < Elementos.Count; i++)
-        {
-            if (i == IndiceActual)
-            {
-                float distance = Vector3.Distance(transform.position, Elementos[i].transform.position);
+        if(gameManager.DadoSeleccionado == transform.gameObject){
+            LigadoA = Elementos[IndiceActual].gameObject;
 
-                if (distance <= RadioDeteccion)
-                {
-                    lineRenderer.gameObject.SetActive(true);
-                    lineRenderer.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
-                    lineRenderer.SetPosition(0, new Vector3(gameManager.Monolito.transform.position.x, 0.1f, gameManager.Monolito.transform.position.z));
-                }
+            float distance = Vector3.Distance(transform.position, LigadoA.transform.position);
+
+            if (distance <= RadioDeteccion)
+            {
+                lineRenderer.gameObject.SetActive(true);
+                lineRenderer.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
+                lineRenderer.SetPosition(0, new Vector3(LigadoA.transform.position.x, 0.1f, LigadoA.transform.position.z));
             } else {
                 lineRenderer.gameObject.SetActive(false);
             }
         }
-
-        Debug.Log("Elemento actual: " + Elementos[IndiceActual].name);
     }
 
     private void OnMouseOver() {

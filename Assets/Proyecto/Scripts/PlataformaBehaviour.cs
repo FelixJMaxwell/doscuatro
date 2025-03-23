@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlataformaBehaviour : MonoBehaviour
 {
     public GameManager gameManager;
+    public GameObject DadoAsignado;
 
     void Start()
     {
@@ -11,9 +12,11 @@ public class PlataformaBehaviour : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (gameManager.DadoConstruyendo && !gameManager.DadoConstruyendo.GetComponent<DadoBehaviour>().DadoEstablecido)
+        if (gameManager.DadoConstruyendo && !gameManager.DadoConstruyendo.GetComponent<DadoBehaviour>().DadoEstablecido && !DadoAsignado) 
         {
             gameManager.DadoConstruyendo.transform.position = transform.position + new Vector3(0,0.6f,0);
         }
+
+        gameManager.PlataformaActual = gameObject;
     }
 }
