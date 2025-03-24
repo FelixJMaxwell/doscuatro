@@ -14,6 +14,7 @@ public class DadoBehaviour : MonoBehaviour
     public int CantCaras;
     public float LimiteTicker;
     public float RadioDeteccion;
+    public List<GameObject> ObjetosConectados;
 
     [Header("Configuraciones")]
     public Transform Ligado;
@@ -122,6 +123,26 @@ public class DadoBehaviour : MonoBehaviour
                 lineRenderer.SetPosition(0, new Vector3(LigadoA.transform.position.x, 0.1f, LigadoA.transform.position.z));
             } else {
                 lineRenderer.gameObject.SetActive(false);
+            }
+        }
+
+        if (LigadoA.GetComponent<MonolitoBehaviour>())
+        {
+            MonolitoBehaviour monolito = LigadoA.GetComponent<MonolitoBehaviour>();
+
+            if (!monolito.ObjetosConectados.Contains(gameObject))
+            {
+                monolito.ObjetosConectados.Add(gameObject);
+            }
+        }
+
+        if (LigadoA.GetComponent<DadoBehaviour>())
+        {
+            DadoBehaviour dado = LigadoA.GetComponent<DadoBehaviour>();
+
+            if (!ObjetosConectados.Contains(gameObject))
+            {
+                dado.ObjetosConectados.Add(gameObject);
             }
         }
     }

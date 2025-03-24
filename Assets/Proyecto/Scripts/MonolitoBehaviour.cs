@@ -14,6 +14,8 @@ public class MonolitoBehaviour : MonoBehaviour
     public float Ticker;
     public float TickerLimit;
 
+    public int ContadorPulsar;
+
     private void Start() {
         
     }
@@ -34,6 +36,7 @@ public class MonolitoBehaviour : MonoBehaviour
     }
 
     public void EnviarPulso(){
+        ContadorPulsar++;
         for (int i = 0; i < ObjetosConectados.Count; i++)
         {
             if (ObjetosConectados[i].tag == "Dado")
@@ -43,6 +46,7 @@ public class MonolitoBehaviour : MonoBehaviour
                 GameObject PulsarTemp = Instantiate(Pulsar, transform.position, quaternion.identity);
                 PulsarTemp.transform.position += new Vector3(0,DadoConectado.transform.position.y, 0);
                 PulsarTemp.GetComponent<PulsarBehaviour>().Objetivo = DadoConectado.transform;
+                PulsarTemp.transform.name = "Pulsar_" + ContadorPulsar;
             }
         }
     }
