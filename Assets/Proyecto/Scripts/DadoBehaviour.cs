@@ -1,11 +1,4 @@
 using UnityEngine;
-using System;
-using Unity.VisualScripting;
-using UnityEngine.InputSystem;
-using System.Collections.Specialized;
-using UnityEngine.AI;
-using System.Transactions;
-using UnityEngine.Rendering;
 using System.Collections.Generic;
 
 public class DadoBehaviour : MonoBehaviour
