@@ -10,10 +10,10 @@
     - MONOLITO
         - Shoot pulsar to connected structures
         - Shoot every N seconds
-
         - shoot amount can be increased
+        - the shoot time can be reduced (ticker limit)
+
         - can generate more types of pulsars that affect the structures hitted
-        - the shoot time can be reduced (shoot speed)
         - it changed its form based on updates
         - Can shoot a wave that affects every sctucture ($$$)
             - the wave has a range that can be increased
@@ -26,9 +26,10 @@
         - they receive the pulsar and user get a point
         - the amount of points that gives can only be "changed" when its clicked
 
+        - When hit by a pulsar they shoot another pulsar to the connected structures (WIP)
+            - It need to remove the selected dice from the List of the other dice
         - diferent effects when hit by the pulsar based on the previous structure
             - need and upgrade
-        - When hit by a pulsar they shoot another pulsar to the connected structures
         - the sctucture can be upgraded to give more points
         - Dices throws stuff/parts when hit (?) 
             - based on percentage?

@@ -38,4 +38,16 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    public void SubirFireRateMonolito(){
+        MonolitoBehaviour monolito = Monolito.GetComponent<MonolitoBehaviour>();
+
+        if (monolito.FireRate >= monolito.LimitFireRate) return;
+
+        monolito.FireRate++;
+    }
+
+    public void ReducirTiempoTicker(){
+        
+    }
 }

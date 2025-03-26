@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PulsarBehaviour : MonoBehaviour
@@ -6,10 +7,12 @@ public class PulsarBehaviour : MonoBehaviour
     public float VelocidadMovimiento = 2;
     public GameObject Particula;
     public Transform ParticulaPos;
+    public GameManager gameManager;
 
     void Start()
     {
         ParticulaPos = transform.GetChild(0);
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -18,15 +21,32 @@ public class PulsarBehaviour : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, Objetivo.position, VelocidadMovimiento * Time.deltaTime);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        if (collision.transform.name.Contains("Dado"))
+        if (other.transform.name.Contains("Dado"))
         {
-            collision.transform.GetComponent<DadoBehaviour>().GenerarPunto();
+            other.transform.GetComponent<DadoBehaviour>().GenerarPunto();
             Destroy(transform.gameObject);
             Quaternion rotacion = Quaternion.Euler(0,90,-90);
             GameObject _Particula = Instantiate(Particula, ParticulaPos.position, rotacion);
             _Particula.gameObject.SetActive(true);
+
+            MonolitoBehaviour _monolito = gameManager.Monolito.GetComponent<MonolitoBehaviour>();
+            DadoBehaviour _dado = other.GetComponent<DadoBehaviour>();
+            /* StartCoroutine(_monolito.GenerarPulso(_dado.ObjetosConectados, transform.position)); */
+
+            foreach (GameObject objetoConectado in _dado.ObjetosConectados)
+            {
+                StartCoroutine(_monolito.GenerarPulso(new List<GameObject> { objetoConectado }, transform.position));
+            }
         }
     }
+
+
+
+    /* public void GenerarPulsar(){
+        MonolitoBehaviour _monolito = gameManager.Monolito.GetComponent<MonolitoBehaviour>();
+
+        StartCoroutine(_monolito.GenerarPulso(ObjetosConectados, transform.position));
+    } */
 }

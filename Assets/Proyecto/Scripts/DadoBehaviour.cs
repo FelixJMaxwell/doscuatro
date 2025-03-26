@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using JetBrains.Annotations;
 
 public class DadoBehaviour : MonoBehaviour
 {
@@ -133,7 +135,7 @@ public class DadoBehaviour : MonoBehaviour
         {
             DadoBehaviour dado = LigadoA.GetComponent<DadoBehaviour>();
 
-            if (!ObjetosConectados.Contains(gameObject))
+            if (!dado.ObjetosConectados.Contains(gameObject))
             {
                 dado.ObjetosConectados.Add(gameObject);
             }
