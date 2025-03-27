@@ -33,20 +33,6 @@ public class PulsarBehaviour : MonoBehaviour
 
             MonolitoBehaviour _monolito = gameManager.Monolito.GetComponent<MonolitoBehaviour>();
             DadoBehaviour _dado = other.GetComponent<DadoBehaviour>();
-            /* StartCoroutine(_monolito.GenerarPulso(_dado.ObjetosConectados, transform.position)); */
-
-            foreach (GameObject objetoConectado in _dado.ObjetosConectados)
-            {
-                StartCoroutine(_monolito.GenerarPulso(new List<GameObject> { objetoConectado }, transform.position));
-            }
         }
     }
-
-
-
-    /* public void GenerarPulsar(){
-        MonolitoBehaviour _monolito = gameManager.Monolito.GetComponent<MonolitoBehaviour>();
-
-        StartCoroutine(_monolito.GenerarPulso(ObjetosConectados, transform.position));
-    } */
 }

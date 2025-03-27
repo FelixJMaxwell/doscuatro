@@ -1,13 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using System.Collections;
 
 public class MonolitoBehaviour : MonoBehaviour
 {
     public int ConexionesSimultaneas;
-    public float FireRate = 1;
-    public float LimitFireRate = 5;
+    public float CadenciaDisparo = 1;
+    public float LimiteCadenciaDisparo = 5;
     public GameObject Pulsar;
 
     [Header("Configuraciones")]
@@ -16,6 +14,7 @@ public class MonolitoBehaviour : MonoBehaviour
     public float TickerLimit = 5;
 
     public int ContadorPulsar;
+    public List<GameObject> Pulsos;
 
     private void Start() {
         
@@ -37,41 +36,53 @@ public class MonolitoBehaviour : MonoBehaviour
     }
 
     public void EnviarPulso(){
-
         ContadorPulsar++;
-
-        StartCoroutine(GenerarPulso(ObjetosConectados, transform.position));
-
-    }
-
-    public IEnumerator GenerarPulso(List<GameObject> _ObjectosConectados, Vector3 _Posicion){
-        foreach (GameObject objetoConectado in _ObjectosConectados)
+        Pulsos = new List<GameObject>();
+        
+        for (int i = 0; i < (CadenciaDisparo * ObjetosConectados.Count); i++)
         {
-            if (objetoConectado.tag == "Dado")
+            GameObject tempPulsar = Instantiate(Pulsar, transform.position, Quaternion.identity);
+            PulsarBehaviour _tempPulsar = tempPulsar.GetComponent<PulsarBehaviour>();
+            Vector3 posicion = Random.insideUnitCircle * 0.25f;
+            _tempPulsar.transform.position = posicion + transform.position;
+
+            if (!Pulsos.Contains(tempPulsar))
             {
-                DadoBehaviour DadoConectado = objetoConectado.GetComponent<DadoBehaviour>();
+                Pulsos.Add(tempPulsar);
+            }
+        }
 
-                // Generar 'FireRate' cantidad de pulsos con un pequeño retraso entre ellos
-                for (int e = 0; e < FireRate; e++)
+        int cantidadObjetos = ObjetosConectados.Count;
+        int cantidadPulsos = Pulsos.Count;
+
+        if (cantidadObjetos == 0 || cantidadPulsos == 0) return;
+
+        // Calcular cuántos pulsos se asignan por objeto
+        int pulsosPorObjeto = cantidadPulsos / cantidadObjetos;
+
+        // Asignar los pulsos a cada objeto conectado
+        int pulsoIndex = 0;
+        for (int i = 0; i < cantidadObjetos; i++)
+        {
+            for (int e = 0; e < pulsosPorObjeto; e++)
+            {
+                if (pulsoIndex < cantidadPulsos)
                 {
-                    // Instanciar el Pulsar en la posición del objeto
-                    GameObject PulsarTemp = Instantiate(Pulsar, _Posicion, Quaternion.identity);
-
-                    // Ajustar la posición del Pulsar para alinearlo al Dado conectado
-                    PulsarTemp.transform.position += new Vector3(0, DadoConectado.transform.position.y, 0);
-
-                    // Asignar el objetivo al Pulsar
-                    PulsarTemp.GetComponent<PulsarBehaviour>().Objetivo = DadoConectado.transform;
-
-                    // Nombrar el Pulsar para diferenciarlo
-                    PulsarTemp.transform.name = "Pulsar_" + ContadorPulsar;
-                    ContadorPulsar++;
-
-                    // Esperar antes de generar el siguiente pulso
-                    yield return new WaitForSeconds(0.2f); // Tiempo de espera entre pulsos (ajustable)
+                    PulsarBehaviour tempPulso = Pulsos[pulsoIndex].GetComponent<PulsarBehaviour>();
+                    tempPulso.Objetivo = ObjetosConectados[i].transform;
+                    pulsoIndex++;
                 }
             }
         }
+
+        // Si sobran pulsos, asignarlos a los primeros objetos conectados
+        for (int i = 0; pulsoIndex < cantidadPulsos; i++)
+        {
+            PulsarBehaviour tempPulso = Pulsos[pulsoIndex].GetComponent<PulsarBehaviour>();
+            tempPulso.Objetivo = ObjetosConectados[i % cantidadObjetos].transform;
+            pulsoIndex++;
+        }
+
     }
 
 }

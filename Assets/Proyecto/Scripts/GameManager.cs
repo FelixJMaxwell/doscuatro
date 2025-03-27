@@ -1,7 +1,9 @@
+using System;
+using System.Collections;
+using JetBrains.Annotations;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +19,10 @@ public class GameManager : MonoBehaviour
 
     [Space(10)]
     public GameObject PlataformaActual;
+
+    /* [Space(10)]
+    public int pelotas;
+    public float Multiplo; */
 
     public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto){
         ElementoUI.text = texto;
@@ -42,12 +48,29 @@ public class GameManager : MonoBehaviour
     public void SubirFireRateMonolito(){
         MonolitoBehaviour monolito = Monolito.GetComponent<MonolitoBehaviour>();
 
-        if (monolito.FireRate >= monolito.LimitFireRate) return;
+        if (monolito.CadenciaDisparo >= monolito.LimiteCadenciaDisparo) return;
 
-        monolito.FireRate++;
+        monolito.CadenciaDisparo++;
     }
 
-    public void ReducirTiempoTicker(){
+    /* public void GenerarPuntos(){
+        Debug.Log("1");
+        StartCoroutine(GenerarObjetosConDelay());
+        Debug.Log("2");
+    } */
+
+    /* public IEnumerator GenerarObjetosConDelay(){
+        GameObject tempPulsar = Monolito.GetComponent<MonolitoBehaviour>().Pulsar;
+        tempPulsar.GetComponent<PulsarBehaviour>().enabled = false;    
         
-    }
+        for (int i = 0; i < pelotas; i++)
+        {
+            GameObject temp  = Instantiate(tempPulsar, Vector3.zero, quaternion.identity);
+            Vector3 Posicion = UnityEngine.Random.insideUnitSphere * Multiplo;
+            temp.transform.position = new Vector3(Posicion.x, Posicion.y, Posicion.z);
+
+            yield return new WaitForSeconds(0.01f);
+            Debug.Log("3");
+        }
+    } */
 }

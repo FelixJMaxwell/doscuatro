@@ -82,16 +82,14 @@ public class DadoBehaviour : MonoBehaviour
 
             float ScrollInput = Input.GetAxis("Mouse ScrollWheel");
 
-            if (Time.time - TiempoUltimoScroll > DelayScroll)
-            {
+            if (Time.time - TiempoUltimoScroll > DelayScroll) {
                 if (ScrollInput > 0)
                 {
                     IndiceActual = Elementos.Count - 1;
                 }
 
                 ActualizarSeleccion();
-            } else if (ScrollInput < 0) // Scroll hacia abajo
-            {
+            } else if (ScrollInput < 0) {
                 IndiceActual++;
                 if (IndiceActual >= Elementos.Count)
                 {
@@ -106,7 +104,30 @@ public class DadoBehaviour : MonoBehaviour
 
     void ActualizarSeleccion()
     {
-        if(gameManager.DadoSeleccionado == transform.gameObject){
+        if(gameManager.DadoSeleccionado == transform.gameObject) {
+            if (LigadoA != null)
+            {
+                if (LigadoA.GetComponent<MonolitoBehaviour>())
+                {
+                    MonolitoBehaviour monolitoAnterior = LigadoA.GetComponent<MonolitoBehaviour>();
+
+                    if (monolitoAnterior.ObjetosConectados.Contains(gameObject))
+                    {
+                        monolitoAnterior.ObjetosConectados.Remove(gameObject);
+                    }
+                }
+
+                if (LigadoA.GetComponent<DadoBehaviour>())
+                {
+                    DadoBehaviour dadoAnterior = LigadoA.GetComponent<DadoBehaviour>();
+
+                    if (dadoAnterior.ObjetosConectados.Contains(gameObject))
+                    {
+                        dadoAnterior.ObjetosConectados.Remove(gameObject);
+                    }
+                }
+            }
+
             LigadoA = Elementos[IndiceActual].gameObject;
 
             float distance = Vector3.Distance(transform.position, LigadoA.transform.position);
@@ -120,6 +141,8 @@ public class DadoBehaviour : MonoBehaviour
                 lineRenderer.gameObject.SetActive(false);
             }
         }
+
+
 
         if (LigadoA.GetComponent<MonolitoBehaviour>())
         {
