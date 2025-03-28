@@ -82,7 +82,6 @@ public class MonolitoBehaviour : MonoBehaviour
             tempPulso.Objetivo = ObjetosConectados[i % cantidadObjetos].transform;
             pulsoIndex++;
         }
-
     }
 
 }

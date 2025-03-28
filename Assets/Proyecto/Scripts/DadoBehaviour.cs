@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using JetBrains.Annotations;
 
 public class DadoBehaviour : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class DadoBehaviour : MonoBehaviour
     public float LimiteTicker;
     public float RadioDeteccion;
     public List<GameObject> ObjetosConectados;
+    public int ContadorPulsar = 0;
 
     [Header("Configuraciones")]
     public Transform Ligado;
@@ -20,17 +20,20 @@ public class DadoBehaviour : MonoBehaviour
     public Vector3 offset;
     public bool Clicked;
     
-    private LineRenderer lineRenderer;
-    
+    [Space(10)]
     private int IndiceActual = 0;
     public float DelayScroll = 0.2f;
     private float TiempoUltimoScroll;
     public List<GameObject> Elementos;
     public GameObject LigadoA;
 
+    private GameObject Pulsar;
+    private List<GameObject> Pulsos;
+    private LineRenderer lineRenderer;
+
     private void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
+        Pulsar = gameManager.Monolito.GetComponent<MonolitoBehaviour>().Pulsar;
         lineRenderer = GetComponentInChildren<LineRenderer>();
         lineRenderer.positionCount = 2;
     }
@@ -205,5 +208,58 @@ public class DadoBehaviour : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, RadioDeteccion);
+    }
+
+    public void EnviarPulso(){
+        ContadorPulsar++;
+        Pulsos = new List<GameObject>();
+        
+        for (int i = 0; i < ObjetosConectados.Count; i++)
+        {
+            GameObject tempPulsar = Instantiate(Pulsar, transform.position, Quaternion.identity);
+            PulsarBehaviour _tempPulsar = tempPulsar.GetComponent<PulsarBehaviour>();
+
+            // Generar posición ligeramente desplazada para evitar superposición
+            Vector3 posicion = UnityEngine.Random.insideUnitCircle * 0.25f;
+            _tempPulsar.transform.position = posicion + transform.position;
+
+            // Añadir el Pulsar a la lista si aún no está
+            if (!Pulsos.Contains(tempPulsar))
+            {
+                Pulsos.Add(tempPulsar);
+            }
+        }
+
+
+        int cantidadObjetos = ObjetosConectados.Count;
+        int cantidadPulsos = Pulsos.Count;
+
+        if (cantidadObjetos == 0 || cantidadPulsos == 0) return;
+
+        // Calcular cuántos pulsos se asignan por objeto
+        int pulsosPorObjeto = cantidadPulsos / cantidadObjetos;
+
+        // Asignar los pulsos a cada objeto conectado
+        int pulsoIndex = 0;
+        for (int i = 0; i < cantidadObjetos; i++)
+        {
+            for (int e = 0; e < pulsosPorObjeto; e++)
+            {
+                if (pulsoIndex < cantidadPulsos)
+                {
+                    PulsarBehaviour tempPulso = Pulsos[pulsoIndex].GetComponent<PulsarBehaviour>();
+                    tempPulso.Objetivo = ObjetosConectados[i].transform;
+                    pulsoIndex++;
+                }
+            }
+        }
+
+        // Si sobran pulsos, asignarlos a los primeros objetos conectados
+        for (int i = 0; pulsoIndex < cantidadPulsos; i++)
+        {
+            PulsarBehaviour tempPulso = Pulsos[pulsoIndex].GetComponent<PulsarBehaviour>();
+            tempPulso.Objetivo = ObjetosConectados[i % cantidadObjetos].transform;
+            pulsoIndex++;
+        }
     }
 }

@@ -23,7 +23,7 @@ public class PulsarBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.transform.name.Contains("Dado"))
+        if (other.transform.name.Contains("Dado") && other.transform == Objetivo)
         {
             other.transform.GetComponent<DadoBehaviour>().GenerarPunto();
             Destroy(transform.gameObject);
@@ -31,8 +31,7 @@ public class PulsarBehaviour : MonoBehaviour
             GameObject _Particula = Instantiate(Particula, ParticulaPos.position, rotacion);
             _Particula.gameObject.SetActive(true);
 
-            MonolitoBehaviour _monolito = gameManager.Monolito.GetComponent<MonolitoBehaviour>();
-            DadoBehaviour _dado = other.GetComponent<DadoBehaviour>();
+            other.transform.GetComponent<DadoBehaviour>().EnviarPulso();
         }
     }
 }
