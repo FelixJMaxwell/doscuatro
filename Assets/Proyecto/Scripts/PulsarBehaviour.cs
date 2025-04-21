@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PulsarBehaviour : MonoBehaviour
@@ -8,6 +9,7 @@ public class PulsarBehaviour : MonoBehaviour
     public GameObject Particula;
     public Transform ParticulaPos;
     public GameManager gameManager;
+    public GameObject VinoDesde;
 
     void Start()
     {
@@ -27,7 +29,10 @@ public class PulsarBehaviour : MonoBehaviour
         {
             other.transform.GetComponent<DadoBehaviour>().GenerarPunto();
             Destroy(transform.gameObject);
-            Quaternion rotacion = Quaternion.Euler(0,90,-90);
+
+            Vector3 direccion = VinoDesde.transform.position - transform.position;
+
+            Quaternion rotacion = Quaternion.LookRotation(direccion);
             GameObject _Particula = Instantiate(Particula, ParticulaPos.position, rotacion);
             _Particula.gameObject.SetActive(true);
 

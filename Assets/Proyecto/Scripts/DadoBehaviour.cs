@@ -19,6 +19,7 @@ public class DadoBehaviour : MonoBehaviour
     public bool Selected;
     public Vector3 offset;
     public bool Clicked;
+    public bool ColocarDado;
     
     [Space(10)]
     private int IndiceActual = 0;
@@ -26,6 +27,8 @@ public class DadoBehaviour : MonoBehaviour
     private float TiempoUltimoScroll;
     public List<GameObject> Elementos;
     public GameObject LigadoA;
+    public Transform Plataforma;
+    public List<Material> MaterialesPlataforma;
 
     private GameObject Pulsar;
     private List<GameObject> Pulsos;
@@ -57,7 +60,19 @@ public class DadoBehaviour : MonoBehaviour
             {
                 DadoEstablecido = true;
                 gameManager.DadoConstruyendo = null;
-                gameManager.PlataformaActual.GetComponent<PlataformaBehaviour>().DadoAsignado = gameObject;
+                ColocarDado = true;
+
+                //gameManager.PlataformaActual.GetComponent<PlataformaBehaviour>().DadoAsignado = gameObject;
+            }
+        }
+
+        if(ColocarDado){
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 0.5f, transform.position.z), 2.5f * Time.deltaTime);
+            
+            float Distancia = Vector3.Distance(transform.position, new Vector3(transform.position.x, 0.5f, transform.position.z));
+
+            if(Distancia <= 0.01f){
+                ColocarDado = false;
             }
         }
 
@@ -107,7 +122,12 @@ public class DadoBehaviour : MonoBehaviour
 
     void ActualizarSeleccion()
     {
-        if(gameManager.DadoSeleccionado == transform.gameObject) {
+        if(gameManager.EstructuraSeleccionada == transform.gameObject) {
+            if (Elementos.Count == 0)
+            {
+                return;
+            }
+
             if (LigadoA != null)
             {
                 if (LigadoA.GetComponent<MonolitoBehaviour>())
@@ -173,9 +193,9 @@ public class DadoBehaviour : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (!gameManager.DadoSeleccionado)
+            if (!gameManager.EstructuraSeleccionada)
             {
-                gameManager.DadoSeleccionado = transform.gameObject;
+                gameManager.EstructuraSeleccionada = transform.gameObject;
                 Selected = true;
             }
         }
@@ -218,6 +238,7 @@ public class DadoBehaviour : MonoBehaviour
         {
             GameObject tempPulsar = Instantiate(Pulsar, transform.position, Quaternion.identity);
             PulsarBehaviour _tempPulsar = tempPulsar.GetComponent<PulsarBehaviour>();
+            _tempPulsar.VinoDesde = gameObject;
 
             // Generar posición ligeramente desplazada para evitar superposición
             Vector3 posicion = UnityEngine.Random.insideUnitCircle * 0.25f;
