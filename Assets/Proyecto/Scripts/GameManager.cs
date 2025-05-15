@@ -1,35 +1,24 @@
 using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public float Puntos;
-    public TextMeshProUGUI Saldo;
     public GameObject Monolito;
 
     [Space(10)]
     public float VelocidadMovimientoDado;
-    public GameObject DadoConstruyendo;
+    public GameObject EstructuraConstruyendo;
     public GameObject EstructuraSeleccionada;
-    public GameObject DadoGO;
-    public Transform DadoHolder;
-    public Transform PulsarHolder;
-    public Transform ParticleHolder;
-    public List<Transform> Estructuras;
+    public GameObject EstructurAConstruir;
 
-    [Space(10)]
-    public GameObject PlataformaActual;
+    public Transform EstructurasHolder;
+    public List<Transform> Estructuras;
     
     [Space(10)]
     public List<GameObject> TextosUI;
-
-
-    /* [Space(10)]
-    public int pelotas;
-    public float Multiplo; */
 
     public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto){
         ElementoUI.text = texto;
@@ -37,12 +26,12 @@ public class GameManager : MonoBehaviour
     }
 
     public void ComprarDado(){
-        if (!DadoConstruyendo)
+        if (!EstructuraConstruyendo)
         {
-            GameObject tempDado = Instantiate(DadoGO, Monolito.transform.position + new Vector3(0,5,0), quaternion.identity);
-            DadoConstruyendo = tempDado;
-            tempDado.transform.SetParent(DadoHolder);
-            tempDado.name = "Dado_" + DadoHolder.childCount;
+            GameObject tempDado = Instantiate(EstructurAConstruir, Monolito.transform.position + new Vector3(0,5,0), quaternion.identity);
+            EstructuraConstruyendo = tempDado;
+            tempDado.transform.SetParent(EstructurasHolder);
+            tempDado.name = "Dado_" + EstructurasHolder.childCount;
         }
     }
 
@@ -51,33 +40,50 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) {
             if (EstructuraSeleccionada)
             {
+
+                if (EstructuraSeleccionada.GetComponent<MonolitoBehaviour>())
+                {
+                    TextosUI[0].gameObject.SetActive(false);
+                }
+                
                 EstructuraSeleccionada = null;
             }
         }
 
-        if (DadoConstruyendo)
+        if (EstructuraConstruyendo)
         {
             float MouseX = Input.GetAxis("Mouse X");
             float MouseY = Input.GetAxis("Mouse Y");
 
             Vector3 movimiento = new Vector3(MouseX, 0f, MouseY) * VelocidadMovimientoDado;
+            EstructuraConstruyendo.transform.position += movimiento;
 
-            DadoConstruyendo.transform.position += movimiento;
+            DadoBehaviour tempDadoConstruyendo = EstructuraConstruyendo.GetComponent<DadoBehaviour>();
 
-            DadoBehaviour tempDadoConstruyendo = DadoConstruyendo.GetComponent<DadoBehaviour>();
+            bool estaCercaDeAlguna = false;
 
             foreach (Transform estructura in Estructuras)
             {
                 float distancia = Vector3.Distance(tempDadoConstruyendo.Plataforma.position, estructura.position);
 
-                if (distancia <= 3.8f)
+                bool tieneMonolit = estructura.GetComponent<MonolitoBehaviour>() != null;
+
+                if (
+                    (tieneMonolit && distancia > 4f && distancia < 6f) ||
+                    (!tieneMonolit && distancia <= 3.8f)
+                )
                 {
-                    tempDadoConstruyendo.Plataforma.GetComponent<MeshRenderer>().material = tempDadoConstruyendo.MaterialesPlataforma[0];
-                } else {
-                    tempDadoConstruyendo.Plataforma.GetComponent<MeshRenderer>().material = tempDadoConstruyendo.MaterialesPlataforma[1];
+                    estaCercaDeAlguna = true;
+                    break; // Ya con una estructura cercana es suficiente
                 }
             }
+
+            MeshRenderer renderer = tempDadoConstruyendo.Plataforma.GetComponent<MeshRenderer>();
+            renderer.material = estaCercaDeAlguna
+                ? tempDadoConstruyendo.MaterialesPlataforma[0]
+                : tempDadoConstruyendo.MaterialesPlataforma[1];
         }
+
 
         if (EstructuraSeleccionada != null && EstructuraSeleccionada.name.Contains("Monolito"))
         {
@@ -86,11 +92,21 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.F))
             {
-                tempMonolito.FeActual++;
-                for (int i = 0; i < 3; i++)
+                if (tempMonolito != null && ResourceManager.Instance != null)
                 {
-                    tempMonolito.GenerarPilar();
+                    // Añade 1 unidad de Fe al ResourceManager
+                    tempMonolito.AñadirFeManualmente(1f);
+
+                    // Genera 3 pilares (esto consume Fe según el costo actual del fragmento)
+                    for (int i = 0; i < 3; i++)
+                    {
+                        tempMonolito.GenerarPilar();
+                    }
+                } else {
+                    Debug.LogError("MonolitoBehaviour, FeDataSO o ResourceManager no encontrados en la estructura seleccionada.");
                 }
+
+                TextosUI[1].GetComponent<TextMeshProUGUI>().text = ResourceManager.Instance.GetCantidad("Fe").ToString() + " / " + ResourceManager.Instance.GetMaximo("Fe");
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -100,37 +116,15 @@ public class GameManager : MonoBehaviour
             }
         }
 
-
-    }
-
-    public void SubirFireRateMonolito(){
-        MonolitoBehaviour monolito = Monolito.GetComponent<MonolitoBehaviour>();
-
-        if (monolito.CadenciaDisparo >= monolito.LimiteCadenciaDisparo) return;
-
-        monolito.CadenciaDisparo++;
-    }
-
-
-
-    /* public void GenerarPuntos(){
-        Debug.Log("1");
-        StartCoroutine(GenerarObjetosConDelay());
-        Debug.Log("2");
-    } */
-
-    /* public IEnumerator GenerarObjetosConDelay(){
-        GameObject tempPulsar = Monolito.GetComponent<MonolitoBehaviour>().Pulsar;
-        tempPulsar.GetComponent<PulsarBehaviour>().enabled = false;    
-        
-        for (int i = 0; i < pelotas; i++)
+        if (EstructuraSeleccionada != null && EstructuraSeleccionada.name.Contains("Granja"))
         {
-            GameObject temp  = Instantiate(tempPulsar, Vector3.zero, quaternion.identity);
-            Vector3 Posicion = UnityEngine.Random.insideUnitSphere * Multiplo;
-            temp.transform.position = new Vector3(Posicion.x, Posicion.y, Posicion.z);
-
-            yield return new WaitForSeconds(0.01f);
-            Debug.Log("3");
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                Building_Granja tempGranja = EstructuraSeleccionada.GetComponent<Building_Granja>();
+                tempGranja.ActivateBuilding();
+            }
         }
-    } */
+
+
+    }
 }

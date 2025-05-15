@@ -399,14 +399,24 @@ MonoBehaviour:
   LimiteCadenciaDisparo: 5
   Pulsar: {fileID: 6918314282252467540, guid: 88f321bb3cafbac498a1e38d283c8640, type: 3}
   CostoFragmento: 0
-  ConteoFragmentos: 0
+  PartesMonolito: 0
   PorcentajeSingularidad: 0
+  FeActual: 0
+  FeMaxima: 0
+  NivelDeFe: 0
+  FeBase: 0
+  FeNecesariaParaSubirNivel: 0
+  Pilar: {fileID: 800455135477203597, guid: 0dadb1ebd86a1684cb654e36fd2ef632, type: 3}
+  RadioMinimo: 1
+  RadioMaximo: 3.5
+  FaithHolder: {fileID: 0}
   ObjetosConectados: []
   Ticker: 0
   TickerLimit: 5
   ContadorPulsar: 0
   Pulsos: []
   gameManager: {fileID: 0}
+  GizmoRadio: 1
 --- !u!65 &8097424690555872175
 BoxCollider:
   m_ObjectHideFlags: 0

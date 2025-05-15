@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
+
+
 
 public class DadoBehaviour : MonoBehaviour
 {
@@ -30,15 +31,12 @@ public class DadoBehaviour : MonoBehaviour
     public Transform Plataforma;
     public List<Material> MaterialesPlataforma;
 
-    private GameObject Pulsar;
-    private List<GameObject> Pulsos;
-    private LineRenderer lineRenderer;
+    private LineRenderer lineaDado;
 
     private void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        Pulsar = gameManager.Monolito.GetComponent<MonolitoBehaviour>().Pulsar;
-        lineRenderer = GetComponentInChildren<LineRenderer>();
-        lineRenderer.positionCount = 2;
+        lineaDado = GetComponentInChildren<LineRenderer>();
+        lineaDado.positionCount = 2;
     }
 
     private void Update() {
@@ -54,15 +52,18 @@ public class DadoBehaviour : MonoBehaviour
             Clicked = false;
         }
 
-        if (!DadoEstablecido && gameManager.DadoConstruyendo)
+        if (!DadoEstablecido && gameManager.EstructuraConstruyendo)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 DadoEstablecido = true;
-                gameManager.DadoConstruyendo = null;
+                gameManager.EstructuraConstruyendo = null;
                 ColocarDado = true;
 
-                //gameManager.PlataformaActual.GetComponent<PlataformaBehaviour>().DadoAsignado = gameObject;
+                if (!gameManager.Estructuras.Contains(transform))
+                {
+                    gameManager.Estructuras.Add(transform);
+                }
             }
         }
 
@@ -78,18 +79,20 @@ public class DadoBehaviour : MonoBehaviour
 
         if (Selected)
         {
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position, RadioDeteccion);
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
             
             foreach (Collider item in hitColliders)
             {
-                if (item.CompareTag("Monolito"))
+                float distancia = Vector3.Distance(transform.position, item.transform.position);
+
+                if (item.CompareTag("Monolito") && distancia > 4f && distancia < 6f)
                 {
                     if (!Elementos.Contains(item.gameObject))
                     {
                         Elementos.Add(item.gameObject);
                     }
                 }
-                if (item.CompareTag("Dado"))
+                if (item.CompareTag("Dado") && distancia <= 3.8f)
                 {
                     if (!Elementos.Contains(item.gameObject) && item != transform.GetComponent<Collider>())
                     {
@@ -134,9 +137,9 @@ public class DadoBehaviour : MonoBehaviour
                 {
                     MonolitoBehaviour monolitoAnterior = LigadoA.GetComponent<MonolitoBehaviour>();
 
-                    if (monolitoAnterior.ObjetosConectados.Contains(gameObject))
+                    if (monolitoAnterior.EstructurasConectadas.Contains(gameObject))
                     {
-                        monolitoAnterior.ObjetosConectados.Remove(gameObject);
+                        monolitoAnterior.EstructurasConectadas.Remove(gameObject);
                     }
                 }
 
@@ -155,13 +158,25 @@ public class DadoBehaviour : MonoBehaviour
 
             float distance = Vector3.Distance(transform.position, LigadoA.transform.position);
 
-            if (distance <= RadioDeteccion)
+            if (LigadoA.CompareTag("Monolito") && distance <= 10)
             {
-                lineRenderer.gameObject.SetActive(true);
-                lineRenderer.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
-                lineRenderer.SetPosition(0, new Vector3(LigadoA.transform.position.x, 0.1f, LigadoA.transform.position.z));
+                lineaDado.gameObject.SetActive(true);
+                lineaDado.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
+                lineaDado.SetPosition(0, new Vector3(LigadoA.transform.position.x, 0.1f, LigadoA.transform.position.z));
             } else {
-                lineRenderer.gameObject.SetActive(false);
+                lineaDado.gameObject.SetActive(false);
+            }
+
+            if (LigadoA.CompareTag("Dado"))
+            {
+                if (distance <= RadioDeteccion)
+                {
+                    lineaDado.gameObject.SetActive(true);
+                    lineaDado.SetPosition(1, new Vector3(transform.position.x, 0.1f, transform.position.z));
+                    lineaDado.SetPosition(0, new Vector3(LigadoA.transform.position.x, 0.1f, LigadoA.transform.position.z));
+                } else {
+                    lineaDado.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -171,9 +186,9 @@ public class DadoBehaviour : MonoBehaviour
         {
             MonolitoBehaviour monolito = LigadoA.GetComponent<MonolitoBehaviour>();
 
-            if (!monolito.ObjetosConectados.Contains(gameObject))
+            if (!monolito.EstructurasConectadas.Contains(gameObject))
             {
-                monolito.ObjetosConectados.Add(gameObject);
+                monolito.EstructurasConectadas.Add(gameObject);
             }
         }
 
@@ -189,7 +204,7 @@ public class DadoBehaviour : MonoBehaviour
     }
 
     private void OnMouseOver() {
-        if (gameManager.DadoConstruyendo == transform.gameObject) return;
+        if (gameManager.EstructuraConstruyendo == transform.gameObject) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -215,12 +230,6 @@ public class DadoBehaviour : MonoBehaviour
         ValorActual = UnityEngine.Random.Range(1,CantCaras);
     }
 
-    public void GenerarPunto(){
-        gameManager.Puntos += ValorActual;
-
-        gameManager.ActualizarUI(gameManager.Saldo, "$$$: " + gameManager.Puntos.ToString());
-    }
-
     /// <summary>
     /// Callback to draw gizmos only if the object is selected.
     /// </summary>
@@ -228,59 +237,5 @@ public class DadoBehaviour : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, RadioDeteccion);
-    }
-
-    public void EnviarPulso(){
-        ContadorPulsar++;
-        Pulsos = new List<GameObject>();
-        
-        for (int i = 0; i < ObjetosConectados.Count; i++)
-        {
-            GameObject tempPulsar = Instantiate(Pulsar, transform.position, Quaternion.identity);
-            PulsarBehaviour _tempPulsar = tempPulsar.GetComponent<PulsarBehaviour>();
-            _tempPulsar.VinoDesde = gameObject;
-
-            // Generar posición ligeramente desplazada para evitar superposición
-            Vector3 posicion = UnityEngine.Random.insideUnitCircle * 0.25f;
-            _tempPulsar.transform.position = posicion + transform.position;
-
-            // Añadir el Pulsar a la lista si aún no está
-            if (!Pulsos.Contains(tempPulsar))
-            {
-                Pulsos.Add(tempPulsar);
-            }
-        }
-
-
-        int cantidadObjetos = ObjetosConectados.Count;
-        int cantidadPulsos = Pulsos.Count;
-
-        if (cantidadObjetos == 0 || cantidadPulsos == 0) return;
-
-        // Calcular cuántos pulsos se asignan por objeto
-        int pulsosPorObjeto = cantidadPulsos / cantidadObjetos;
-
-        // Asignar los pulsos a cada objeto conectado
-        int pulsoIndex = 0;
-        for (int i = 0; i < cantidadObjetos; i++)
-        {
-            for (int e = 0; e < pulsosPorObjeto; e++)
-            {
-                if (pulsoIndex < cantidadPulsos)
-                {
-                    PulsarBehaviour tempPulso = Pulsos[pulsoIndex].GetComponent<PulsarBehaviour>();
-                    tempPulso.Objetivo = ObjetosConectados[i].transform;
-                    pulsoIndex++;
-                }
-            }
-        }
-
-        // Si sobran pulsos, asignarlos a los primeros objetos conectados
-        for (int i = 0; pulsoIndex < cantidadPulsos; i++)
-        {
-            PulsarBehaviour tempPulso = Pulsos[pulsoIndex].GetComponent<PulsarBehaviour>();
-            tempPulso.Objetivo = ObjetosConectados[i % cantidadObjetos].transform;
-            pulsoIndex++;
-        }
     }
 }
