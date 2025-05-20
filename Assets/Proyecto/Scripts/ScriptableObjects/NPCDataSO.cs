@@ -8,6 +8,7 @@ public class NPCDataSO : ScriptableObject
     public string npcNombre;
     public string profesion;
     public GameObject prefabModelo;
+    public bool esLegendario = false; // Cambiado a booleano para dos estados de rareza
 
     [Header("Estado")]
     public float saludBase = 100f;
@@ -17,6 +18,6 @@ public class NPCDataSO : ScriptableObject
     [Header("Trabajo")]
     public string trabajo;
 
-     [Header("Educacion")]
+    [Header("Educacion")]
     public string educacion;
 }

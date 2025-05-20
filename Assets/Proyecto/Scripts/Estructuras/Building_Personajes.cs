@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+// using UnityEditor.Rendering; // Esta importación no es necesaria para el runtime y puede causar errores si no estás en el editor.
 
 public class Building_Personajes : BaseBuilding
 {
     [Header("Generación de Personajes")]
-    [SerializeField] private NPCDataSO tipoPersonajeAGenerar;
-    [SerializeField] private Transform puntoDeGeneracion;
+    [SerializeField] private NPCDataSO tipoPersonajeAGenerar; // ScriptableObject del tipo de NPC
+    [SerializeField] private Transform puntoDeGeneracion; // Punto donde aparecerá el NPC
     [SerializeField] private int maxPersonajesGenerados = 10;
     private int personajesGeneradosCount = 0;
 
@@ -14,14 +15,14 @@ public class Building_Personajes : BaseBuilding
     private float tiempoTranscurrido;
 
     [Header("Requisitos de Fe")]
-    [SerializeField] private float feNecesariaParaGenerar = 20f;
-    [SerializeField] private RecurSO feDataSO;
+    [SerializeField] private float feNecesariaParaGenerar = 20f; // Cantidad de Fe necesaria para generar un NPC normal
+    [SerializeField] private RecurSO feDataSO; // Referencia al ScriptableObject de Fe
 
     [Header("Generación de Legendarios")]
-    [SerializeField] private bool puedeGenerarLegendarios = false;
-    [SerializeField] private float fragmentosNecesariosParaLegendario = 5f;
+    [SerializeField] private bool puedeGenerarLegendarios = false; // Se desbloquea con progreso
+    [SerializeField] private float fragmentosNecesariosParaLegendario = 5f; // Cantidad de fragmentos
     [SerializeField] private RecurSO fragmentoDataSO;
-    [SerializeField] private NPCDataSO tipoPersonajeLegendario;
+    [SerializeField] private NPCDataSO tipoPersonajeLegendario; //SO del personaje legendario
 
     [Header("Requisitos de Profesión")]
     [SerializeField] private bool PuedeGenerarProfesiones = false;
@@ -51,6 +52,9 @@ public class Building_Personajes : BaseBuilding
     [SerializeField] private Toggle generarLegendarioToggle;
 
     private bool generarLegendario;
+
+    [Header("Configuraciones")]
+    [SerializeField] private GameManager gameManager; // Asegúrate de que GameManager esté asignado en el Inspector.
 
     private void Awake()
     {
@@ -138,44 +142,55 @@ public class Building_Personajes : BaseBuilding
         }
 
         GameObject nuevoPersonaje;
-        string rarezaAsignada;
+        NPCDataSO personajeAGenerar; // Variable para almacenar el NPCDataSO a usar
 
         if (esLegendario)
         {
             if (ResourceManager.Instance.GetCantidad(fragmentoDataSO.Nombre) >= fragmentosNecesariosParaLegendario && puedeGenerarLegendarios)
             {
-                nuevoPersonaje = Instantiate(tipoPersonajeLegendario.prefabModelo, puntoDeGeneracion.position, puntoDeGeneracion.rotation);
+                personajeAGenerar = tipoPersonajeLegendario; // Usar el NPCDataSO legendario
                 ResourceManager.Instance.Gastar(fragmentoDataSO.Nombre, fragmentosNecesariosParaLegendario);
-                rarezaAsignada = Random.Range(0, 2) == 0 ? "SS" : "S";
             }
             else
             {
-                Debug.Log("No se puede generar un personaje legendario");
-                return;
+                Debug.Log("No se puede generar un personaje legendario. Generando normal en su lugar si hay Fe.");
+                // Si no se cumplen las condiciones para legendario, se intenta generar uno normal
+                personajeAGenerar = tipoPersonajeAGenerar;
+                // Asegurarse de que el costo de Fe se pague si se genera uno normal
+                if (ResourceManager.Instance.GetCantidad(feDataSO.Nombre) >= feNecesariaParaGenerar)
+                {
+                    ResourceManager.Instance.Gastar(feDataSO.Nombre, feNecesariaParaGenerar);
+                }
+                else
+                {
+                    Debug.Log("No hay suficiente Fe para generar personaje normal en lugar de legendario.");
+                    return; // No genera nada si no hay recursos para el normal tampoco
+                }
             }
         }
         else
         {
-            if (ResourceManager.Instance.GetCantidad(feDataSO.Nombre) >= feNecesariaParaGenerar)
-            {
-                nuevoPersonaje = Instantiate(tipoPersonajeAGenerar.prefabModelo, puntoDeGeneracion.position, puntoDeGeneracion.rotation);
-                ResourceManager.Instance.Gastar(feDataSO.Nombre, feNecesariaParaGenerar);
-                rarezaAsignada = AsignarRarezaComun();
-            }
-            else
-            {
-                Debug.Log("No hay suficiente Fe para generar personaje en " + gameObject.name);
-                return;
-            }
+             personajeAGenerar = tipoPersonajeAGenerar; // Usar el NPCDataSO normal
+             if (ResourceManager.Instance.GetCantidad(feDataSO.Nombre) >= feNecesariaParaGenerar)
+             {
+                 ResourceManager.Instance.Gastar(feDataSO.Nombre, feNecesariaParaGenerar);
+             }
+             else
+             {
+                 Debug.Log("No hay suficiente Fe para generar personaje normal en " + gameObject.name);
+                 return; // No genera nada si no hay recursos para el normal
+             }
         }
-
+       
+        nuevoPersonaje = Instantiate(personajeAGenerar.prefabModelo, puntoDeGeneracion.position, puntoDeGeneracion.rotation);
         personajesGeneradosCount++;
         tiempoTranscurrido = 0f;
 
         PersonajeBehaviour personajeBehaviour = nuevoPersonaje.GetComponent<PersonajeBehaviour>();
         if (personajeBehaviour != null)
         {
-            personajeBehaviour.Inicializar(esLegendario ? tipoPersonajeLegendario : tipoPersonajeAGenerar);
+            // Pasa el NPCDataSO al inicializar, y PersonajeBehaviour obtendrá la rareza booleana de ahí.
+            personajeBehaviour.Inicializar(personajeAGenerar);
         }
         else
         {
@@ -183,17 +198,6 @@ public class Building_Personajes : BaseBuilding
         }
 
         PersonajeGenerado?.Invoke(nuevoPersonaje);
-    }
-
-    private string AsignarRarezaComun()
-    {
-        int randomValue = Random.Range(0, 100);
-        if (randomValue < 5) return "A";
-        else if (randomValue < 15) return "B";
-        else if (randomValue < 30) return "C";
-        else if (randomValue < 50) return "D";
-        else if (randomValue < 75) return "E";
-        else return "F";
     }
 
     private bool CumplirRequisitosProfesion()
@@ -322,5 +326,16 @@ public class Building_Personajes : BaseBuilding
     {
         generarLegendario = value;
     }
-}
 
+    void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(0) && gameManager != null && !gameManager.EstructuraSeleccionada)
+        {
+            gameManager.EstructuraSeleccionada = transform.gameObject;
+            if (gameManager.NPCPanel != null) // Asegúrate de que NPCPanel esté asignado en GameManager
+            {
+                gameManager.NPCPanel.SetActive(true);
+            }
+        }
+    }
+}

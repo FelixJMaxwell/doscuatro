@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class GameManager : MonoBehaviour
 
     [Space(10)]
     public List<GameObject> TextosUI;
+
+    [Header("NPC Informacion")]
+    public GameObject NPCPanel;
+    
 
     public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto)
     {
@@ -46,6 +51,11 @@ public class GameManager : MonoBehaviour
                 if (EstructuraSeleccionada.GetComponent<MonolitoBehaviour>())
                 {
                     TextosUI[0].gameObject.SetActive(false);
+                }
+
+                if (EstructuraSeleccionada.name.Contains("NPC"))
+                {
+                    NPCPanel.SetActive(false);
                 }
 
                 EstructuraSeleccionada = null;
@@ -87,58 +97,53 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if (EstructuraSeleccionada != null && EstructuraSeleccionada.name.Contains("Monolito"))
+        if (EstructuraSeleccionada != null)
         {
-            TextosUI[0].gameObject.SetActive(true);
-            MonolitoBehaviour tempMonolito = EstructuraSeleccionada.GetComponent<MonolitoBehaviour>();
-
-            if (Input.GetKeyDown(KeyCode.F))
+            if (EstructuraSeleccionada.name.Contains("Monolito"))
             {
-                if (tempMonolito != null && ResourceManager.Instance != null)
-                {
-                    // Verifica si la cantidad actual de Fe es menor que el máximo.
-                    if (ResourceManager.Instance.GetCantidad("Fe") < ResourceManager.Instance.GetMaximo("Fe"))
-                    {
-                        Debug.Log("Fe actual: " + ResourceManager.Instance.GetCantidad("Fe"));
-                        // Añade 1 unidad de Fe al ResourceManager.
-                        tempMonolito.AñadirFeManualmente(1f);
+                TextosUI[0].gameObject.SetActive(true);
+                MonolitoBehaviour tempMonolito = EstructuraSeleccionada.GetComponent<MonolitoBehaviour>();
 
-                        // Genera 3 pilares (esto NO consume Fe).
-                        for (int i = 0; i < 3; i++)
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    if (tempMonolito != null && ResourceManager.Instance != null)
+                    {
+                        // Verifica si la cantidad actual de Fe es menor que el máximo.
+                        if (ResourceManager.Instance.GetCantidad("Fe") < ResourceManager.Instance.GetMaximo("Fe"))
                         {
-                            tempMonolito.GenerarPilar();
+                            // Añade 1 unidad de Fe al ResourceManager.
+                            tempMonolito.AñadirFeManualmente(1f);
+
+                            // Genera 3 pilares (esto NO consume Fe).
+                            for (int i = 0; i < 3; i++)
+                            {
+                                tempMonolito.GenerarPilar();
+                            }
                         }
                     }
                     else
                     {
-                        Debug.Log("No se puede añadir más Fe, se alcanzaría el máximo.");
+                        Debug.LogError("MonolitoBehaviour o ResourceManager no encontrados en la estructura seleccionada.");
                     }
+
+                    // Actualiza la UI para mostrar la cantidad de Fe.
+                    TextosUI[1].GetComponent<TextMeshProUGUI>().text = ResourceManager.Instance.GetCantidad("Fe").ToString() + " / " + ResourceManager.Instance.GetMaximo("Fe");
                 }
-                else
+            }
+
+            if (EstructuraSeleccionada.name.Contains("Granja"))
+            {
+                if (Input.GetKeyDown(KeyCode.G))
                 {
-                    Debug.LogError("MonolitoBehaviour o ResourceManager no encontrados en la estructura seleccionada.");
+                    Building_Granja tempGranja = EstructuraSeleccionada.GetComponent<Building_Granja>();
+                    tempGranja.ActivateBuilding();
                 }
-
-                // Actualiza la UI para mostrar la cantidad de Fe.
-                TextosUI[1].GetComponent<TextMeshProUGUI>().text = ResourceManager.Instance.GetCantidad("Fe").ToString() + " / " + ResourceManager.Instance.GetMaximo("Fe");
             }
 
-
-            if (Input.GetKeyDown(KeyCode.Escape))
+            /* if (EstructuraSeleccionada.name.Contains("NPC"))
             {
-                EstructuraSeleccionada = null;
-                TextosUI[0].gameObject.SetActive(false);
-            }
+                
+            } */
         }
-
-        if (EstructuraSeleccionada != null && EstructuraSeleccionada.name.Contains("Granja"))
-        {
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                Building_Granja tempGranja = EstructuraSeleccionada.GetComponent<Building_Granja>();
-                tempGranja.ActivateBuilding();
-            }
-        }
-
     }
 }

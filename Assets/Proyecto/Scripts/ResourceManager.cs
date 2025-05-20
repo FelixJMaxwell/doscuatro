@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public enum ResourceType
@@ -21,6 +22,8 @@ public class ResourceManager : MonoBehaviour
     public static ResourceManager Instance { get; private set; }
     public List<RecurSO> recursosIniciales;
     [SerializeField] public Dictionary<string, RecursoInstancia> recursos = new();
+    public TextMeshProUGUI FeUI;
+    [SerializeField] private Transform FaithHolder;
 
     private void Awake()
     {
@@ -82,6 +85,22 @@ public class ResourceManager : MonoBehaviour
         else
         {
             Debug.LogError($"Recurso '{nombre}' no encontrado.");
+        }
+
+        if (nombre == "Fe")
+        {
+            FeUI.text = GetCantidad("Fe").ToString() + " / " + GetMaximo("Fe");
+            
+            if (FaithHolder)
+            {
+                int Pilares = (int)cantidad * 3;
+
+                for (int i = 0; i < Pilares; i++)
+                {
+                    PilarBehaviour tempPilar = FaithHolder.GetChild(i).GetComponent<PilarBehaviour>();
+                    tempPilar.Bajar = true;
+                }
+            }
         }
     }
 

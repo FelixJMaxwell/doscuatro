@@ -7,6 +7,7 @@ public class PersonajeBehaviour : MonoBehaviour
     public string nombre { get; private set; }
     public int edad { get; private set; }
     public string genero { get; private set; }
+    public bool esLegendario { get; private set; } // Nuevo: propiedad para la rareza booleana
 
     // Estado
     public float salud { get; private set; }
@@ -15,9 +16,9 @@ public class PersonajeBehaviour : MonoBehaviour
     public int felicidad { get; private set; }
 
     //Trabajo
-    public string trabajo {get; private set;}
+    public string trabajo { get; private set; }
     //Educacion
-    public string educacion {get; private set;}
+    public string educacion { get; private set; }
 
     // Inventario
     public List<GameObject> inventario = new List<GameObject>();
@@ -37,6 +38,7 @@ public class PersonajeBehaviour : MonoBehaviour
         nombre = data.npcNombre;
         edad = data.edad;
         genero = data.genero;
+        esLegendario = data.esLegendario; // Asignar la rareza booleana desde el NPCDataSO
 
         // Estado
         salud = data.saludBase;
@@ -79,7 +81,7 @@ public class PersonajeBehaviour : MonoBehaviour
         herramienta = nuevaHerramienta;
     }
 
-     public void ModificarFelicidad(int cantidad)
+    public void ModificarFelicidad(int cantidad)
     {
         felicidad += cantidad;
         // Asegurar que la felicidad esté dentro de un rango válido (ejemplo: 0-100)
@@ -106,7 +108,7 @@ public class PersonajeBehaviour : MonoBehaviour
         }
     }
 
-     public int ObtenerRelacion(PersonajeBehaviour otroNPC)
+    public int ObtenerRelacion(PersonajeBehaviour otroNPC)
     {
         if (otroNPC != null && relaciones.ContainsKey(otroNPC))
         {
