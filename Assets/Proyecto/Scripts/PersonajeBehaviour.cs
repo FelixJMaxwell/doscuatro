@@ -3,142 +3,48 @@ using System.Collections.Generic;
 
 public class PersonajeBehaviour : MonoBehaviour
 {
-    // Variables básicas generales
+    // Variables básicas
     public string nombre { get; private set; }
     public int edad { get; private set; }
     public string genero { get; private set; }
-    public string rareza { get; private set; }  // "SS", "S", "A", "B", "C", "D", "E", "F"
-    public string profesion { get; private set; }
 
-    // Estadísticas
+    // Estado
     public float salud { get; private set; }
-    public float energia { get; private set; }
-    public float mana { get; private set; }
-    public float velocidadMovimiento { get; private set; }
+    public string ropa { get; private set; }
+    public string herramienta { get; private set; }
+    public int felicidad { get; private set; }
 
-    public Dictionary<string, int> estadisticas = new Dictionary<string, int>();
+    //Trabajo
+    public string trabajo {get; private set;}
+    //Educacion
+    public string educacion {get; private set;}
 
     // Inventario
     public List<GameObject> inventario = new List<GameObject>();
-    public List<string> nombresNPCsConocidos = new List<string>();
 
     // Relaciones
-    public Dictionary<string, float> relaciones = new Dictionary<string, float>();
-
-    // Eventos
-    public delegate void OnPersonajeNivelUp(PersonajeBehaviour personaje);
-    public static event OnPersonajeNivelUp PersonajeNivelUp;
-
-    private float tiempoVivo = 0f;
-    [SerializeField] private float tiempoParaNuevaRelacion = 30f;  // Ejemplo: cada 30 segundos
+    private Dictionary<PersonajeBehaviour, int> relaciones = new Dictionary<PersonajeBehaviour, int>();
 
     private void Start()
     {
-        // Aquí podrías agregar lógica adicional de inicialización.
-        tiempoVivo = 0f;
+        // Inicialización
+        felicidad = 100; // Valor inicial de felicidad
     }
 
-    public void Inicializar(NPCDataSO data, Dictionary<string, int> stats, string rarezaAsignada)
+    public void Inicializar(NPCDataSO data)
     {
         // Información general
         nombre = data.npcNombre;
         edad = data.edad;
         genero = data.genero;
-        profesion = data.profesion;
-        rareza = rarezaAsignada; // Usar la rareza asignada por el edificio
 
-        // Estadísticas
+        // Estado
         salud = data.saludBase;
-        energia = data.energiaBase;
-        mana = data.manaBase;
-        velocidadMovimiento = data.velocidadMovimientoBase;
-
-        estadisticas = stats;
-
-        // Inventario
-        for (int i = 0; i < Random.Range(10, 16); i++)
-        {
-            //Generar un objeto aleatorio y añadirlo al inventario
-            //GameObject objeto = GenerarObjetoAleatorio();
-            //inventario.Add(objeto);
-        }
-        nombresNPCsConocidos.Add(nombre);
+        ropa = "Ropa Básica"; // Valor inicial
+        herramienta = "Ninguna"; // Valor inicial
+        trabajo = data.trabajo;
+        educacion = data.educacion;
     }
-
-    public bool EsLegendario()
-    {
-        return rareza == "SS" || rareza == "S";
-    }
-
-
-    public void AgregarRelacion(string nombreNPC, float valorInicial)
-    {
-        if (!relaciones.ContainsKey(nombreNPC))
-        {
-            relaciones.Add(nombreNPC, valorInicial);
-        }
-        else
-        {
-            relaciones[nombreNPC] = valorInicial;
-        }
-    }
-
-    public void ModificarRelacion(string nombreNPC, float cantidad)
-    {
-        if (relaciones.ContainsKey(nombreNPC))
-        {
-            relaciones[nombreNPC] += cantidad;
-        }
-        else
-        {
-            AgregarRelacion(nombreNPC, cantidad);
-        }
-    }
-
-    private void Update()
-    {
-        // Lógica de comportamiento del personaje.
-        tiempoVivo += Time.deltaTime;
-
-        if (tiempoVivo >= tiempoParaNuevaRelacion)
-        {
-            tiempoVivo = 0f; // Reiniciar el contador
-
-            // Lógica para conocer un nuevo NPC y establecer una relación.
-            ConocerNuevoNPC();
-        }
-    }
-
-     private void ConocerNuevoNPC()
-    {
-        // 1. Encontrar otros NPCs cercanos (esto es un ejemplo, necesitarás tu propia lógica)
-        PersonajeBehaviour[] otrosNPCs = FindObjectsOfType<PersonajeBehaviour>();
-        PersonajeBehaviour npcMasCercano = null;
-        float distanciaMinima = float.MaxValue;
-
-        foreach (PersonajeBehaviour otroNPC in otrosNPCs)
-        {
-            if (otroNPC != this && !nombresNPCsConocidos.Contains(otroNPC.nombre)) // No conocerse a sí mismo y no conocer ya
-            {
-                float distancia = Vector3.Distance(transform.position, otroNPC.transform.position);
-                if (distancia < distanciaMinima)
-                {
-                    distanciaMinima = distancia;
-                    npcMasCercano = otroNPC;
-                }
-            }
-        }
-
-        // 2. Si se encuentra un NPC cercano, establecer una relación.
-        if (npcMasCercano != null)
-        {
-            nombresNPCsConocidos.Add(npcMasCercano.nombre);
-            float relacionInicial = Random.Range(-10f, 10f); // Valor de relación inicial aleatorio
-            AgregarRelacion(npcMasCercano.nombre, relacionInicial);
-            Debug.Log($"{nombre} conoce a {npcMasCercano.nombre}. Relación inicial: {relacionInicial}");
-        }
-    }
-
 
     public void RecibirDaño(float daño)
     {
@@ -151,6 +57,69 @@ public class PersonajeBehaviour : MonoBehaviour
 
     private void Morir()
     {
+        // Aquí también deberías limpiar las relaciones del NPC muerto con otros NPCs
+        foreach (var relacion in relaciones)
+        {
+            if (relacion.Key != null) // Verifica que el NPC relacionado no sea nulo (ya destruido)
+            {
+                relacion.Key.EliminarRelacion(this); // Llama a un método para eliminar la relación en el otro NPC
+            }
+        }
+        relaciones.Clear(); // Limpia las relaciones de este NPC
         Destroy(gameObject);
+    }
+
+    public void CambiarRopa(string nuevaRopa)
+    {
+        ropa = nuevaRopa;
+    }
+
+    public void CambiarHerramienta(string nuevaHerramienta)
+    {
+        herramienta = nuevaHerramienta;
+    }
+
+     public void ModificarFelicidad(int cantidad)
+    {
+        felicidad += cantidad;
+        // Asegurar que la felicidad esté dentro de un rango válido (ejemplo: 0-100)
+        felicidad = Mathf.Clamp(felicidad, 0, 100);
+    }
+
+    // Métodos para gestionar relaciones
+    public void ConocerNuevoNPC(PersonajeBehaviour otroNPC, int relacionInicial = 0)
+    {
+        if (otroNPC != null && !relaciones.ContainsKey(otroNPC))
+        {
+            relaciones.Add(otroNPC, relacionInicial);
+            otroNPC.ConocerNuevoNPC(this, relacionInicial); // Establecer la relación en ambos sentidos
+        }
+    }
+
+    public void ModificarRelacion(PersonajeBehaviour otroNPC, int cantidad)
+    {
+        if (otroNPC != null && relaciones.ContainsKey(otroNPC))
+        {
+            relaciones[otroNPC] += cantidad;
+            // Puedesclamp la relación dentro de un rango (ejemplo: -100 a 100)
+            relaciones[otroNPC] = Mathf.Clamp(relaciones[otroNPC], -100, 100);
+        }
+    }
+
+     public int ObtenerRelacion(PersonajeBehaviour otroNPC)
+    {
+        if (otroNPC != null && relaciones.ContainsKey(otroNPC))
+        {
+            return relaciones[otroNPC];
+        }
+        return 0; // Valor por defecto si no hay relación
+    }
+
+    public void EliminarRelacion(PersonajeBehaviour otroNPC)
+    {
+        if (otroNPC != null && relaciones.ContainsKey(otroNPC))
+        {
+            relaciones.Remove(otroNPC);
+        }
     }
 }

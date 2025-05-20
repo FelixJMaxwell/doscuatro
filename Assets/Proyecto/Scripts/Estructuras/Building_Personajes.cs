@@ -4,32 +4,27 @@ using System.Collections.Generic;
 public class Building_Personajes : BaseBuilding
 {
     [Header("Generación de Personajes")]
-    [SerializeField] private NPCDataSO tipoPersonajeAGenerar; // ScriptableObject del tipo de NPC
-    [SerializeField] private Transform puntoDeGeneracion; // Punto donde aparecerá el NPC
-    [SerializeField] private float tiempoEntreGeneraciones = 5f; // Tiempo entre generación de NPCs
+    [SerializeField] private NPCDataSO tipoPersonajeAGenerar;
+    [SerializeField] private Transform puntoDeGeneracion;
+    [SerializeField] private float tiempoEntreGeneraciones = 5f;
     private float tiempoTranscurrido;
     [SerializeField] private int maxPersonajesGenerados = 10;
     private int personajesGeneradosCount = 0;
 
     [Header("Requisitos de Fe")]
-    [SerializeField] private float feNecesariaParaGenerar = 20f; // Cantidad de Fe necesaria para generar un NPC normal
-    [SerializeField] private RecurSO feDataSO; // Referencia al ScriptableObject de Fe
+    [SerializeField] private float feNecesariaParaGenerar = 20f;
+    [SerializeField] private RecurSO feDataSO;
 
     [Header("Generación de Legendarios")]
-    [SerializeField] private bool puedeGenerarLegendarios = false; // Se desbloquea con progreso
-    [SerializeField] private float fragmentosNecesariosParaLegendario = 5f; // Cantidad de fragmentos
+    [SerializeField] private bool puedeGenerarLegendarios = false;
+    [SerializeField] private float fragmentosNecesariosParaLegendario = 5f;
     [SerializeField] private RecurSO fragmentoDataSO;
-    [SerializeField] private NPCDataSO tipoPersonajeLegendario; //SO del personaje legendario
+    [SerializeField] private NPCDataSO tipoPersonajeLegendario;
 
     [Header("Requisitos de Profesión")]
-    [SerializeField] private bool requiereEducacionEspecializada = true;
+    [SerializeField] private bool PuedeGenerarProfesiones = false; // Nuevo nombre
     [SerializeField] private List<ObjetoProfesion> objetosProfesionNecesarios;
 
-    [Header("Sacrificio")]
-    [SerializeField] private bool puedeSacrificar = true;
-    [SerializeField] private float relacionNegativaPorSacrificio = -10f; // Ejemplo de impacto en la relación
-
-    // Evento para la indicación audiovisual
     public delegate void OnPersonajeGenerado(GameObject nuevoPersonaje);
     public static event OnPersonajeGenerado PersonajeGenerado;
 
@@ -39,6 +34,15 @@ public class Building_Personajes : BaseBuilding
         public string nombreObjeto;
         public int cantidadNecesaria;
     }
+
+    [Header("Actualizaciones del Edificio")]
+    [SerializeField] private int nivelMaximo = 10;
+    [SerializeField] private float[] tiempoEntreGeneracionesPorNivel;
+    [SerializeField] private int[] maxPersonajesGeneradosPorNivel;
+    [SerializeField] private float[] costoFePorNivel;
+    [SerializeField] private float[] costoFragmentoPorNivel;
+    [SerializeField] private ObjetoProfesion[][] herramientasNecesariasPorNivel;
+    private int nivelActual = 1;
 
     protected override void Start()
     {
@@ -52,6 +56,18 @@ public class Building_Personajes : BaseBuilding
         {
             Debug.LogError("No se ha asignado el RecurSO de Fe en " + gameObject.name);
         }
+
+        if (tiempoEntreGeneracionesPorNivel.Length != nivelMaximo ||
+            maxPersonajesGeneradosPorNivel.Length != nivelMaximo ||
+            costoFePorNivel.Length != nivelMaximo ||
+            costoFragmentoPorNivel.Length != nivelMaximo ||
+            herramientasNecesariasPorNivel.Length != nivelMaximo)
+        {
+            Debug.LogError("Los arrays de costos y capacidades en " + gameObject.name + " no tienen la longitud correcta. Deben tener " + nivelMaximo + " elementos.");
+            nivelMaximo = Mathf.Min(tiempoEntreGeneracionesPorNivel.Length, maxPersonajesGeneradosPorNivel.Length, costoFePorNivel.Length, herramientasNecesariasPorNivel.Length);
+        }
+        InicializarNiveles();
+        AplicarNivel();
     }
 
     protected override void Update()
@@ -65,17 +81,15 @@ public class Building_Personajes : BaseBuilding
             {
                 if (ResourceManager.Instance != null && ResourceManager.Instance.GetCantidad(feDataSO.Nombre) >= feNecesariaParaGenerar)
                 {
-                    // Verifica si se cumplen los requisitos de profesión
-                    if (!requiereEducacionEspecializada || CumplirRequisitosProfesion())
+                    if (!PuedeGenerarProfesiones || CumplirRequisitosProfesion()) // Usa el nuevo nombre
                     {
-                         GenerarPersonaje(false); // Genera un personaje normal
-                         tiempoTranscurrido = 0f;
+                        GenerarPersonaje(false);
+                        tiempoTranscurrido = 0f;
                     }
                     else
                     {
                         Debug.Log("No se cumplen los requisitos de profesión para generar personaje en " + gameObject.name);
                     }
-                   
                 }
                 else
                 {
@@ -88,7 +102,7 @@ public class Building_Personajes : BaseBuilding
     private void GenerarPersonaje(bool esLegendario)
     {
         GameObject nuevoPersonaje;
-        string rarezaAsignada; // Variable para almacenar la rareza
+        string rarezaAsignada;
 
         if (esLegendario)
         {
@@ -96,7 +110,7 @@ public class Building_Personajes : BaseBuilding
             {
                 nuevoPersonaje = Instantiate(tipoPersonajeLegendario.prefabModelo, puntoDeGeneracion.position, puntoDeGeneracion.rotation);
                 ResourceManager.Instance.Gastar(fragmentoDataSO.Nombre, fragmentosNecesariosParaLegendario);
-                rarezaAsignada = Random.Range(0, 2) == 0 ? "SS" : "S"; // Asignar "SS" o "S" aleatoriamente
+                rarezaAsignada = Random.Range(0, 2) == 0 ? "SS" : "S";
             }
             else
             {
@@ -108,7 +122,7 @@ public class Building_Personajes : BaseBuilding
         {
             nuevoPersonaje = Instantiate(tipoPersonajeAGenerar.prefabModelo, puntoDeGeneracion.position, puntoDeGeneracion.rotation);
             ResourceManager.Instance.Gastar(feDataSO.Nombre, feNecesariaParaGenerar);
-            rarezaAsignada = AsignarRarezaComun(); // Asignar rareza común
+            rarezaAsignada = AsignarRarezaComun();
         }
 
         personajesGeneradosCount++;
@@ -116,82 +130,144 @@ public class Building_Personajes : BaseBuilding
         PersonajeBehaviour personajeBehaviour = nuevoPersonaje.GetComponent<PersonajeBehaviour>();
         if (personajeBehaviour != null)
         {
-            personajeBehaviour.Inicializar(esLegendario ? tipoPersonajeLegendario : tipoPersonajeAGenerar, GenerarStatsAleatorios(), rarezaAsignada); // Pasar la rareza asignada
+            personajeBehaviour.Inicializar(esLegendario ? tipoPersonajeLegendario : tipoPersonajeAGenerar);
         }
         else
         {
             Debug.LogError("El prefab del personaje generado no tiene un script PersonajeBehaviour en " + gameObject.name);
         }
 
-        // Invocar el evento de generación
         PersonajeGenerado?.Invoke(nuevoPersonaje);
     }
 
     private string AsignarRarezaComun()
     {
-        // Lógica para asignar rarezas comunes (A, B, C, D, E, F)
-        int randomValue = Random.Range(0, 100); // Rango del 0 al 99
-
-        if (randomValue < 5)        return "A"; // 5%
-        else if (randomValue < 15)   return "B"; // 10% (15-5)
-        else if (randomValue < 30)  return "C"; // 15% (30-15)
-        else if (randomValue < 50)  return "D"; // 20% (50-30)
-        else if (randomValue < 75)  return "E"; // 25% (75-50)
-        else                       return "F"; // 25% (100-75)
-    }
-
-     private Dictionary<string, int> GenerarStatsAleatorios()
-    {
-        Dictionary<string, int> statsAleatorios = new Dictionary<string, int>();
-        statsAleatorios.Add("Fuerza", Random.Range(10, 20));
-        statsAleatorios.Add("Destreza", Random.Range(10, 20));
-        statsAleatorios.Add("Constitucion", Random.Range(10, 20));
-        statsAleatorios.Add("Inteligencia", Random.Range(10, 20));
-        statsAleatorios.Add("Sabiduria", Random.Range(10, 20));
-        statsAleatorios.Add("Carisma", Random.Range(10, 20));
-        return statsAleatorios;
+        int randomValue = Random.Range(0, 100);
+        if (randomValue < 5) return "A";
+        else if (randomValue < 15) return "B";
+        else if (randomValue < 30) return "C";
+        else if (randomValue < 50) return "D";
+        else if (randomValue < 75) return "E";
+        else return "F";
     }
 
     private bool CumplirRequisitosProfesion()
     {
+        if (!PuedeGenerarProfesiones) return true; // Usa el nuevo nombre
         if (objetosProfesionNecesarios == null || objetosProfesionNecesarios.Count == 0)
         {
-            return true; // No hay requisitos
+            return true;
         }
 
         foreach (ObjetoProfesion requisito in objetosProfesionNecesarios)
         {
             if (ResourceManager.Instance == null || ResourceManager.Instance.GetCantidad(requisito.nombreObjeto) < requisito.cantidadNecesaria)
             {
-                return false; // No se cumple un requisito
+                return false;
             }
         }
-        //Si llego hasta aqui, se cumplen todos los requisitos
         return true;
     }
 
-    public void SacrificarPersonaje(GameObject personajeASacrificar)
+    public void DesbloquearGeneracionLegendarios()
     {
-        if (!puedeSacrificar) return;
-
-        // Aquí iría la lógica para eliminar al personaje de la escena y del sistema de juego
-        Destroy(personajeASacrificar);
-        personajesGeneradosCount--;
-
-        // Lógica para afectar las relaciones (ejemplo)
-        //GameManager.Instance.ModificarRelaciones(relacionNegativaPorSacrificio);
-
-        // Generar evento de sacrificio (opcional)
-        //OnPersonajeSacrificado?.Invoke();
+        puedeGenerarLegendarios = true;
     }
 
-    public void GenerarPersonajeLegendario()
+    public void DesbloquearRequisitosProfesion()
     {
-        GenerarPersonaje(true);
+        PuedeGenerarProfesiones = true; // Usa el nuevo nombre
     }
 
-    protected override void ProduceResources()
+    public void ActualizarEdificio()
     {
-        // Este edificio no produce recursos
+        if (nivelActual < nivelMaximo)
+        {
+            if (ResourceManager.Instance.GetCantidad(feDataSO.Nombre) >= costoFePorNivel[nivelActual - 1] &&
+                ResourceManager.Instance.GetCantidad(fragmentoDataSO.Nombre) >= costoFragmentoPorNivel[nivelActual - 1] &&
+                CumplirRequisitosHerramientas(herramientasNecesariasPorNivel[nivelActual - 1]))
+            {
+                ResourceManager.Instance.Gastar(feDataSO.Nombre, costoFePorNivel[nivelActual - 1]);
+                ResourceManager.Instance.Gastar(fragmentoDataSO.Nombre, costoFragmentoPorNivel[nivelActual - 1]);
+
+                nivelActual++;
+                AplicarNivel();
+            }
+            else
+            {
+                Debug.Log("No hay suficientes recursos para actualizar el edificio " + gameObject.name);
+            }
+        }
+        else
+        {
+            Debug.Log("El edificio " + gameObject.name + " ya está al máximo nivel.");
+        }
+    }
+
+    private void AplicarNivel()
+    {
+        tiempoEntreGeneraciones = tiempoEntreGeneracionesPorNivel[nivelActual - 1];
+        maxPersonajesGenerados = maxPersonajesGeneradosPorNivel[nivelActual - 1];
+        // Aquí podrías añadir más lógica para aplicar cambios específicos del nivel.
+        if (nivelActual >= 2)
+        {
+            PuedeGenerarProfesiones = true;
+        }
+        if (nivelActual >= 5)
+        {
+            puedeGenerarLegendarios = true;
+        }
+    }
+
+    private bool CumplirRequisitosHerramientas(ObjetoProfesion[] herramientasNecesarias)
+    {
+        if (herramientasNecesarias == null || herramientasNecesarias.Length == 0)
+        {
+            return true;
+        }
+
+        foreach (ObjetoProfesion requisito in herramientasNecesarias)
+        {
+            if (ResourceManager.Instance == null || ResourceManager.Instance.GetCantidad(requisito.nombreObjeto) < requisito.cantidadNecesaria)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void InicializarNiveles()
+    {
+        tiempoEntreGeneracionesPorNivel = new float[nivelMaximo];
+        maxPersonajesGeneradosPorNivel = new int[nivelMaximo];
+        costoFePorNivel = new float[nivelMaximo];
+        costoFragmentoPorNivel = new float[nivelMaximo];
+        herramientasNecesariasPorNivel = new ObjetoProfesion[nivelMaximo][];
+
+        for (int i = 0; i < nivelMaximo; i++)
+        {
+            tiempoEntreGeneracionesPorNivel[i] = Mathf.Max(1f, 5f - i * 0.5f);
+            if (i < 9)
+            {
+                maxPersonajesGeneradosPorNivel[i] = 10000;
+            }
+            else
+            {
+                maxPersonajesGeneradosPorNivel[i] = int.MaxValue;
+            }
+
+            costoFePorNivel[i] = 10f * Mathf.Pow(2, i);
+            costoFragmentoPorNivel[i] = 2f * Mathf.Pow(1.5f, i);
+
+            herramientasNecesariasPorNivel[i] = new ObjetoProfesion[i + 1];
+            for (int j = 0; j < herramientasNecesariasPorNivel[i].Length; j++)
+            {
+                herramientasNecesariasPorNivel[i][j].nombreObjeto = "HerramientaNivel" + (j + 1);
+                herramientasNecesariasPorNivel[i][j].cantidadNecesaria = (int)Mathf.Pow(2, j);
+            }
+        }
+        PuedeGenerarProfesiones = false;
+        puedeGenerarLegendarios = false;
     }
 }
+
