@@ -16,19 +16,21 @@ public class GameManager : MonoBehaviour
 
     public Transform EstructurasHolder;
     public List<Transform> Estructuras;
-    
+
     [Space(10)]
     public List<GameObject> TextosUI;
 
-    public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto){
+    public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto)
+    {
         ElementoUI.text = texto;
         Estructuras = new List<Transform>();
     }
 
-    public void ComprarDado(){
+    public void ComprarDado()
+    {
         if (!EstructuraConstruyendo)
         {
-            GameObject tempDado = Instantiate(EstructurAConstruir, Monolito.transform.position + new Vector3(0,5,0), quaternion.identity);
+            GameObject tempDado = Instantiate(EstructurAConstruir, Monolito.transform.position + new Vector3(0, 5, 0), quaternion.identity);
             EstructuraConstruyendo = tempDado;
             tempDado.transform.SetParent(EstructurasHolder);
             tempDado.name = "Dado_" + EstructurasHolder.childCount;
@@ -37,15 +39,15 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
             if (EstructuraSeleccionada)
             {
-
                 if (EstructuraSeleccionada.GetComponent<MonolitoBehaviour>())
                 {
                     TextosUI[0].gameObject.SetActive(false);
                 }
-                
+
                 EstructuraSeleccionada = null;
             }
         }
@@ -94,20 +96,33 @@ public class GameManager : MonoBehaviour
             {
                 if (tempMonolito != null && ResourceManager.Instance != null)
                 {
-                    // Añade 1 unidad de Fe al ResourceManager
-                    tempMonolito.AñadirFeManualmente(1f);
-
-                    // Genera 3 pilares (esto consume Fe según el costo actual del fragmento)
-                    for (int i = 0; i < 3; i++)
+                    // Verifica si la cantidad actual de Fe es menor que el máximo.
+                    if (ResourceManager.Instance.GetCantidad("Fe") < ResourceManager.Instance.GetMaximo("Fe"))
                     {
-                        tempMonolito.GenerarPilar();
+                        Debug.Log("Fe actual: " + ResourceManager.Instance.GetCantidad("Fe"));
+                        // Añade 1 unidad de Fe al ResourceManager.
+                        tempMonolito.AñadirFeManualmente(1f);
+
+                        // Genera 3 pilares (esto NO consume Fe).
+                        for (int i = 0; i < 3; i++)
+                        {
+                            tempMonolito.GenerarPilar();
+                        }
                     }
-                } else {
-                    Debug.LogError("MonolitoBehaviour, FeDataSO o ResourceManager no encontrados en la estructura seleccionada.");
+                    else
+                    {
+                        Debug.Log("No se puede añadir más Fe, se alcanzaría el máximo.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("MonolitoBehaviour o ResourceManager no encontrados en la estructura seleccionada.");
                 }
 
+                // Actualiza la UI para mostrar la cantidad de Fe.
                 TextosUI[1].GetComponent<TextMeshProUGUI>().text = ResourceManager.Instance.GetCantidad("Fe").ToString() + " / " + ResourceManager.Instance.GetMaximo("Fe");
             }
+
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -124,7 +139,6 @@ public class GameManager : MonoBehaviour
                 tempGranja.ActivateBuilding();
             }
         }
-
 
     }
 }

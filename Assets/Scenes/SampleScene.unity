@@ -462,8 +462,8 @@ MonoBehaviour:
   TasaDeProduccion: 1
   tipoPersonajeAGenerar: {fileID: 11400000, guid: 18b6fcab67217734ebd5fb13c6033044, type: 2}
   puntoDeGeneracion: {fileID: 1175654879}
-  tiempoEntreGeneraciones: 5
   maxPersonajesGenerados: 1000
+  tiempoEntreGeneraciones: 5
   feNecesariaParaGenerar: 20
   feDataSO: {fileID: 11400000, guid: 43432c29c7d31694591b8bbf0ac045ee, type: 2}
   puedeGenerarLegendarios: 0
@@ -477,6 +477,8 @@ MonoBehaviour:
   maxPersonajesGeneradosPorNivel: 
   costoFePorNivel: []
   costoFragmentoPorNivel: []
+  generarNormalButton: {fileID: 364488740}
+  generarLegendarioToggle: {fileID: 1442780834}
 --- !u!136 &126553517
 CapsuleCollider:
   m_ObjectHideFlags: 0
