@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 public class MonolitoBehaviour : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class MonolitoBehaviour : MonoBehaviour
     public float FeNecesariaParaSubirNivel => FeDataSO != null ? FeDataSO.CalcularCostoSubirNivel(NivelDeFe) : 0f;
 
     [Space(10)]
+    [SerializeField] private RecurSO FragmentoSO; // Referencia al ScriptableObject de Fragmento
+
+    [Space(10)]
     public GameObject Pilar;
     public float RadioMinimo = 2f;
     public float RadioMaximo = 5f;
@@ -31,6 +35,7 @@ public class MonolitoBehaviour : MonoBehaviour
     public List<GameObject> EstructurasConectadas;
     public float Ticker = 0f;
     public float TickerLimit = 5f;
+    public TextMeshProUGUI CostoFragmentoBtn;
 
     public GameManager gameManager;
     public float GizmoRadio = 5f;
@@ -46,7 +51,7 @@ public class MonolitoBehaviour : MonoBehaviour
 
         // Inicializar la Fe actual al valor máximo o base al inicio
         /* FeActual = FeMaxima; // O FeActual = FeBase; según tu diseño */
-        ActualizarCostoFragmento();
+        ActualizarCostoFragmento(); // Calculate initial fragment cost
     }
 
     private void Update()
@@ -82,7 +87,15 @@ public class MonolitoBehaviour : MonoBehaviour
         GameObject tempPilar = Instantiate(Pilar, new Vector3(position.x, -0.5f, position.z), Quaternion.identity);
         tempPilar.transform.SetParent(FaithHolder);
         tempPilar.transform.name = "Pilar_ " + FaithHolder.childCount;
-        tempPilar.GetComponent<PilarBehaviour>().Posicion = position;
+        // Assuming PilarBehaviour exists and has a 'Posicion' property
+        if (tempPilar.GetComponent<PilarBehaviour>() != null)
+        {
+            tempPilar.GetComponent<PilarBehaviour>().Posicion = position;
+        }
+        else
+        {
+            Debug.LogWarning("Pilar prefab does not have a PilarBehaviour script.");
+        }
     }
 
     public void IntentarSubirNivelFe()
@@ -90,6 +103,12 @@ public class MonolitoBehaviour : MonoBehaviour
         if (FeDataSO != null && ResourceManager.Instance != null)
         {
             float costoSubida = FeNecesariaParaSubirNivel;
+            // Assuming recursoRequeridoParaNivel is a property of RecurSO
+            if (FeDataSO.recursoRequeridoParaNivel == null || FeDataSO.recursoRequeridoParaNivel == "")
+            {
+                Debug.LogError("FeDataSO.recursoRequeridoParaNivel is not set.");
+                return;
+            }
             float recursosFeActual = ResourceManager.Instance.GetCantidad(FeDataSO.recursoRequeridoParaNivel);
 
             if (recursosFeActual >= costoSubida)
@@ -97,7 +116,7 @@ public class MonolitoBehaviour : MonoBehaviour
                 ResourceManager.Instance.Gastar(FeDataSO.recursoRequeridoParaNivel, costoSubida);
                 NivelDeFe++;
                 Debug.Log($"Nivel de Fe del Monolito subido a {NivelDeFe}. Costo: {costoSubida} {FeDataSO.recursoRequeridoParaNivel}");
-                // Recalcular la Fe necesaria para el siguiente nivel
+                // Recalcular la Fe necesaria para el siguiente nivel (if applicable in FeDataSO)
             }
             else
             {
@@ -106,13 +125,16 @@ public class MonolitoBehaviour : MonoBehaviour
         }
         else
         {
-            Debug.LogError("FeDataSO no asignado o ResourceManager no encontrado.");
+            Debug.LogError("FeDataSO not assigned or ResourceManager not found.");
         }
     }
 
     private void ActualizarCostoFragmento()
     {
+        // Calculate the current fragment cost based on base cost, increment, and fragment counter
         CostoFragmento = CostoFragmentoBase * Mathf.Pow(IncrementoCostoFragmento, ContadorFragmentos);
+        CostoFragmentoBtn.text = "Extraer fragmento (" + CostoFragmento + ")";
+        //Debug.Log($"Current fragment cost: {CostoFragmento}"); // Log the updated cost
     }
 
     private void OnMouseOver()
@@ -120,6 +142,11 @@ public class MonolitoBehaviour : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !gameManager.EstructuraSeleccionada)
         {
             gameManager.EstructuraSeleccionada = transform.gameObject;
+            // Assuming GameManager has an NPCPanel, activate it here if needed for UI
+            // if (gameManager.NPCPanel != null)
+            // {
+            //     gameManager.NPCPanel.SetActive(true);
+            // }
         }
     }
 
@@ -134,11 +161,39 @@ public class MonolitoBehaviour : MonoBehaviour
         if (FeDataSO != null && ResourceManager.Instance != null)
         {
             ResourceManager.Instance.Añadir(FeDataSO.Nombre, cantidad);
-            Debug.Log($"{cantidad} de Fe añadida al sistema.");
+            //Debug.Log($"{cantidad} de Fe añadida al sistema.");
         }
         else
         {
-            Debug.LogError("FeDataSO no asignado o ResourceManager no encontrado.");
+            Debug.LogError("FeDataSO not assigned or ResourceManager not found.");
+        }
+    }
+
+    public void AñadirFragmentoMonolito()
+    {
+        // Ensure ResourceManager and FragmentSO are assigned
+        if (ResourceManager.Instance == null || FragmentoSO == null || FeDataSO == null)
+        {
+            Debug.LogError("ResourceManager, FragmentoSO, or FeDataSO not assigned in MonolitoBehaviour.");
+            return;
+        }
+
+        // Check if there's enough Fe to pay for the fragment
+        if (ResourceManager.Instance.GetCantidad(FeDataSO.Nombre) >= CostoFragmento)
+        {
+            ResourceManager.Instance.Gastar(FeDataSO.Nombre, CostoFragmento); // Spend Fe
+            ResourceManager.Instance.Añadir(FragmentoSO.Nombre, 1); // Add 1 Fragment
+            ContadorFragmentos++; // Increment the fragment counter
+            ActualizarCostoFragmento(); // Recalculate the cost for the next fragment
+
+            //Debug.Log($"1 Fragment added. {CostoFragmento} Fe spent. New fragment cost: {CostoFragmento}");
+            // You might want to update a UI text element here to show the new cost
+            // Example: UIManager.Instance.UpdateFragmentCostText(CostoFragmento);
+
+        }
+        else
+        {
+            Debug.Log($"Not enough Fe to buy a fragment. Needed: {CostoFragmento}, Have: {ResourceManager.Instance.GetCantidad(FeDataSO.Nombre)}");
         }
     }
 }

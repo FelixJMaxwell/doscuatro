@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f979e486e0a9e409d6aa8da158ecb0, type: 3}
   m_Name: FragmentoMonolito
   m_EditorClassIdentifier: 
-  Nombre: FragmentoMonolito
-  Maximo: 0
+  Nombre: Fragmento
+  Maximo: 100
   ValorBase: 10
   requiereNivel: 1
   recursoRequeridoParaNivel: 

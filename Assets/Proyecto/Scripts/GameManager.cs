@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -21,9 +22,10 @@ public class GameManager : MonoBehaviour
     [Space(10)]
     public List<GameObject> TextosUI;
 
-    [Header("NPC Informacion")]
+    [Header("Panels")]
     public GameObject NPCPanel;
-    
+    public GameObject MonolitoPanel;
+
 
     public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto)
     {
@@ -51,6 +53,7 @@ public class GameManager : MonoBehaviour
                 if (EstructuraSeleccionada.GetComponent<MonolitoBehaviour>())
                 {
                     TextosUI[0].gameObject.SetActive(false);
+                    MonolitoPanel.SetActive(false);
                 }
 
                 if (EstructuraSeleccionada.name.Contains("NPC"))
@@ -64,7 +67,7 @@ public class GameManager : MonoBehaviour
 
         if (EstructuraConstruyendo)
         {
-            float MouseX = Input.GetAxis("Mouse X");
+            /* float MouseX = Input.GetAxis("Mouse X");
             float MouseY = Input.GetAxis("Mouse Y");
 
             Vector3 movimiento = new Vector3(MouseX, 0f, MouseY) * VelocidadMovimientoDado;
@@ -93,7 +96,7 @@ public class GameManager : MonoBehaviour
             MeshRenderer renderer = tempDadoConstruyendo.Plataforma.GetComponent<MeshRenderer>();
             renderer.material = estaCercaDeAlguna
                 ? tempDadoConstruyendo.MaterialesPlataforma[0]
-                : tempDadoConstruyendo.MaterialesPlataforma[1];
+                : tempDadoConstruyendo.MaterialesPlataforma[1]; */
         }
 
 
@@ -102,6 +105,7 @@ public class GameManager : MonoBehaviour
             if (EstructuraSeleccionada.name.Contains("Monolito"))
             {
                 TextosUI[0].gameObject.SetActive(true);
+                MonolitoPanel.SetActive(true);
                 MonolitoBehaviour tempMonolito = EstructuraSeleccionada.GetComponent<MonolitoBehaviour>();
 
                 if (Input.GetKeyDown(KeyCode.F))
@@ -127,7 +131,7 @@ public class GameManager : MonoBehaviour
                     }
 
                     // Actualiza la UI para mostrar la cantidad de Fe.
-                    TextosUI[1].GetComponent<TextMeshProUGUI>().text = ResourceManager.Instance.GetCantidad("Fe").ToString() + " / " + ResourceManager.Instance.GetMaximo("Fe");
+                    TextosUI[1].GetComponent<TextMeshProUGUI>().text = "Fe: " + ResourceManager.Instance.GetCantidad("Fe").ToString() + " / " + ResourceManager.Instance.GetMaximo("Fe");
                 }
             }
 
@@ -144,6 +148,16 @@ public class GameManager : MonoBehaviour
             {
                 
             } */
+        }
+    }
+
+    public void BotonesDerecha()
+    {
+        GameObject UISeleccionada = EventSystem.current.currentSelectedGameObject;
+
+        if (UISeleccionada.gameObject.name == "ArquitecturaBtn")
+        {
+            
         }
     }
 }
