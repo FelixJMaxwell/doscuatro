@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("Panels")]
     public GameObject NPCPanel;
     public GameObject MonolitoPanel;
+    public GameObject ArquitecturaPanel;
 
 
     public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto)
@@ -157,7 +158,30 @@ public class GameManager : MonoBehaviour
 
         if (UISeleccionada.gameObject.name == "ArquitecturaBtn")
         {
-            
+            if (ArquitecturaPanel.activeInHierarchy)
+            {
+                ArquitecturaPanel.SetActive(false);
+            }
+            else
+            {
+                ArquitecturaPanel.SetActive(true);
+            }
+        }
+        if (UISeleccionada.gameObject.name == "AdministracionBtn")
+        {
+            Debug.Log("Menu de administración");
+        }
+        if (UISeleccionada.gameObject.name == "InvestigacionBtn")
+        {
+            Debug.Log("Menu de investigacion");
+        }
+        if (UISeleccionada.gameObject.name == "AldeanosBtn")
+        {
+            Debug.Log("Menu de aldeanos");
+        }
+        if (UISeleccionada.gameObject.name == "ConfiguracionesBtn")
+        {
+            Debug.Log("Menu de configuraciones");
         }
     }
 }
