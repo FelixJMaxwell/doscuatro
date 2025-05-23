@@ -127,29 +127,20 @@ MonoBehaviour:
   buildingName: Aldeanos
   buildingIcon: {fileID: 0}
   constructionCost: 100
+  TipoEstructura: 0
   producesResources: 0
   RecursoProducir: {fileID: 0}
   TasaDeProduccion: 1
   tipoPersonajeAGenerar: {fileID: 11400000, guid: 18b6fcab67217734ebd5fb13c6033044, type: 2}
   puntoDeGeneracion: {fileID: 3336922967286779328}
-  maxPersonajesGenerados: 1000
-  tiempoEntreGeneraciones: 5
-  feNecesariaParaGenerar: 10
   feDataSO: {fileID: 11400000, guid: 43432c29c7d31694591b8bbf0ac045ee, type: 2}
-  puedeGenerarLegendarios: 0
-  fragmentosNecesariosParaLegendario: 5
   fragmentoDataSO: {fileID: 11400000, guid: a0a5ce2216a82fe458043ae75dc3cd69, type: 2}
   tipoPersonajeLegendario: {fileID: 11400000, guid: 18b6fcab67217734ebd5fb13c6033044, type: 2}
-  PuedeGenerarProfesiones: 0
-  objetosProfesionNecesarios: []
-  nivelMaximo: 10
-  tiempoEntreGeneracionesPorNivel: []
-  maxPersonajesGeneradosPorNivel: 
-  costoFePorNivel: []
-  costoFragmentoPorNivel: []
-  generarNormalButton: {fileID: 0}
+  objetosProfesionParaGeneracion: []
+  configuracionesDeNivel: []
+  generarPersonajeButton: {fileID: 0}
   generarLegendarioToggle: {fileID: 0}
-  gameManager: {fileID: 0}
+  mejorarEdificioButton: {fileID: 0}
 --- !u!1 &6486203277938451037
 GameObject:
   m_ObjectHideFlags: 0

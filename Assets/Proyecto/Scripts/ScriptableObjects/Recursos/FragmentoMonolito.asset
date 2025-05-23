@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Nombre: Fragmento
   Maximo: 100
-  ValorBase: 10
+  ValorBase: 0
   requiereNivel: 1
   recursoRequeridoParaNivel: 
   factorNivel: 0.75

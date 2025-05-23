@@ -2,210 +2,319 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-// Enum for different resource types (optional, but good for organization)
-public enum ResourceType
-{
-    None,
-    Food,
-    Water,
-    Wood,
-    Stone,
-    Metal,
-    Cloth,
-    Medicine,
-    Knowledge,
-    Faith
-}
+// Enum para diferentes tipos de recursos (opcional, pero bueno para organización).
+// Ya lo tienes en un archivo separado, lo cual está bien. Si no, podría ir aquí.
+/* public enum ResourceType { ... } */
 
-// Centralized resource manager in the game
+// Gestiona de forma centralizada todos los recursos del juego.
 public class ResourceManager : MonoBehaviour
 {
+    // Implementación del patrón Singleton para fácil acceso.
     public static ResourceManager Instance { get; private set; }
 
-    // List of initial RecurSO ScriptableObjects to be loaded at startup
+    // Lista de ScriptableObjects (RecurSO) que definen los recursos iniciales
+    // a cargar al inicio del juego. Asignar desde el Inspector.
+    [Tooltip("Arrastra aquí los ScriptableObjects de los recursos iniciales del juego.")]
     public List<RecurSO> recursosIniciales;
 
-    // Dictionary to store active resource instances, keyed by resource name
-    [SerializeField] public Dictionary<string, RecursoInstancia> recursos = new();
+    // Diccionario para almacenar las instancias activas de los recursos,
+    // usando el nombre del recurso (desde RecurSO.Nombre) como clave.
+    // Es serializable para poder verlo en el Inspector (útil para debug).
+    [SerializeField]
+    public Dictionary<string, RecursoInstancia> recursos = new Dictionary<string, RecursoInstancia>();
 
-    // UI TextMeshProUGUI element to display Faith amount
+    // --- UI Específica de Recursos ---
+    // Sugerencia: Idealmente, la gestión directa de elementos UI específicos
+    // debería estar en un UIManager para separar responsabilidades.
+    // ResourceManager podría emitir eventos cuando los recursos cambian, y UIManager escucharía.
+    [Header("UI (Considerar mover a un UIManager)")]
+    [Tooltip("Elemento TextMeshPro para mostrar la cantidad de Fe. Asignar desde el Inspector.")]
     public TextMeshProUGUI FeUI;
+    // Considera una forma más genérica de actualizar la UI si tienes muchos recursos.
+    // Ejemplo: Un diccionario de string (nombreRecurso) a TextMeshProUGUI.
 
-    // Transform for visual pillars related to Faith (e.g., in MonolitoBehaviour)
-    [SerializeField] private Transform FaithHolder;
+    [Tooltip("Transform que contiene los GameObjects de los pilares de Fe (usado para animaciones).")]
+    [SerializeField] private Transform FaithHolder; // Esta referencia parece muy específica de MonolitoBehaviour.
+                                                 // ¿Debería estar aquí o ser pasada/manejada por MonolitoBehaviour directamente?
 
     private void Awake()
     {
-        // Implement Singleton pattern
+        // Implementación del Singleton.
         if (Instance == null)
         {
             Instance = this;
-            // Optional: DontDestroyOnLoad(gameObject); to persist between scenes
+            // DontDestroyOnLoad(gameObject); // Descomentar si el ResourceManager debe persistir entre escenas.
             InicializarRecursos();
         }
         else
         {
-            // Destroy duplicate instances
-            Destroy(gameObject);
+            Debug.LogWarning("Ya existe una instancia de ResourceManager. Destruyendo este duplicado.");
+            Destroy(gameObject); // Destruye este objeto si ya existe una instancia.
         }
     }
 
-    // Initializes resources from the list of RecurSO ScriptableObjects
+    // Inicializa los recursos basándose en la lista 'recursosIniciales'.
     private void InicializarRecursos()
     {
-        recursos.Clear(); // Ensure the dictionary is empty before initializing
+        recursos.Clear(); // Limpia el diccionario por si se llama múltiples veces (aunque Awake lo previene).
 
-        if (recursosIniciales == null)
+        if (recursosIniciales == null || recursosIniciales.Count == 0)
         {
-            Debug.LogWarning("ResourceManager: The initial resources list is null. No resources will be initialized.");
+            Debug.LogWarning("ResourceManager: La lista 'recursosIniciales' está vacía o es nula. No se inicializarán recursos.");
             return;
         }
 
         foreach (var recursoSO in recursosIniciales)
         {
-            // Validate the RecurSO before attempting to use it
-            if (ValidarRecurSO(recursoSO))
+            if (ValidarRecurSO(recursoSO)) // Valida la configuración del ScriptableObject.
             {
                 if (!recursos.ContainsKey(recursoSO.Nombre))
                 {
-                    // Create a new RecursoInstancia and add it to the dictionary
+                    // Crea una nueva instancia del recurso y la añade al diccionario.
                     recursos[recursoSO.Nombre] = new RecursoInstancia
                     {
                         data = recursoSO,
-                        actual = recursoSO.ValorBase // Initialize with base value
+                        actual = recursoSO.ValorBase // Inicializa con el valor base.
                     };
-                    //Debug.Log($"ResourceManager: Resource initialized: {recursoSO.Nombre}, Amount: {recursoSO.ValorBase}, Max: {recursoSO.Maximo}");
+                    // Actualiza la UI para este recurso recién inicializado.
+                    ActualizarRecursoUI(recursoSO.Nombre);
+                    // Debug.Log($"Recurso inicializado: {recursoSO.Nombre}, Cantidad: {recursoSO.ValorBase}, Max: {recursoSO.Maximo}");
                 }
                 else
                 {
-                    Debug.LogWarning($"ResourceManager: Resource '{recursoSO.Nombre}' has already been initialized. Duplication will be ignored.");
+                    Debug.LogWarning($"ResourceManager: El recurso '{recursoSO.Nombre}' ya ha sido inicializado. Se ignorará la duplicación.");
                 }
             }
         }
     }
 
-    // Method to validate basic configuration of a RecurSO
+    // Valida la configuración básica de un ScriptableObject de recurso (RecurSO).
     private bool ValidarRecurSO(RecurSO recurso)
     {
         if (recurso == null)
         {
-            Debug.LogError("ResourceManager: Attempted to use a null RecurSO. Please assign a valid ScriptableObject in the Inspector.");
+            Debug.LogError("ResourceManager: Se intentó usar un RecurSO nulo. Asigna un ScriptableObject válido en el Inspector.");
             return false;
         }
         if (string.IsNullOrEmpty(recurso.Nombre))
         {
-            Debug.LogError($"ResourceManager: RecurSO '{recurso.name}' has a null or empty name. Please assign a valid name to the ScriptableObject!");
+            Debug.LogError($"ResourceManager: El RecurSO '{recurso.name}' (nombre de asset) tiene un campo 'Nombre' vacío o nulo. ¡Asigna un nombre válido!");
             return false;
         }
-        // Check if Maximo is zero or less, which would prevent adding resources
-        // The 'Faith' exception is kept here as per previous discussion, adjust if needed.
-        if (recurso.Maximo <= 0 && recurso.Nombre != "Faith")
+        // La excepción para 'Faith' con Maximo <= 0 podría ser un indicativo de que
+        // 'Faith' se maneja de forma diferente o no debería tener un máximo aquí.
+        // Si Faith no tiene máximo, su propiedad 'Maximo' en el SO debería reflejarlo (ej. float.MaxValue).
+        if (recurso.Maximo <= 0 && recurso.Nombre != "Faith") // Ajustar esta lógica si es necesario.
         {
-            Debug.LogWarning($"ResourceManager: RecurSO '{recurso.Nombre}' has a Maximo value of 0 or less ({recurso.Maximo}). This will prevent resources from being added and might cause unexpected behavior. Please set a positive Maximo value if this resource should be storable.");
-            // You might decide if this should be a fatal error or just a warning based on game design.
+            Debug.LogWarning($"ResourceManager: RecurSO '{recurso.Nombre}' tiene Maximo <= 0 ({recurso.Maximo}). Esto puede impedir añadir recursos. Considera un Maximo positivo.");
         }
         return true;
     }
 
-    // Resets all resources to their initial maximum or base value
+    // Resetea todos los recursos a su valor máximo o base (según diseño).
     public void ResetearRecursos()
     {
-        foreach (var recursoSO in recursosIniciales)
+        foreach (var kvp in recursos) // Itera sobre el diccionario de instancias.
         {
-            if (recursos.ContainsKey(recursoSO.Nombre))
+            RecursoInstancia instancia = kvp.Value;
+            if (instancia.data != null)
             {
-                recursos[recursoSO.Nombre].actual = recursoSO.Maximo; // Reset to Maximo
-                // Or: recursos[recursoSO.Nombre].actual = recursoSO.ValorBase; // Reset to BaseValue
+                // Decide si resetear al máximo o al valor base.
+                // instancia.actual = instancia.Maximo;
+                instancia.actual = instancia.BaseValue; // Ejemplo: resetear al valor base.
+                ActualizarRecursoUI(kvp.Key); // Actualiza la UI para cada recurso reseteado.
             }
         }
-        // Update all relevant UI elements after resetting
-        ActualizarRecursoUI("Fe"); // Example for Fe, extend for others
+        Debug.Log("Todos los recursos han sido reseteados.");
     }
 
-    // Adds a specified quantity to a resource
+    // Añade una cantidad a un recurso específico.
     public void Añadir(string nombre, float cantidad)
     {
+        if (cantidad < 0) {
+             Debug.LogWarning($"Intentando añadir cantidad negativa ({cantidad}) al recurso '{nombre}'. Se usará Gastar() en su lugar.");
+             Gastar(nombre, -cantidad); // Trata cantidad negativa como gasto.
+             return;
+        }
+
         if (recursos.TryGetValue(nombre, out var instancia))
         {
             instancia.Añadir(cantidad);
-            ActualizarRecursoUI(nombre); // Update UI for this resource
+            ActualizarRecursoUI(nombre); // Actualiza la UI del recurso modificado.
         }
         else
         {
-            Debug.LogError($"ResourceManager: Resource '{nombre}' not found. Cannot add {cantidad}.");
+            Debug.LogError($"ResourceManager: Recurso '{nombre}' no encontrado. No se pudo añadir {cantidad}.");
         }
     }
 
-    // Spends a specified quantity from a resource
-    public void Gastar(string nombre, float cantidad)
+    // Gasta una cantidad de un recurso específico.
+    // Devuelve true si se pudo gastar la cantidad, false en caso contrario.
+    public bool Gastar(string nombre, float cantidad) // Cambiado a bool
     {
+        if (cantidad < 0) {
+             Debug.LogWarning($"Intentando gastar cantidad negativa ({cantidad}) del recurso '{nombre}'. Se usará Añadir() en su lugar.");
+             Añadir(nombre, -cantidad); // Trata cantidad negativa como adición.
+             return true; // Asumiendo que la adición siempre es "exitosa" en este contexto.
+        }
+
         if (recursos.TryGetValue(nombre, out var instancia))
         {
-            // The Gastar method in RecursoInstancia already handles the check for sufficient quantity
-            instancia.Gastar(cantidad);
-            ActualizarRecursoUI(nombre); // Update UI for this resource
-
-            // Specific visual logic for "Fe" related to pillars
-            if (nombre == "Fe")
-            {
-                if (FaithHolder != null)
-                {
-                    // Calculate how many pillars to affect based on the quantity of Fe spent
-                    int pillarsToAffect = Mathf.FloorToInt(cantidad) * 3; 
-
-                    for (int i = 0; i < pillarsToAffect && i < FaithHolder.childCount; i++)
-                    {
-                        PilarBehaviour tempPilar = FaithHolder.GetChild(i).GetComponent<PilarBehaviour>();
-                        if (tempPilar != null)
-                        {
-                            tempPilar.Bajar = true; // Set pillar to go down (assuming PilarBehaviour has this property)
-                        }
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("ResourceManager: FaithHolder is not assigned for pillar animation. Assign it in the Inspector.");
-                }
+            float cantidadPrevia = instancia.actual;
+            bool pudoGastarTodo = instancia.Gastar(cantidad); // RecursoInstancia.Gastar ahora también podría devolver bool.
+                                                     // O simplemente verificar aquí:
+            if (cantidadPrevia < cantidad && instancia.actual == 0) {
+                // No había suficiente, se gastó todo lo que había.
+                pudoGastarTodo = false;
+            } else if (cantidadPrevia >= cantidad) {
+                pudoGastarTodo = true;
             }
+
+
+            ActualizarRecursoUI(nombre);
+
+            // Lógica específica para 'Fe' y pilares.
+            // Considera si esta lógica tan específica debería estar aquí o ser manejada por
+            // un sistema que observe los cambios en 'Fe'.
+            if (nombre == "Fe" && pudoGastarTodo) // Solo animar si el gasto fue exitoso (o como se desee).
+            {
+                GestionarPilaresDeFe(cantidad);
+            }
+            return pudoGastarTodo;
         }
         else
         {
-            Debug.LogError($"ResourceManager: Resource '{nombre}' not found. Cannot spend {cantidad}.");
+            Debug.LogError($"ResourceManager: Recurso '{nombre}' no encontrado. No se pudo gastar {cantidad}.");
+            return false;
         }
     }
 
-    // Gets the current quantity of a resource
+    // Método privado para la lógica de los pilares de Fe.
+    // Dentro de ResourceManager.cs
+
+    // ... otros métodos y variables ...
+
+    // Método privado para la lógica de los pilares de Fe.
+    // Se llama cuando se gasta Fe.
+    private void GestionarPilaresDeFe(float cantidadFeGastada)
+    {
+        if (FaithHolder == null)
+        {
+            // Es una advertencia leve porque el juego puede funcionar sin esto, pero el efecto visual no ocurrirá.
+            // Debug.LogWarning("ResourceManager: FaithHolder no asignado. No se animarán pilares de Fe.");
+            return;
+        }
+
+        if (cantidadFeGastada <= 0)
+        {
+            // No hacer nada si no se gastó Fe o se gastó una cantidad no positiva.
+            return;
+        }
+
+        // Calcular cuántos pilares afectar: 3 pilares por cada unidad de Fe gastada.
+        // Usamos Mathf.FloorToInt para asegurar que solo unidades completas de Fe contribuyan.
+        // Ejemplo: si se gastan 10.5 de Fe, se afectan 10 * 3 = 30 pilares.
+        // Si se gastan 0.5 de Fe, se afectan 0 * 3 = 0 pilares.
+        int pilaresAAfectar = Mathf.FloorToInt(cantidadFeGastada) * 3;
+
+        if (pilaresAAfectar == 0 && cantidadFeGastada > 0)
+        {
+            // Consideración: ¿Qué pasa si se gasta menos de 1 Fe (ej. 0.5)?
+            // Actualmente, no se afectaría ningún pilar. Si quieres que incluso una fracción
+            // afecte al menos a un grupo de 3 pilares (o 1 pilar), la lógica necesitaría ajustarse.
+            // Por ahora, seguimos la regla de "3 por cada unidad entera de Fe".
+            // Debug.Log($"Se gastó {cantidadFeGastada} de Fe, pero es menos de 1 unidad entera. No se afectarán pilares.");
+        }
+
+
+        // Ahora, iterar y afectar los pilares.
+        // Es importante decidir cómo se seleccionan los pilares a afectar.
+        // Opción 1: Afectar los últimos 'N' hijos activos del FaithHolder (de arriba hacia abajo).
+        // Opción 2: Tener una lista de pilares "llenos" y "vaciar" los primeros 'N'.
+        // La Opción 1 es más simple si los pilares se destruyen o desactivan al bajar.
+
+        int pilaresRealmenteAfectados = 0;
+        for (int i = 0; i < pilaresAAfectar; i++)
+        {
+            // Para afectar los pilares "visualmente más altos" o "más recientemente añadidos" primero,
+            // si los nuevos pilares se añaden al final de la jerarquía de FaithHolder.
+            // Iteramos desde el final de los hijos hacia el principio.
+            int childIndex = FaithHolder.childCount - 1 - pilaresRealmenteAfectados;
+
+            if (childIndex < 0)
+            {
+                // No hay más pilares hijos que afectar, incluso si 'pilaresAAfectar' era mayor.
+                // Debug.LogWarning("Se intentó afectar más pilares de los disponibles en FaithHolder.");
+                break;
+            }
+
+            Transform pilarTransform = FaithHolder.GetChild(childIndex);
+            if (pilarTransform != null)
+            {
+                PilarBehaviour pilarBehaviour = pilarTransform.GetComponent<PilarBehaviour>();
+                if (pilarBehaviour != null && !pilarBehaviour.Bajar) // Solo afecta pilares que no estén ya bajando.
+                {
+                    pilarBehaviour.EstablecerEstadoBajada(true); // Usa el método más explícito.
+                    pilaresRealmenteAfectados++;
+                }
+                // Si el pilar no tiene PilarBehaviour o ya está bajando, se salta y se intenta el siguiente
+                // (el contador 'i' avanza, pero 'pilaresRealmenteAfectados' no, así que se buscará más atrás).
+                // Para evitar un bucle si todos los restantes ya están bajando o no tienen script,
+                // es mejor que 'pilaresRealmenteAfectados' siempre incremente o que el bucle tenga otra condición.
+                // Con la lógica actual, si se encuentran pilares no válidos, simplemente no se cuentan
+                // y se intentará afectar 'pilaresAAfectar' válidos.
+            }
+        }
+
+        // if (pilaresRealmenteAfectados > 0)
+        // {
+        //     Debug.Log($"{pilaresRealmenteAfectados} pilares de Fe han comenzado a bajar debido al gasto de {cantidadFeGastada} de Fe.");
+        // }
+    }
+
+    // Obtiene la cantidad actual de un recurso.
     public float GetCantidad(string nombre)
     {
         return recursos.TryGetValue(nombre, out var instancia) ? instancia.actual : 0f;
     }
 
-    // Gets the maximum capacity of a resource
+    // Obtiene la capacidad máxima de un recurso.
     public float GetMaximo(string nombre)
     {
         return recursos.TryGetValue(nombre, out var instancia) ? instancia.Maximo : 0f;
     }
 
-    // Gets the base value of a resource (from its RecurSO data)
+    // Obtiene el valor base de un recurso.
     public float GetValorBase(string nombre)
     {
         return recursos.TryGetValue(nombre, out var instancia) ? instancia.BaseValue : 0f;
     }
 
-    // Helper method to update UI for specific resources
+    // Comprueba si hay suficiente cantidad de un recurso.
+    public bool TieneSuficiente(string nombre, float cantidadNecesaria)
+    {
+        return GetCantidad(nombre) >= cantidadNecesaria;
+    }
+
+
+    // Método para actualizar la UI de un recurso específico.
+    // Sugerencia: Abstraer esto a un UIManager o usar un sistema de eventos.
     private void ActualizarRecursoUI(string nombreRecurso)
     {
-        // This is a simplified example. In a real game, you'd have a more robust UI manager
-        // that maps resource names to specific TextMeshProUGUI elements.
+        if (string.IsNullOrEmpty(nombreRecurso)) return;
+
         if (nombreRecurso == "Fe" && FeUI != null)
         {
+            // Formatea los números a enteros si no necesitas decimales para la Fe.
             FeUI.text = $"Fe: {GetCantidad("Fe").ToString("F0")} / {GetMaximo("Fe").ToString("F0")}";
         }
-        // Add more else if blocks here for other resources if they have dedicated UI elements
-        // For example:
-        // else if (nombreRecurso == "Fragmento" && FragmentoUI != null)
+        // Ejemplo para otros recursos:
+        // else if (nombreRecurso == "Madera" && MaderaUI != null)
         // {
-        //     FragmentoUI.text = $"Fragmentos: {GetCantidad("Fragmento").ToString("F0")}";
+        //     MaderaUI.text = $"Madera: {GetCantidad("Madera").ToString("F0")}";
         // }
+
+        // Alternativa más genérica (requiere que GameManager o un UIManager tenga referencias a los textos):
+        // GameManager.Instance?.ActualizarTextoRecurso(nombreRecurso, GetCantidad(nombreRecurso), GetMaximo(nombreRecurso));
     }
 }
