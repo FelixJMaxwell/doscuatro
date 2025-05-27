@@ -92,9 +92,9 @@ public class Building_Personajes : BaseBuilding
     }
 
     [Header("Referencias de la UI (Asignar en Inspector)")]
-    [SerializeField] private Button generarPersonajeButton;
-    [SerializeField] private Toggle generarLegendarioToggle;
-    [SerializeField] private Button mejorarEdificioButton; // Botón para mejorar el edificio.
+    public Button generarPersonajeButton;
+    public Toggle generarLegendarioToggle;
+    public Button mejorarEdificioButton; // Botón para mejorar el edificio.
 
     // Ahora estas propiedades leen del ConfigSOActual
     private float TiempoEntreGeneracionesActual => ConfigSOActual?.tiempoEntreGeneraciones ?? float.MaxValue;
@@ -106,7 +106,6 @@ public class Building_Personajes : BaseBuilding
     protected override void Start()
     {
         base.Start();
-        buildingName = "Santuario de Aparición Avanzado";
 
         // Validaciones de configuración esencial.
         if (puntoDeGeneracion == null) Debug.LogError($"Edificio '{buildingName}': PuntoDeGeneracion no asignado.");

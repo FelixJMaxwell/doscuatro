@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic; // Necesario para List<GameObject>
-using TMPro; // Necesario para TextMeshProUGUI
+using TMPro;
+using System.Collections; // Necesario para TextMeshProUGUI
 
 public class MonolitoBehaviour : MonoBehaviour // Considerar si debería heredar de BaseBuilding si comparte lógica.
 {
@@ -77,6 +78,22 @@ public class MonolitoBehaviour : MonoBehaviour // Considerar si debería heredar
     [Tooltip("Radio para el Gizmo de depuración que se dibuja en el editor.")]
     public float GizmoRadio = 5f;
 
+
+    [Space(10)]
+    [Header("Control de Partículas del Monolito")]
+    [Tooltip("Referencia al script MonolitoParticles que controla los efectos visuales de partículas.")]
+    public MonolitoParticles controladorDeParticulas;
+    [Tooltip("Transform al que las partículas convergerán durante la extracción de fragmentos. Puede ser el propio Monolito.")]
+    public Transform puntoConvergenciaParticulasMonolito;
+
+    [Header("Instanciación de Objeto Post-Convergencia")]
+    [Tooltip("Prefab del GameObject que se instanciará después de la convergencia de partículas.")]
+    public GameObject objetoAInstanciarPrefab;
+    [Tooltip("Transform que define la posición y rotación para instanciar el 'objetoAInstanciarPrefab'. Si es nulo, se usará la posición del Monolito.")]
+    public Transform puntoDeInstanciacionObjeto;
+
+    private bool _estaExtrayendoFragmento = false; // Para evitar múltiples extracciones simultáneas
+
     private void Awake() // Awake se llama antes que Start. Bueno para inicializar referencias.
     {
         gameManager = FindFirstObjectByType<GameManager>(); // Más robusto que GameObject.Find.
@@ -105,6 +122,11 @@ public class MonolitoBehaviour : MonoBehaviour // Considerar si debería heredar
         // }
 
         ActualizarCostoFragmentoUI(); // Calcula y muestra el costo inicial del fragmento.
+
+        if (objetoAInstanciarPrefab == null)
+        {
+            Debug.LogWarning($"MonolitoBehaviour ({gameObject.name}): 'objetoAInstanciarPrefab' no asignado. No se instanciará nada durante la extracción.");
+        }
     }
 
     private void Update()
@@ -117,6 +139,97 @@ public class MonolitoBehaviour : MonoBehaviour // Considerar si debería heredar
         //     Ticker = 0;
         //     // Lógica futura: generar Fe pasivamente, activar efectos en estructuras conectadas, etc.
         // }
+    }
+
+    // Este método será llamado por un botón de la UI o una acción del jugador.
+    public void IniciarProcesoExtraccionFragmento()
+    {
+        if (_estaExtrayendoFragmento)
+        {
+            Debug.Log("Monolito: Ya se está extrayendo un fragmento. Por favor, espera.");
+            return;
+        }
+
+        if (ResourceManager.Instance == null || FeDataSO == null)
+        {
+            Debug.LogError("Monolito: ResourceManager o FeDataSO no asignados. No se puede verificar costo.");
+            return;
+        }
+
+        if (ResourceManager.Instance.TieneSuficiente(FeDataSO.Nombre, CostoFragmentoActual))
+        {
+            StartCoroutine(ProcesoExtraerFragmentoCoroutine());
+        }
+        else
+        {
+            Debug.Log($"Monolito: Fe insuficiente para extraer fragmento. Necesitas: {CostoFragmentoActual.ToString("F0")}, Tienes: {ResourceManager.Instance.GetCantidad(FeDataSO.Nombre).ToString("F0")}");
+        }
+    }
+
+    private IEnumerator ProcesoExtraerFragmentoCoroutine()
+    {
+        _estaExtrayendoFragmento = true;
+        Debug.Log("Monolito: Iniciando proceso de extracción de fragmento...");
+
+        // 1. GASTAR LA FE NECESARIA PRIMERO
+        ResourceManager.Instance.Gastar(FeDataSO.Nombre, CostoFragmentoActual);
+        Debug.Log($"Monolito: {CostoFragmentoActual.ToString("F0")} de Fe gastada para extracción del fragmento No. {contadorFragmentosGenerados + 1}.");
+
+        // 2. INICIAR CONVERGENCIA DE PARTÍCULAS Y ESPERAR
+        if (controladorDeParticulas != null && puntoConvergenciaParticulasMonolito != null)
+        {
+            Debug.Log("Monolito: Iniciando convergencia de partículas...");
+            Coroutine convergeCoroutine = controladorDeParticulas.CongelarYConvergerParticulas(puntoConvergenciaParticulasMonolito);
+            if (convergeCoroutine != null) yield return convergeCoroutine;
+            Debug.Log("Monolito: Convergencia de partículas completada.");
+        }
+        else
+        {
+            Debug.LogWarning("Monolito: ControladorDeParticulas o PuntoDeConvergencia no asignado. Saltando animación de convergencia.");
+            // yield return new WaitForSeconds(1.5f); // Considerar una espera simbólica si es importante para el timing.
+        }
+
+        // --- NUEVO PASO: INSTANCIAR OBJETO DADO ---
+        if (objetoAInstanciarPrefab != null)
+        {
+            Transform spawnPoint = (puntoDeInstanciacionObjeto != null) ? puntoDeInstanciacionObjeto : this.transform; // Usar Monolito si no se especifica otro punto
+            Instantiate(objetoAInstanciarPrefab, spawnPoint.position, spawnPoint.rotation);
+            Debug.Log($"Monolito: Objeto '{objetoAInstanciarPrefab.name}' instanciado en {spawnPoint.position}.");
+            // Aquí podrías querer hacer algo con el objeto instanciado, como guardarlo o configurarlo.
+        }
+        else
+        {
+            Debug.LogWarning("Monolito: 'objetoAInstanciarPrefab' no está asignado. No se instanció ningún objeto extra.");
+        }
+        // --- FIN NUEVO PASO ---
+
+        // 3. SUMAR 1 FRAGMENTO AL RESOURCE MANAGER (AHORA PASO 4)
+        if (ResourceManager.Instance != null && FragmentoSO != null)
+        {
+            ResourceManager.Instance.Añadir(FragmentoSO.Nombre, 1);
+            contadorFragmentosGenerados++;
+            Debug.Log($"Monolito: ¡Fragmento No. {contadorFragmentosGenerados} obtenido! Total de '{FragmentoSO.Nombre}': {ResourceManager.Instance.GetCantidad(FragmentoSO.Nombre)}");
+        }
+        else
+        {
+            Debug.LogError("Monolito: ResourceManager o FragmentoSO no asignados. No se pudo añadir el fragmento.");
+        }
+
+        // 4. ACTUALIZAR EL COSTO DEL FRAGMENTO (AHORA PASO 5)
+        ActualizarCostoFragmentoUI();
+
+        // 5. LLAMAR AL MÉTODO QUE RETORNA LAS PARTÍCULAS A SU POSICIÓN ORIGINAL Y ESPERAR (AHORA PASO 6)
+        if (controladorDeParticulas != null)
+        {
+            Debug.Log("Monolito: Iniciando retorno de partículas a su origen...");
+            Coroutine returnCoroutine = controladorDeParticulas.DevolverParticulasASuOrigen();
+            if (returnCoroutine != null) yield return returnCoroutine;
+            Debug.Log("Monolito: Retorno de partículas completado.");
+        }
+        // else { yield return new WaitForSeconds(0.5f); } // Considerar espera simbólica
+
+        Debug.Log("Monolito: Proceso de extracción de fragmento finalizado.");
+        _estaExtrayendoFragmento = false;
     }
 
     // Genera un pilar visual de Fe en una posición aleatoria alrededor del Monolito.

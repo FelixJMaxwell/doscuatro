@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 4011749199132002821}
   - component: {fileID: 7972505823231548141}
   - component: {fileID: 4699631796651043601}
-  - component: {fileID: -2766425371279627031}
   m_Layer: 0
   m_Name: Pulsar
   m_TagString: Untagged
@@ -164,25 +163,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-2766425371279627031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6918314282252467540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b85b07a6d51835f44977be9edb61fe4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Objetivo: {fileID: 0}
-  VelocidadMovimiento: 2
-  Particula: {fileID: 3412609749234682251, guid: 0e08cfef4302c164da4c440cabe52f35, type: 3}
-  ParticulaPos: {fileID: 0}
-  gameManager: {fileID: 0}

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8545258540102292442}
   - component: {fileID: 6155624764893297584}
   m_Layer: 0
-  m_Name: EdificioNPC
+  m_Name: CrisolDeAlmas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2916061038913093671}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.58, y: 0.25, z: -3.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -124,9 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d49180f5a1349f439c9a756769b8811, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Aldeanos
+  buildingName: Crisol de Almas
   buildingIcon: {fileID: 0}
-  constructionCost: 100
+  constructionCost: 1
   TipoEstructura: 0
   producesResources: 0
   RecursoProducir: {fileID: 0}
@@ -137,7 +137,9 @@ MonoBehaviour:
   fragmentoDataSO: {fileID: 11400000, guid: a0a5ce2216a82fe458043ae75dc3cd69, type: 2}
   tipoPersonajeLegendario: {fileID: 11400000, guid: 18b6fcab67217734ebd5fb13c6033044, type: 2}
   objetosProfesionParaGeneracion: []
-  configuracionesDeNivel: []
+  progresionDeNiveles:
+  - {fileID: 11400000, guid: 4b323959e8d0bab4eab9f3a8be6dd6c5, type: 2}
+  - {fileID: 11400000, guid: 92d21d76009d7154cb66a9936dff67ef, type: 2}
   generarPersonajeButton: {fileID: 0}
   generarLegendarioToggle: {fileID: 0}
   mejorarEdificioButton: {fileID: 0}

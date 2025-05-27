@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using TMPro; // Necesario para TextMeshProUGUI
 using UnityEngine;
-using UnityEngine.EventSystems; // Necesario para EventSystem.current
+using UnityEngine.EventSystems;
+using UnityEngine.UI; // Necesario para EventSystem.current
 // using UnityEngine.UI; // No parece usarse directamente (Button es referenciado por GameObject y luego se accede al componente)
 
 public class GameManager : MonoBehaviour
@@ -16,8 +17,6 @@ public class GameManager : MonoBehaviour
 
     [Space(10)]
     [Header("Construcción y Selección")]
-    [Tooltip("Velocidad de movimiento para la estructura que se está colocando (si aplica).")]
-    public float VelocidadMovimientoDado; // Nombre 'Dado' parece específico, ¿quizás 'VelocidadColocacion'?
     [Tooltip("Referencia al GameObject de la estructura que se está colocando actualmente.")]
     public GameObject EstructuraConstruyendo; // El objeto que el jugador está moviendo para colocar.
     [Tooltip("Referencia al GameObject de la estructura actualmente seleccionada por el jugador.")]
@@ -43,6 +42,11 @@ public class GameManager : MonoBehaviour
     public GameObject MonolitoPanel;
     [Tooltip("Panel UI para el menú de construcción de arquitecturas.")]
     public GameObject ArquitecturaPanel;
+
+    public GameObject CrisolDeAlmasGO;
+    public Button GenerarAldeanoBtn;
+    public Toggle ToggleLegendario;
+    public Button ActualizarCrisolBtn;
 
     private void Awake()
     {
@@ -286,6 +290,12 @@ public class GameManager : MonoBehaviour
         //     EstructurAConstruir = edificioAComprar.prefab; // Asigna el prefab del SO.
         //     IniciarColocacionEstructura(); // Reutiliza la lógica de ComprarDado.
         // }
+
+        GameObject tempEdificioAConstruir = GameObject.Instantiate(CrisolDeAlmasGO, new Vector3(-5,0,0), Quaternion.identity);
+        tempEdificioAConstruir.GetComponent<Building_Personajes>().ActivateBuilding();
+        tempEdificioAConstruir.GetComponent<Building_Personajes>().generarPersonajeButton = GenerarAldeanoBtn;
+        tempEdificioAConstruir.GetComponent<Building_Personajes>().generarLegendarioToggle = ToggleLegendario;
+        tempEdificioAConstruir.GetComponent<Building_Personajes>().mejorarEdificioButton = ActualizarCrisolBtn;
     }
 
     // Sugerencia: Un método para finalizar la construcción.
