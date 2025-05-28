@@ -94,6 +94,60 @@ public class MonolitoBehaviour : MonoBehaviour // Considerar si debería heredar
 
     private bool _estaExtrayendoFragmento = false; // Para evitar múltiples extracciones simultáneas
 
+    [Header("Generación de Fe por Rezo")]
+    [Tooltip("Progreso actual acumulado por los NPCs rezando (0.0 a 1.0 representa 0% a 100% para la siguiente unidad de Fe).")]
+    [SerializeField] // Para verlo en Inspector (debug)
+    private float _progresoFePorRezoActual = 0f;
+    public float ProgresoFePorRezoActual => _progresoFePorRezoActual; // Propiedad para leerlo si es necesario desde fuera
+
+    [Tooltip("Cuántas unidades de Fe se añaden al ResourceManager cuando el progreso llega al 100%.")]
+    public float unidadesFePorCicloCompletoDeRezo = 1.0f;
+
+    /// <summary>
+    /// Llamado por un PersonajeBehaviour cuando está rezando para contribuir al progreso de Fe del Monolito.
+    /// </summary>
+    /// <param name="cantidadProgreso">Cuánto progreso añade este "pulso" de rezo (ej. 0.1 para 10%).</param>
+    public void RecibirContribucionDeRezo(float cantidadProgreso)
+    {
+        if (cantidadProgreso <= 0) return;
+
+        _progresoFePorRezoActual += cantidadProgreso;
+        // Debug.Log($"Monolito: Recibida contribución de rezo: +{cantidadProgreso*100}%. Progreso actual: {_progresoFePorRezoActual*100}%");
+
+        while (_progresoFePorRezoActual >= 1.0f)
+        {
+            _progresoFePorRezoActual -= 1.0f;
+
+            // CORRECCIÓN AQUÍ: Llamar al método que efectivamente añade Fe y genera pilares.
+            AñadirFeAlSistema(unidadesFePorCicloCompletoDeRezo); // <--- ESTE ES EL MÉTODO CORRECTO
+
+            Debug.Log($"Monolito: ¡UNIDAD DE FE GENERADA POR REZO! Se añadieron {unidadesFePorCicloCompletoDeRezo} de Fe. Progreso restante para la siguiente: {_progresoFePorRezoActual * 100:F1}%.");
+        }
+    }
+
+    // Este es el método que definimos para centralizar la adición de Fe y la generación de pilares:
+    public void AñadirFeAlSistema(float cantidad)
+    {
+        if (FeDataSO == null || ResourceManager.Instance == null || cantidad <= 0)
+        {
+            return;
+        }
+        ResourceManager.Instance.Añadir(FeDataSO.Nombre, cantidad);
+        
+        int pilaresAGenerar = Mathf.FloorToInt(cantidad) * 3; // 3 pilares por unidad de Fe
+        for(int i=0; i < pilaresAGenerar; i++)
+        {
+            GenerarPilar();
+        }
+    }
+
+    // Y este es el método para la acción específica del jugador, que también usa AñadirFeAlSistema
+    public void AccionPrincipalDelJugadorEnMonolito()
+    {
+        AñadirFeAlSistema(1.0f); // Ejemplo: el jugador genera 1 de Fe
+        Debug.Log("Monolito: Acción del jugador concedió 1 de Fe.");
+    }
+
     private void Awake() // Awake se llama antes que Start. Bueno para inicializar referencias.
     {
         gameManager = FindFirstObjectByType<GameManager>(); // Más robusto que GameObject.Find.

@@ -1,5 +1,18 @@
 using UnityEngine;
-using System.Collections.Generic; // Necesario para List y Dictionary
+using System.Collections.Generic;
+using System; // Necesario para List y Dictionary
+
+// Estados posibles para el NPC
+public enum EstadoNPC
+{
+    Ocioso,
+    MoviendoseAlTrabajo,
+    Trabajando,
+    MoviendoseACasa,
+    EnCasa,
+    MoviendoseAlMonolito, // NUEVO ESTADO
+    RezandoAlMonolito    // NUEVO ESTADO
+}
 
 // Representa el comportamiento y estado de un NPC (Personaje No Jugador) en el juego.
 public class PersonajeBehaviour : MonoBehaviour
@@ -73,14 +86,94 @@ public class PersonajeBehaviour : MonoBehaviour
     // Evento que se puede disparar cuando el personaje muere. Otros sistemas pueden suscribirse.
     public static event System.Action<PersonajeBehaviour> OnPersonajeMuerto;
 
+    [Header("Identidad del Personaje")]
+    // Podríamos añadir una estadística de "Fe Individual" para el NPC
+    [SerializeField][Range(0, 100)] private int _feIndividual = 50;
+    public int FeIndividual => _feIndividual;
+
+
+    [Header("Ocupación del Personaje")]
+    [SerializeField] private string _trabajoDefinido;
+    public string TrabajoDefinido => _trabajoDefinido;
+
+    private Dictionary<PersonajeBehaviour, int> _relaciones = new Dictionary<PersonajeBehaviour, int>();
+
+
+    // --- Máquina de Estados (FSM) ---
+    [Header("Estado Actual (FSM)")]
+    [SerializeField]
+    private EstadoNPC _estadoActualNPC = EstadoNPC.Ocioso;
+    public EstadoNPC EstadoActualNPC => _estadoActualNPC;
+
+    private BaseBuilding _edificioDeTrabajoActual = null;
+    private MonolitoBehaviour _monolitoObjetivoRezo = null; // NUEVA VARIABLE para el objetivo del rezo
+    private float _timerEstadoActual = 0f;
+    private float _duracionRezo = 10f; // Ejemplo: cuánto tiempo reza el NPC
+
+    // --- Eventos ---
+    public static event Action<PersonajeBehaviour> OnPersonajeMuertoGlobal;
+    public event Action<PersonajeBehaviour> OnEstePersonajeMuerto;
+    public event Action<int> OnFelicidadCambiada;
+    public event Action<float> OnSaludCambiada;
+    public event Action<int> OnFeIndividualCambiada; // NUEVO EVENTO
+    public event Action<EstadoNPC, EstadoNPC> OnEstadoNPCCambiado;
+
+    [Header("Configuración de Rezo del NPC")]
+    [Tooltip("Cuánto progreso (0.0 a 1.0) contribuye este NPC al Monolito por cada pulso de rezo.")]
+    public float progresoPorPulsoDeRezo = 0.05f; // Ej: 5% por pulso. (20 pulsos para 1 unidad de Fe)
+    [Tooltip("Intervalo en segundos entre cada pulso de contribución de rezo.")]
+    public float intervaloPulsoRezo = 1.0f; // Contribuye cada segundo mientras reza.
+
+    private float _timerSiguientePulsoRezo = 0f;
 
     private void Start()
     {
-        // La inicialización principal ahora se hace en Inicializar(NPCDataSO).
-        // 'felicidad' se establece aquí como un valor por defecto si no viniera de NPCDataSO.
-        // Si NPCDataSO puede definir felicidad inicial, mover esta línea a Inicializar.
-        // Si no, aquí está bien como valor por defecto post-instanciación.
-        _felicidad = 75; // Ejemplo de felicidad inicial por defecto.
+        CambiarEstado(EstadoNPC.Ocioso);
+    }
+
+    private void Update()
+    {
+        ActualizarFSM();
+    }
+
+    private void ActualizarFSM()
+    {
+        _timerEstadoActual += Time.deltaTime;
+
+        switch (_estadoActualNPC)
+        {
+            case EstadoNPC.Ocioso:
+                ActualizarEstadoOcioso();
+                break;
+            case EstadoNPC.MoviendoseAlTrabajo:
+                ActualizarEstadoMoviendoseAlTrabajo();
+                break;
+            case EstadoNPC.Trabajando:
+                ActualizarEstadoTrabajando();
+                break;
+            case EstadoNPC.MoviendoseACasa:
+                ActualizarEstadoMoviendoseACasa();
+                break;
+            case EstadoNPC.EnCasa:
+                ActualizarEstadoEnCasa();
+                break;
+            case EstadoNPC.MoviendoseAlMonolito: // NUEVO CASE
+                ActualizarEstadoMoviendoseAlMonolito();
+                break;
+            case EstadoNPC.RezandoAlMonolito:    // NUEVO CASE
+                ActualizarEstadoRezandoAlMonolito();
+                break;
+        }
+    }
+
+    private void CambiarEstado(EstadoNPC nuevoEstado)
+    {
+        if (_estadoActualNPC == nuevoEstado) return;
+        EstadoNPC estadoAnterior = _estadoActualNPC;
+        _estadoActualNPC = nuevoEstado;
+        _timerEstadoActual = 0f;
+        OnEstadoNPCCambiado?.Invoke(estadoAnterior, _estadoActualNPC);
+        // Debug.Log($"'{Nombre}' cambió de {estadoAnterior} a {nuevoEstado}");
     }
 
     // Inicializa al personaje con datos de un ScriptableObject.
@@ -94,24 +187,180 @@ public class PersonajeBehaviour : MonoBehaviour
             return;
         }
 
-        // Información general
-        nombre = data.npcNombre; // Asigna el nombre del SO. Podrías añadir un número o hacerlo único si es necesario.
-                                // gameObject.name = nombre; // Opcional: sincronizar nombre del GameObject.
-        edad = data.edad;         // Si quieres variabilidad, data.edad podría ser un rango.
-        genero = data.genero;
-        esLegendario = data.esLegendario;
+        _nombre = data.npcNombre;
+        gameObject.name = "NPC_" + _nombre + "_" + GetInstanceID();
+        _edad = data.edad;
+        _genero = data.genero;
+        _esLegendario = data.esLegendario;
+        _salud = data.saludBase;
+        _ropa = "Ropa Básica de Aldeano";
+        _herramienta = "Ninguna";
+        _felicidad = UnityEngine.Random.Range(40, 61);
+        _feIndividual = UnityEngine.Random.Range(30, 71); // Fe inicial
+        _trabajoDefinido = data.trabajo;
+        _educacion = data.educacion;
 
-        // Estado
-        salud = data.saludBase;
-        ropa = "Ropa Básica de Aldeano"; // Valor inicial por defecto. Podría venir de NPCDataSO.
-        herramienta = "Ninguna";       // Valor inicial por defecto.
-        felicidad = 50; // Valor inicial de felicidad al ser creado, podría venir de NPCDataSO.
-
-        // Ocupación
-        trabajo = data.trabajo;       // Podría ser "Ninguno" o un trabajo base.
-        educacion = data.educacion;   // Podría ser "Básica" o "Ninguna".
+        OnSaludCambiada?.Invoke(_salud);
+        OnFelicidadCambiada?.Invoke(_felicidad);
+        OnFeIndividualCambiada?.Invoke(_feIndividual);
 
         Debug.Log($"Personaje '{nombre}' inicializado. Edad: {edad}, Género: {genero}, Legendario: {esLegendario}, Trabajo: {trabajo}");
+    }
+
+    // --- Lógica de cada Estado ---
+    private void ActualizarEstadoOcioso()
+    {
+        // Podría decidir ir a rezar si su fe es baja o si no hay trabajo
+        // if (_timerEstadoActual > 5f) { // Cada 5 segundos, tomar una decisión
+        //     if (FeIndividual < 40 && GameManager.Instance != null && GameManager.Instance.MonolitoPrincipal != null) {
+        //         OrdenarRezarAlMonolito(GameManager.Instance.MonolitoPrincipal);
+        //     }
+        //     _timerEstadoActual = 0f;
+        // }
+    }
+
+    private void ActualizarEstadoMoviendoseAlTrabajo()
+    {
+        // Debug.Log($"'{Nombre}' llegó conceptualmente a '{_edificioDeTrabajoActual?.buildingName ?? "su trabajo"}'.");
+        CambiarEstado(EstadoNPC.Trabajando);
+    }
+
+    private void ActualizarEstadoTrabajando()
+    {
+        if (_edificioDeTrabajoActual == null)
+        {
+            CambiarEstado(EstadoNPC.Ocioso);
+            return;
+        }
+        // if (_timerEstadoActual > 3.0f) {
+        //     // Debug.Log($"'{Nombre}' completó ciclo de trabajo en '{_edificioDeTrabajoActual.buildingName}'.");
+        //     _timerEstadoActual = 0f;
+        // }
+    }
+    private void ActualizarEstadoMoviendoseACasa()
+    {
+        if (_casaAsignada == null) { CambiarEstado(EstadoNPC.Ocioso); return; }
+        // Debug.Log($"'{Nombre}' llegó conceptualmente a su casa '{_casaAsignada.buildingName}'.");
+        CambiarEstado(EstadoNPC.EnCasa);
+    }
+
+    private void ActualizarEstadoEnCasa()
+    {
+        // if (_timerEstadoActual > 10f) {
+        //     ModificarFelicidad(2);
+        //     _timerEstadoActual = 0f;
+        // }
+    }
+
+    private void ActualizarEstadoMoviendoseAlMonolito() // NUEVO MÉTODO
+    {
+        if (_monolitoObjetivoRezo == null)
+        {
+            Debug.LogWarning($"'{nombre}' intentando moverse al Monolito, pero no hay objetivo. Volviendo a Ocioso.");
+            CambiarEstado(EstadoNPC.Ocioso);
+            return;
+        }
+        // En esta versión básica, el movimiento es instantáneo.
+        // Debug.Log($"'{Nombre}' llegó conceptualmente al Monolito '{_monolitoObjetivoRezo.name}'.");
+        CambiarEstado(EstadoNPC.RezandoAlMonolito);
+        // Futuro: Lógica de movimiento hacia _monolitoObjetivoRezo.transform.position
+    }
+
+    private void ActualizarEstadoRezandoAlMonolito()
+    {
+        if (_monolitoObjetivoRezo == null)
+        {
+            Debug.LogWarning($"'{nombre}' está en estado RezandoAlMonolito pero no hay Monolito objetivo. Volviendo a Ocioso.");
+            CambiarEstado(EstadoNPC.Ocioso);
+            return;
+        }
+
+        // El NPC permanece en este estado durante _duracionRezo
+        // Debug.Log($"'{Nombre}' está rezando al Monolito '{_monolitoObjetivoRezo.name}'... (Tiempo Total: {_timerEstadoActual:F1}/{_duracionRezo:F1})");
+
+        // Lógica de pulso de rezo
+        _timerSiguientePulsoRezo += Time.deltaTime;
+        if (_timerSiguientePulsoRezo >= intervaloPulsoRezo)
+        {
+            _monolitoObjetivoRezo.RecibirContribucionDeRezo(progresoPorPulsoDeRezo);
+            // Debug.Log($"'{Nombre}' envió pulso de rezo (+{progresoPorPulsoDeRezo*100}%) al Monolito.");
+            _timerSiguientePulsoRezo = 0f; // Resetear timer para el siguiente pulso
+        }
+
+        if (_timerEstadoActual >= _duracionRezo)
+        {
+            // El NPC ya no contribuye con Fe Individual directamente, sino al progreso del Monolito.
+            // Podrías darle una pequeña recompensa de felicidad o mantener/aumentar su Fe Individual aquí si aún la tiene.
+            ModificarFelicidad(5); // Ejemplo: Gana algo de felicidad por completar el rezo.
+            // Debug.Log($"'{Nombre}' terminó su sesión de rezo de {_duracionRezo}s.");
+
+            if (casaAsignada != null) CambiarEstado(EstadoNPC.MoviendoseACasa);
+            else CambiarEstado(EstadoNPC.Ocioso);
+        }
+    }
+
+    // --- Métodos para Controlar la FSM desde Fuera ---
+    public void AsignarTrabajo(BaseBuilding puestoDeTrabajo)
+    {
+        // ... (código existente) ...
+        if (puestoDeTrabajo == null) return;
+        // Quitar de trabajo/rezo anterior
+        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable) { ((ITrabajable)_edificioDeTrabajoActual).QuitarTrabajador(this); }
+        _monolitoObjetivoRezo = null; // Dejar de tener el monolito como objetivo si estaba rezando/yendo a rezar
+
+        _edificioDeTrabajoActual = puestoDeTrabajo;
+        _trabajoDefinido = puestoDeTrabajo.buildingName;
+        if (puestoDeTrabajo is ITrabajable it) it.AnadirTrabajador(this);
+        CambiarEstado(EstadoNPC.MoviendoseAlTrabajo);
+    }
+
+    public void QuitarDelTrabajoActual()
+    {
+        // ... (código existente) ...
+        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable it) {
+            it.QuitarTrabajador(this);
+        }
+        _edificioDeTrabajoActual = null;
+        if (_casaAsignada != null) CambiarEstado(EstadoNPC.MoviendoseACasa);
+        else CambiarEstado(EstadoNPC.Ocioso);
+    }
+
+    public void OrdenarRezarAlMonolito(MonolitoBehaviour monolitoARezar) // NUEVO MÉTODO
+    {
+        if (monolitoARezar == null)
+        {
+            Debug.LogWarning($"'{nombre}': Se intentó ordenar rezar a un Monolito nulo.");
+            return;
+        }
+        // Quitar de trabajo anterior si lo tuviera
+        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable it) {
+            it.QuitarTrabajador(this);
+            _edificioDeTrabajoActual = null;
+        }
+
+        _monolitoObjetivoRezo = monolitoARezar;
+        // Debug.Log($"'{Nombre}' ha recibido la orden de ir a rezar al Monolito '{_monolitoObjetivoRezo.name}'.");
+        CambiarEstado(EstadoNPC.MoviendoseAlMonolito);
+    }
+
+    // --- Modificadores de Estadísticas ---
+    public void ModificarFeIndividual(int cantidad) // NUEVO MÉTODO
+    {
+        int fePrevia = _feIndividual;
+        _feIndividual = Mathf.Clamp(_feIndividual + cantidad, 0, 100); // Asumiendo máximo de 100
+        if (fePrevia != _feIndividual)
+        {
+            OnFeIndividualCambiada?.Invoke(_feIndividual);
+            // Debug.Log($"Fe Individual de '{Nombre}' cambió a {_feIndividual}.");
+        }
+    }
+
+    // Interfaz hipotética para edificios que aceptan trabajadores (si no la tienes ya)
+    public interface ITrabajable {
+        bool AnadirTrabajador(PersonajeBehaviour trabajador);
+        void QuitarTrabajador(PersonajeBehaviour trabajador);
+        // int GetMaxTrabajadores();
+        // int GetTrabajadoresActuales();
     }
 
     // Aplica daño al personaje y maneja la muerte si la salud llega a cero.
@@ -212,10 +461,10 @@ public class PersonajeBehaviour : MonoBehaviour
         // Sin embargo, por seguridad, nos aseguramos que la referencia interna se actualice.
         if (_casaAsignada != null && _casaAsignada != casa)
         {
-             Debug.LogWarning($"Personaje '{nombre}' está siendo reasignado de la casa '{_casaAsignada.buildingName ?? "DESCONOCIDA"}' a '{casa?.buildingName ?? "NUEVA DESCONOCIDA"}'. Asegúrate que la casa anterior lo haya quitado.");
+            Debug.LogWarning($"Personaje '{nombre}' está siendo reasignado de la casa '{_casaAsignada.buildingName ?? "DESCONOCIDA"}' a '{casa?.buildingName ?? "NUEVA DESCONOCIDA"}'. Asegúrate que la casa anterior lo haya quitado.");
             // _casaAsignada.QuitarHabitante(this); // Esto podría ser problemático si 'casa' es la misma que '_casaAsignada' y causa un bucle.
-                                                // La lógica de quitar de la casa vieja debería estar en el sistema que inicia la reasignación,
-                                                // o Building_Casa.AsignarHabitante podría manejarlo.
+            // La lógica de quitar de la casa vieja debería estar en el sistema que inicia la reasignación,
+            // o Building_Casa.AsignarHabitante podría manejarlo.
         }
         _casaAsignada = casa; // Asigna la nueva casa.
         // Debug.Log($"Personaje '{nombre}' ahora tiene asignada la casa: '{_casaAsignada?.buildingName ?? "Ninguna"}'.");
