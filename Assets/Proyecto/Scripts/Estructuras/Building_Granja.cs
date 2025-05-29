@@ -1,78 +1,188 @@
+// Archivo: Building_Granja.cs
 using UnityEngine;
+using UnityEngine.EventSystems; // Para EventSystem.current.IsPointerOverGameObject()
 
-// Representa una Granja, un tipo específico de BaseBuilding.
 public class Building_Granja : BaseBuilding
 {
-    // 'gameManager' se usaba para la selección. Si BaseBuilding o un sistema global
-    // maneja la selección, esta referencia podría no ser necesaria aquí.
-    // public GameManager gameManager; // Considerar obtenerlo vía Singleton o pasarlo si es necesario.
-    private GameManager _gameManagerInstance; // Caché local si se usa frecuentemente.
+    #region Configuration
+    // =================================================================================================================
+    // CONFIGURACIÓN ESPECÍFICA DE LA GRANJA (ASIGNAR EN INSPECTOR O EN START)
+    // =================================================================================================================
+    [Header("Configuración Específica de Granja")]
+    [Tooltip("El ScriptableObject del recurso que esta granja produce (ej. Comida).")]
+    [SerializeField] private RecurSO recursoAlimentoSO; // Ejemplo, asigna el SO de "Comida"
 
+    [Tooltip("Cuántas unidades de alimento produce la granja por cada lote/evento.")]
+    [SerializeField] private float unidadesAlimentoPorLote = 5f;
+
+    [Tooltip("Tiempo en segundos entre cada lote de producción de alimento.")]
+    [SerializeField] private float intervaloProduccionAlimento = 10f;
+
+    // Ejemplo de necesidad de trabajadores (conceptual)
+    // [SerializeField] private int trabajadoresNecesariosParaMaxEficiencia = 3;
+    // private List<PersonajeBehaviour> _trabajadoresActuales = new List<PersonajeBehaviour>();
+    #endregion
+
+    #region Unity Lifecycle Methods
+    // =================================================================================================================
+    // MÉTODOS DEL CICLO DE VIDA DE UNITY
+    // =================================================================================================================
     protected override void Start()
     {
-        base.Start(); // Importante llamar al Start de la clase base.
+        base.Start(); // Llama al Start de la clase base (importante para 'buildingName' por defecto)
 
-        // Configuración específica de la Granja.
-        buildingName = "Granja de Cultivos"; // Nombre por defecto.
-        TipoEstructura = BuildingType.Estructura.Granja; // Asigna el tipo correcto.
-        producesResources = true; // Las granjas suelen producir recursos.
-        // 'RecursoProducir' y 'TasaDeProduccion' deberían asignarse en el Inspector
-        // o aquí si esta Granja siempre produce lo mismo.
-        // Ejemplo:
-        // RecursoProducir = ResourceManager.Instance.GetRecurSOByName("Comida"); // Necesitarías un método para esto.
-        // TasaDeProduccion = 0.5f; // Produce 0.5 Comida por segundo.
+        // --- Configuración específica de la Granja ---
+        if (string.IsNullOrEmpty(buildingName)) // Si BaseBuilding.Start() no asignó uno
+        {
+            buildingName = "Granja de Cultivos";
+        }
+        buildingType = BuildingType.Estructura.Granja; // Asigna el tipo de estructura correcto
 
-        // Obtener referencia al GameManager si es necesario para alguna lógica específica de la granja.
-        // _gameManagerInstance = GameManager.Instance; // Asumiendo que GameManager es Singleton.
+        // Configurar la producción de recursos
+        producesResources = true; // Indicar que este edificio produce recursos
+
+        if (recursoAlimentoSO != null)
+        {
+            resourceToProduceSO = recursoAlimentoSO; // Asigna el SO del recurso a producir (de BaseBuilding)
+            unitsPerProductionBatch = unidadesAlimentoPorLote; // Asigna las unidades por lote (de BaseBuilding)
+            intervalBetweenProduction = intervaloProduccionAlimento; // Asigna el intervalo (de BaseBuilding)
+        }
+        else
+        {
+            Debug.LogError($"'{buildingName}': No se ha asignado 'recursoAlimentoSO'. La granja no producirá.");
+            producesResources = false; // Desactivar producción si no está bien configurada
+        }
+
+        // La activación (isActive = true) se maneja ahora a través de BuildingManager
+        // al finalizar la construcción, llamando a buildingScript.ActivateBuilding().
+    }
+    #endregion
+
+    #region Building Logic Overrides
+    // =================================================================================================================
+    // SOBREESCRITURA DE LÓGICA DEL EDIFICIO (DE BASEBUILDING)
+    // =================================================================================================================
+
+    /// <summary>
+    /// Se llama cuando el edificio se activa (ej. después de ser construido).
+    /// Aquí puedes añadir lógica específica de la granja que ocurra al activarse.
+    /// </summary>
+    public override void ActivateBuilding()
+    {
+        // Primero, verificar si la configuración de producción es válida antes de activar la lógica base
+        if (resourceToProduceSO == null || unitsPerProductionBatch <= 0 || intervalBetweenProduction <= 0)
+        {
+            Debug.LogWarning($"'{buildingName}': No se puede activar la producción. Parámetros de producción no configurados correctamente.");
+            // No llamar a base.ActivateBuilding() si no puede producir, o manejar 'isActive' de forma diferente.
+            // Opcionalmente, permitir que se active pero no produzca.
+            // Por ahora, si está mal configurada, no se activará la producción de BaseBuilding.
+            // Pero el edificio sí puede estar "activo" para otras interacciones.
+            this.isActive = true; // Marcar como activo para selección, etc.
+                                  // pero la lógica de Update() en BaseBuilding no producirá.
+            Debug.Log($"Edificio '{buildingName}' activado, pero la producción de recursos puede no funcionar debido a configuración incompleta.");
+            return;
+        }
+
+        base.ActivateBuilding(); // Llama a la lógica base (pone isActive = true, resetea timer de producción).
+        // Debug.Log($"La granja '{buildingName}' ha comenzado su producción de '{resourceToProduceSO.Nombre}'.");
+        // Aquí podrías iniciar animaciones, efectos visuales de granja activa, etc.
     }
 
-    // La lógica de OnMouseOver para selección es muy genérica.
-    // Podría estar en BaseBuilding si todos los edificios se seleccionan igual,
-    // o manejada por un sistema de input global.
-    private void OnMouseOver()
+    /// <summary>
+    /// Se llama cuando el edificio debe producir recursos.
+    /// Aquí puedes añadir lógica específica de la granja (ej. consumir agua, depender de trabajadores).
+    /// </summary>
+    protected override void ExecuteProduction()
     {
-        // Si se requiere referencia a GameManager (ej. si es para ESTRUCTURA_SELECCIONADA global)
-        // es mejor obtenerla una vez en Start o usar un Singleton.
-        GameManager gm = GameManager.Instance; // Asumiendo Singleton.
-                                                // Si GameManager no es Singleton, necesitarías asignarlo.
+        // Ejemplo de condición adicional: ¿La granja necesita agua para producir comida?
+        // string aguaResourceName = "Agua"; // Asumir que tienes un recurso "Agua"
+        // float aguaNecesariaPorLote = 1.0f;
+        // if (ResourceManager.Instance != null && ResourceManager.Instance.TieneSuficiente(aguaResourceName, aguaNecesariaPorLote))
+        // {
+        //     ResourceManager.Instance.Gastar(aguaResourceName, aguaNecesariaPorLote);
+        //     base.ExecuteProduction(); // Llama a la lógica de producción de BaseBuilding (que añade 'resourceToProduceSO')
+        //     Debug.Log($"'{buildingName}' produjo alimento consumiendo {aguaNecesariaPorLote} de {aguaResourceName}.");
+        // }
+        // else
+        // {
+        //    Debug.LogWarning($"'{buildingName}': No hay suficiente '{aguaResourceName}' para producir. Producción detenida este ciclo.");
+        //    // Aquí podrías querer que el _productionTimer de BaseBuilding no se resetee completamente,
+        //    // o que la granja entre en un estado de "esperando recursos" y muestre un ícono.
+        //    // Por ahora, si no se llama a base.ExecuteProduction(), simplemente no se produce nada en este ciclo.
+        // }
 
-        if (gm == null) return; // No hacer nada si no hay GameManager.
+        // Si no hay condiciones especiales, simplemente llama a la producción base:
+        base.ExecuteProduction();
+    }
+    #endregion
 
-        // El comentario original /* if (gameManager.EstructuraConstruyendo == transform.gameObject) return; */
-        // evitaría la selección si este objeto es el que se está construyendo. Buena idea.
-        if (gm.EstructuraConstruyendo == this.gameObject) return;
+    #region Player Interaction
+    // =================================================================================================================
+    // INTERACCIÓN DEL JUGADOR CON ESTE EDIFICIO
+    // =================================================================================================================
 
-        if (Input.GetMouseButtonDown(0)) // Clic izquierdo.
+    /// <summary>
+    /// Se llama cuando el jugador hace clic sobre este edificio (si tiene un Collider).
+    /// </summary>
+    private void OnMouseDown()
+    {
+        // Evitar selección si el clic fue sobre un elemento de la UI.
+        if (EventSystem.current.IsPointerOverGameObject())
         {
-            if (gm.EstructuraSeleccionada == null) // Si no hay nada seleccionado aún.
+            return;
+        }
+
+        // Si el GameManager existe y no está en modo de colocar este mismo edificio.
+        if (GameManager.Instance != null)
+        {
+            if (GameManager.Instance.EstructuraEnModoColocacion == this.gameObject)
             {
-                gm.EstructuraSeleccionada = this.gameObject; // Selecciona esta granja.
-                Debug.Log($"Edificio '{buildingName}' seleccionado.");
-                // Aquí podrías abrir un panel de UI específico para la granja.
-                // Ejemplo: UIManager.Instance.AbrirPanelGranja(this);
+                // El jugador está intentando colocar este edificio, no seleccionarlo para interacción.
+                return;
             }
-            // Si ya estaba seleccionada esta misma granja, un segundo clic podría deseleccionarla
-            // o abrir un menú más detallado.
-            // else if (gm.EstructuraSeleccionada == this.gameObject) { /* Lógica de segundo clic */ }
+
+            // Llama al método de selección del GameManager.
+            GameManager.Instance.SeleccionarEstructura(this.gameObject);
+            // Debug.Log($"'{buildingName}' (Granja) clickeado y enviado a GameManager para selección.");
+
+            // Aquí podrías, por ejemplo, decirle a un UIManager que abra el panel específico de la Granja:
+            // UIManager.Instance?.AbrirPanelInfoGranja(this);
+        }
+    }
+    #endregion
+
+    #region Farm-Specific Logic (Ejemplos para futuro)
+    // =================================================================================================================
+    // LÓGICA ESPECÍFICA DE LA GRANJA (PARA FUTURAS AMPLIACIONES)
+    // =================================================================================================================
+    /*
+    public bool AsignarTrabajador(PersonajeBehaviour trabajador)
+    {
+        if (_trabajadoresActuales.Count < trabajadoresNecesariosParaMaxEficiencia)
+        {
+            _trabajadoresActuales.Add(trabajador);
+            ActualizarEficienciaProduccion();
+            return true;
+        }
+        return false;
+    }
+
+    public void QuitarTrabajador(PersonajeBehaviour trabajador)
+    {
+        if (_trabajadoresActuales.Remove(trabajador))
+        {
+            ActualizarEficienciaProduccion();
         }
     }
 
-    // Override ActivateBuilding para añadir lógica específica de la granja al activarse.
-    public override void ActivateBuilding()
+    private void ActualizarEficienciaProduccion()
     {
-        base.ActivateBuilding(); // Llama a la lógica base (pone isActive = true).
-        Debug.Log($"La granja '{buildingName}' ha comenzado su producción.");
-        // Aquí podrías iniciar animaciones, asignar trabajadores si tuvieras ese sistema, etc.
+        // Lógica para cambiar 'unitsPerProductionBatch' o 'intervalBetweenProduction'
+        // basado en el número de '_trabajadoresActuales'.
+        // Ejemplo:
+        // float eficienciaBase = 5f; // Unidades si está llena
+        // unitsPerProductionBatch = eficienciaBase * ((float)_trabajadoresActuales.Count / trabajadoresNecesariosParaMaxEficiencia);
     }
-
-    // Override ProduceResources si la granja tiene una forma particular de producir.
-    // protected override void ProduceResources(float cantidadPorLote)
-    // {
-    //     base.ProduceResources(cantidadPorLote); // Llama a la lógica base.
-    //     // Lógica adicional: ¿Quizás la granja necesita agua para producir comida?
-    //     // if (ResourceManager.Instance.TieneSuficiente("Agua", 0.1f * cantidadPorLote)) {
-    //     //    ResourceManager.Instance.Gastar("Agua", 0.1f * cantidadPorLote);
-    //     //    ResourceManager.Instance.Añadir(RecursoProducir.Nombre, cantidadPorLote);
-    //     // } else { // No hay suficiente agua, la producción falla o se reduce. }
-    // }
+    */
+    #endregion
 }

@@ -444,8 +444,8 @@ public class Building_Personajes : BaseBuilding
     void OnMouseOver()
     {
         if (GameManager.Instance == null) return;
-        if (Input.GetMouseButtonDown(0) && GameManager.Instance.EstructuraSeleccionada == null) {
-            GameManager.Instance.EstructuraSeleccionada = this.gameObject;
+        if (Input.GetMouseButtonDown(0) && GameManager.Instance.EstructuraSeleccionadaParaInteraccion == null) {
+            GameManager.Instance.EstructuraSeleccionadaParaInteraccion = this.gameObject;
             Debug.Log($"Edificio '{buildingName}' seleccionado.");
             // UIManager.Instance.AbrirPanelGeneradorPersonajes(this);
         }

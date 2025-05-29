@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class BuildingType
 {
-    public enum Estructura{
+    public enum Estructura
+    {
         //Vivienda
         CasaBasica, //lugar donde viviran las personas
         CasaAvanzada,
@@ -20,6 +21,7 @@ public class BuildingType
         Mina, //produccion de materiales en crudo
         Establo, // produccion animal (piel, carne)
         Cocina, //Procesamiento animal
+        CrisolDeAlmas, //Generacion de NPC's
 
         //Produccion de bienes manufacturados
         Forja, // se utilizara para construir o crear diferentes equipos para las personas
@@ -48,5 +50,6 @@ public class BuildingType
 
         //Especializacion
         JardinCeremonial, //se utilizara para desarrollar derivados de la botanica
+    
     }
 }

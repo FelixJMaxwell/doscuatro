@@ -20,7 +20,7 @@ public class Building_Casa : BaseBuilding
             buildingName = "Casa";
         }
         // Define el tipo de estructura (debes tener este enum definido en BuildingType.cs).
-        TipoEstructura = BuildingType.Estructura.CasaBasica; // Ejemplo, asegúrate que el enum coincida.
+        buildingType = BuildingType.Estructura.CasaBasica; // Ejemplo, asegúrate que el enum coincida.
         RegistrarCasa(); // Registra esta casa en el HousingManager.
     }
 

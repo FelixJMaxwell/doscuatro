@@ -125,12 +125,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingName: Crisol de Almas
-  buildingIcon: {fileID: 0}
-  constructionCost: 1
-  TipoEstructura: 0
+  buildingIcon: {fileID: 21300000, guid: e12d6e5ae3f834a4bbbe7674a0b41ed2, type: 3}
+  buildingType: 12
+  constructionCosts:
+  - resourceSO: {fileID: 11400000, guid: a0a5ce2216a82fe458043ae75dc3cd69, type: 2}
+    amount: 1
   producesResources: 0
-  RecursoProducir: {fileID: 0}
-  TasaDeProduccion: 1
+  resourceToProduceSO: {fileID: 0}
+  unitsPerProductionBatch: 1
+  intervalBetweenProduction: 5
+  isActive: 0
   tipoPersonajeAGenerar: {fileID: 11400000, guid: 18b6fcab67217734ebd5fb13c6033044, type: 2}
   puntoDeGeneracion: {fileID: 3336922967286779328}
   feDataSO: {fileID: 11400000, guid: 43432c29c7d31694591b8bbf0ac045ee, type: 2}

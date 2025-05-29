@@ -1,318 +1,445 @@
+// Archivo: GameManager.cs
 using System.Collections.Generic;
-using TMPro; // Necesario para TextMeshProUGUI
+using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI; // Necesario para EventSystem.current
-// using UnityEngine.UI; // No parece usarse directamente (Button es referenciado por GameObject y luego se accede al componente)
+using UnityEngine.UI; // Necesario para Button y Toggle (aunque se acceden por GameObject en tu código, el tipo es de UI)
+
+// Esta clase se puede definir dentro de GameManager.cs o en su propio archivo .cs
+// Si está dentro de GameManager.cs, ponla FUERA de la clase GameManager pero en el mismo archivo,
+// o como una clase pública anidada si prefieres (public class GameManager { [System.Serializable] public class NombreClase ... })
+// Por simplicidad, la definimos aquí como si estuviera lista para ser usada por GameManager.
+
+[System.Serializable] // Necesario para que aparezca en el Inspector como una lista de objetos.
+public class ConfiguracionEntradaArquitecturaUI
+{
+    [Tooltip("Nombre descriptivo para esta entrada en el Inspector (ej. 'Entrada UI Casa').")]
+    public string nombreEditor; // Para tu organización en el Inspector.
+
+    [Tooltip("El GameObject raíz de la 'tarjeta' o 'entrada' de UI para este edificio. Sus hijos deben seguir un orden específico.")]
+    public GameObject elementoRaizUI;
+
+    [Tooltip("El ScriptableObject que contiene todos los datos (nombre, descripción, icono, prefab del edificio) para esta entrada.")]
+    public EdificioDataSO datosDelEdificioSO;
+}
 
 public class GameManager : MonoBehaviour
 {
-    // Instancia estática del Singleton
+    #region Singleton Instance
+    // =================================================================================================================
+    // SINGLETON
+    // =================================================================================================================
     public static GameManager Instance { get; private set; }
+    #endregion
 
-    // 'Puntos' no se usa actualmente. ¿Es una moneda global o puntuación?
-    public float Puntos;
-    [Tooltip("Referencia al objeto principal del Monolito en la escena.")]
-    public GameObject Monolito; // Podría ser MonolitoBehaviour para acceso directo a sus métodos.
+    #region Public Game State & Core References
+    // =================================================================================================================
+    // ESTADO GLOBAL DEL JUEGO Y REFERENCIAS PRINCIPALES
+    // =================================================================================================================
+    [Header("Estado Global y Referencias Principales")]
+    [Tooltip("Puntos generales del jugador o alguna métrica global (actualmente no usada).")]
+    public float PuntosGlobales; // Renombrado de Puntos
+    [Tooltip("Referencia al objeto Monolito principal en la escena.")]
+    public MonolitoBehaviour MonolitoPrincipal; // Cambiado a tipo específico para acceso directo.
+    #endregion
 
-    [Space(10)]
-    [Header("Construcción y Selección")]
-    [Tooltip("Referencia al GameObject de la estructura que se está colocando actualmente.")]
-    public GameObject EstructuraConstruyendo; // El objeto que el jugador está moviendo para colocar.
-    [Tooltip("Referencia al GameObject de la estructura actualmente seleccionada por el jugador.")]
-    public GameObject EstructuraSeleccionada; // El objeto sobre el que se pueden realizar acciones.
-    [Tooltip("Prefab de la estructura que se instanciará al 'ComprarDado' o iniciar construcción.")]
-    public GameObject EstructurAConstruir; // Prefab a instanciar.
+    #region Building Placement & Selection State
+    // =================================================================================================================
+    // ESTADO DE COLOCACIÓN Y SELECCIÓN DE EDIFICIOS
+    // =================================================================================================================
+    [Header("Sistema de Construcción y Selección")]
+    [Tooltip("Referencia al GameObject de la estructura que el jugador está actualmente colocando (modo fantasma).")]
+    public GameObject EstructuraEnModoColocacion; // Renombrado de EstructuraConstruyendo
+    [Tooltip("Referencia al GameObject de la estructura actualmente seleccionada por el jugador para interacción.")]
+    public GameObject EstructuraSeleccionadaParaInteraccion; // Renombrado de EstructuraSeleccionada
+    [Tooltip("Prefab de la estructura que se instanciará al iniciar un proceso de construcción (ej. desde un botón genérico 'ComprarDado').")]
+    public GameObject PrefabEstructuraAGenerica; // Renombrado de EstructurAConstruir
 
-    [Tooltip("Transform padre que contendrá todas las estructuras instanciadas en el juego.")]
-    public Transform EstructurasHolder; // Bueno para organizar la jerarquía.
+    [Tooltip("Transform padre bajo el cual se organizarán todas las estructuras instanciadas en el juego.")]
+    public Transform ContenedorDeEstructuras; // Renombrado de EstructurasHolder
+    [Tooltip("Lista de todos los scripts BaseBuilding de las estructuras activas en el juego.")]
+    public List<BaseBuilding> TodasLasEstructurasActivas = new List<BaseBuilding>();
+    #endregion
 
-    [Space(10)]
-    [Header("UI General")]
-    // Esta lista de GameObjects para textos es poco flexible.
-    // Es mejor tener referencias directas a los TextMeshProUGUI con nombres descriptivos
-    // o un sistema de UIManager más robusto.
-    [Tooltip("Lista de GameObjects que contienen elementos de texto UI. Usar con precaución.")]
-    public List<GameObject> TextosUI; // Ejemplo: TextosUI[0] es para panel Monolito, TextosUI[1] para Fe.
-
-    [Header("Paneles UI")]
+    #region UI Panel & Element References
+    // =================================================================================================================
+    // REFERENCIAS A ELEMENTOS Y PANELES DE LA UI
+    // (Idealmente, gran parte de esto estaría en un UIManager dedicado)
+    // =================================================================================================================
+    [Header("Paneles UI Principales")]
     [Tooltip("Panel UI para interacciones con NPCs seleccionados.")]
-    public GameObject NPCPanel;
+    public GameObject PanelNPC; // Renombrado
     [Tooltip("Panel UI para interacciones con el Monolito seleccionado.")]
-    public GameObject MonolitoPanel;
+    public GameObject PanelMonolito; // Renombrado
     [Tooltip("Panel UI para el menú de construcción de arquitecturas.")]
-    public GameObject ArquitecturaPanel;
+    public GameObject PanelArquitectura;
 
-    public GameObject CrisolDeAlmasGO;
+    [Header("UI Específica (Temporal)")]
+    [Tooltip("Lista de GameObjects que contienen elementos de texto UI generales. Usar con precaución, preferir referencias directas.")]
+    public List<GameObject> TextosUIGenerales; // Renombrado de TextosUI
+
+    [Header("UI para Crisol de Almas (Ejemplo de Interacción Directa)")]
+    [Tooltip("Referencia al GameObject del Crisol de Almas en la escena o un prefab a instanciar.")]
+    public GameObject CrisolDeAlmasGOPrefab; // Renombrado para indicar que puede ser un prefab
+    [Tooltip("Botón para generar aldeanos desde el Crisol.")]
     public Button GenerarAldeanoBtn;
+    [Tooltip("Toggle para decidir si generar un aldeano legendario.")]
     public Toggle ToggleLegendario;
+    [Tooltip("Botón para actualizar/mejorar el Crisol de Almas.")]
     public Button ActualizarCrisolBtn;
+    #endregion
 
+     #region Arquitectura y Configuración Automática de UI
+    // =================================================================================================================
+    // CONFIGURACIÓN AUTOMÁTICA DE LA UI DE ARQUITECTURA
+    // =================================================================================================================
+    [Header("Configuración UI de Arquitectura")]
+    [Tooltip("Lista de entradas para la UI de arquitectura. Cada entrada vincula un GameObject de UI con su EdificioDataSO.")]
+    public List<ConfiguracionEntradaArquitecturaUI> listaConfiguracionArquitecturaUI; // CAMBIADO a la nueva clase/struct
+    #endregion
+
+    #region Unity Lifecycle Methods
+    // =================================================================================================================
+    // MÉTODOS DEL CICLO DE VIDA DE UNITY (AWAKE, UPDATE)
+    // =================================================================================================================
     private void Awake()
     {
-        // Implementación del Singleton
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject); // Descomentar si necesitas que persista entre escenas
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Debug.LogWarning("Ya existe una instancia de GameManager. Destruyendo este duplicado.");
+            Debug.LogWarning("GameManager: Ya existe una instancia. Destruyendo este duplicado.");
             Destroy(gameObject);
         }
-    }
 
-    // Este método tiene un efecto secundario extraño: resetea la lista 'Estructuras'.
-    // Debería solo actualizar el texto.
-    public void ActualizarUI(TextMeshProUGUI ElementoUI, string texto)
-    {
-        if (ElementoUI != null)
+        // Asegurar que la lista esté inicializada
+        if (TodasLasEstructurasActivas == null)
         {
-            ElementoUI.text = texto;
-        }
-        else
-        {
-            Debug.LogError("ElementoUI es nulo. No se puede actualizar el texto.");
+            TodasLasEstructurasActivas = new List<BaseBuilding>();
         }
     }
 
-    // El nombre 'ComprarDado' es muy específico. Si es genérico para comprar/colocar estructuras,
-    // el nombre podría ser más general como 'IniciarColocacionEstructura'.
-    public void ComprarDado() // Renombrar a IniciarConstruccionEstructura(GameObject prefabAConstruir)?
+    private void Start() // Modificamos Start para añadir la configuración de botones
     {
-        if (EstructurAConstruir == null) {
-            Debug.LogError("EstructurAConstruir no está asignada en GameManager. No se puede instanciar.");
-            return;
-        }
-
-        // Solo permite una estructura en construcción a la vez.
-        if (!EstructuraConstruyendo)
-        {
-            // Instancia la estructura en una posición inicial (ej. cerca del Monolito).
-            // 'quaternion.identity' es de Unity.Mathematics, puede ser 'Quaternion.identity' de UnityEngine.
-            GameObject tempDado = Instantiate(EstructurAConstruir, Monolito.transform.position + new Vector3(0, 5, 0), Quaternion.identity);
-            EstructuraConstruyendo = tempDado; // Asigna la nueva instancia.
-
-            if (EstructurasHolder != null)
-            {
-                tempDado.transform.SetParent(EstructurasHolder); // Organiza en la jerarquía.
-            }
-            else
-            {
-                Debug.LogWarning("EstructurasHolder no asignado en GameManager. La estructura se instanciará en la raíz.");
-            }
-            // Nombrar el objeto instanciado puede ser útil para debugging.
-            tempDado.name = EstructurAConstruir.name + "_" + (EstructurasHolder != null ? EstructurasHolder.childCount : Random.Range(0,1000));
-            // Sugerencia: El objeto 'EstructuraConstruyendo' debería tener un script que maneje su lógica de
-            // seguimiento del ratón, validación de posición y colocación final.
-        }
-        else
-        {
-            Debug.Log("Ya hay una estructura en proceso de construcción.");
-        }
+        // ... (código existente en Start si lo hubiera, como _mainCamera = Camera.main;) ...
+        ConfigurarElementosUIConstruccion();
     }
 
-    void Update()
+    private void Update()
     {
-        // --- Lógica de Deselección con Escape ---
+        ManejarInputGlobal(); // Deselección con Escape, etc.
+        // La lógica de mover el fantasma de construcción y la interacción con la estructura seleccionada
+        // se ha movido/comentado para ser manejada por sistemas más dedicados o directamente
+        // por los scripts de los objetos (ej. BuildingManager para colocación, MonolitoBehaviour para su input).
+        // UpdateActualizarLogicaSeleccionInteraccion(); // Método que contenía la lógica de F y G
+    }
+    #endregion
+
+    #region Global Input & Selection Management
+    // =================================================================================================================
+    // GESTIÓN DE INPUT GLOBAL Y SELECCIÓN
+    // =================================================================================================================
+    private void ManejarInputGlobal()
+    {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (EstructuraConstruyendo != null) // Si está colocando una estructura, cancela la colocación.
+            if (BuildingManager.Instance != null && BuildingManager.Instance.IsInPlacementMode) // Chequea si BuildingManager está colocando
             {
-                Destroy(EstructuraConstruyendo);
-                EstructuraConstruyendo = null;
-                Debug.Log("Construcción cancelada.");
+                BuildingManager.Instance.CancelPlacementMode();
+                Debug.Log("GameManager: Construcción cancelada vía Escape (BuildingManager).");
             }
-            else if (EstructuraSeleccionada != null) // Si hay una estructura seleccionada, la deselecciona.
+            else if (EstructuraSeleccionadaParaInteraccion != null)
             {
-                // Cierra paneles asociados a la estructura deseleccionada.
-                // Esta lógica de string.Contains es frágil. Es mejor usar componentes o tags.
-                if (EstructuraSeleccionada.GetComponent<MonolitoBehaviour>() != null && MonolitoPanel != null)
-                {
-                    // TextosUI[0] parece ser un título o info del panel Monolito.
-                    if (TextosUI.Count > 0 && TextosUI[0] != null) TextosUI[0].gameObject.SetActive(false);
-                    MonolitoPanel.SetActive(false);
-                }
-                else if (EstructuraSeleccionada.GetComponent<PersonajeBehaviour>() != null && NPCPanel != null) // Mejor usar GetComponent.
-                {
-                    NPCPanel.SetActive(false);
-                }
-                // Añadir lógica para otros tipos de estructuras y sus paneles si es necesario.
-
-                EstructuraSeleccionada = null; // Deselecciona.
-                Debug.Log("Estructura deselecccionada.");
+                DeseleccionarEstructuraActual();
             }
-            else if (ArquitecturaPanel != null && ArquitecturaPanel.activeInHierarchy) // Si no hay nada seleccionado y el panel de arquitectura está abierto, ciérralo.
+            else if (PanelArquitectura != null && PanelArquitectura.activeInHierarchy)
             {
-                ArquitecturaPanel.SetActive(false);
+                CerrarPanel(PanelArquitectura);
             }
             // Considerar cerrar otros paneles modales aquí también.
         }
+        // La selección por clic se manejaría ahora en un sistema de Input/Selección dedicado
+        // o en el Update de BuildingManager para la colocación.
+    }
 
-        // --- Lógica para la estructura que se está construyendo/colocando ---
-        if (EstructuraConstruyendo != null)
+    public void SeleccionarEstructura(GameObject estructuraObj)
+    {
+        if (EstructuraSeleccionadaParaInteraccion == estructuraObj) return;
+
+        DeseleccionarEstructuraActual();
+        EstructuraSeleccionadaParaInteraccion = estructuraObj;
+        // Debug.Log($"'{EstructuraSeleccionadaParaInteraccion.name}' seleccionada por GameManager.");
+
+        // ABRIR PANELES (Idealmente, esto dispara un evento y UIManager reacciona)
+        if (EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>() != null && PanelMonolito != null)
+            AbrirPanel(PanelMonolito); // Actualizar TextosUI[0] y [1] se haría al abrir el panel, preferiblemente por UIManager
+        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<PersonajeBehaviour>() != null && PanelNPC != null)
+            AbrirPanel(PanelNPC);
+        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<Building_Personajes>() != null && CrisolDeAlmasGOPrefab != null) // Asumiendo PanelCrisol no existe
         {
-            // El código de movimiento y validación de posición está comentado.
-            // Esta lógica debería estar en un script en el prefab de 'EstructuraConstruyendo'
-            // o en un sistema de colocación más dedicado.
-            /*
-            // Ejemplo de cómo podría funcionar el seguimiento del ratón (requiere un Plane o Raycasting):
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, layerMaskParaElSuelo)) // Necesitas un LayerMask
-            {
-                EstructuraConstruyendo.transform.position = hitInfo.point; // Ajustar Y si es necesario.
-                // Aquí iría la lógica de validación de posición (colisiones, cercanía a otras, etc.)
-                // bool puedeConstruirAqui = ValidarPosicionConstruccion(EstructuraConstruyendo.transform.position);
-                // Cambiar material para feedback visual (rojo/verde).
-
-                if (Input.GetMouseButtonDown(0)) // Click para colocar.
-                {
-                    if (puedeConstruirAqui)
-                    {
-                        FinalizarConstruccion(EstructuraConstruyendo);
-                        EstructuraConstruyendo = null; // Limpia la referencia.
-                    }
-                    else
-                    {
-                        Debug.Log("No se puede construir aquí."); // Feedback al jugador.
-                    }
-                }
-            }
-            */
-        }
-
-        // --- Lógica para la estructura seleccionada ---
-        if (EstructuraSeleccionada != null)
-        {
-            // Esta sección maneja interacciones específicas (como presionar 'F' para el Monolito)
-            // Sería mejor si la propia estructura (MonolitoBehaviour, Building_Granja) manejara
-            // sus interacciones cuando está seleccionada, en lugar de tener esta lógica en GameManager.
-            // GameManager podría notificar a la estructura que ha sido seleccionada/deseleccionada.
-
-            MonolitoBehaviour monolitoBehaviour = EstructuraSeleccionada.GetComponent<MonolitoBehaviour>();
-            if (monolitoBehaviour != null)
-            {
-                // Abre el panel del Monolito si no está ya activo.
-                if (MonolitoPanel != null && !MonolitoPanel.activeInHierarchy)
-                {
-                    if (TextosUI.Count > 0 && TextosUI[0] != null) TextosUI[0].gameObject.SetActive(true);
-                    MonolitoPanel.SetActive(true);
-                    // Actualiza la UI de Fe al seleccionar el Monolito
-                    if (TextosUI.Count > 1 && TextosUI[1] != null && TextosUI[1].GetComponent<TextMeshProUGUI>() != null && ResourceManager.Instance != null)
-                    {
-                        TextosUI[1].GetComponent<TextMeshProUGUI>().text = "Fe: " + ResourceManager.Instance.GetCantidad("Fe").ToString("F0") + " / " + ResourceManager.Instance.GetMaximo("Fe").ToString("F0");
-                    }
-
-                }
-
-                if (Input.GetKeyDown(KeyCode.F)) // Interacción específica del Monolito.
-                {
-                    // Verifica si la cantidad actual de Fe es menor que el máximo.
-                    if (ResourceManager.Instance != null && ResourceManager.Instance.GetCantidad("Fe") < ResourceManager.Instance.GetMaximo("Fe"))
-                    {
-                        monolitoBehaviour.AñadirFeManualmente(1f); // Llama al método del Monolito.
-                        for (int i = 0; i < 3; i++) // Genera 3 pilares.
-                        {
-                            monolitoBehaviour.GenerarPilar();
-                        }
-                        // La UI de Fe se actualiza a través de ResourceManager.ActualizarRecursoUI("Fe")
-                        // llamado desde MonolitoBehaviour.AñadirFeManualmente si éste llama a ResourceManager.Instance.Añadir("Fe", ...)
-                        // Si no, hay que actualizarla aquí explícitamente.
-                        if (TextosUI.Count > 1 && TextosUI[1] != null && TextosUI[1].GetComponent<TextMeshProUGUI>() != null) {
-                             TextosUI[1].GetComponent<TextMeshProUGUI>().text = "Fe: " + ResourceManager.Instance.GetCantidad("Fe").ToString("F0") + " / " + ResourceManager.Instance.GetMaximo("Fe").ToString("F0");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("Máximo de Fe alcanzado o ResourceManager no disponible.");
-                    }
-                }
-            }
-
-            Building_Granja granja = EstructuraSeleccionada.GetComponent<Building_Granja>();
-            if (granja != null)
-            {
-                if (Input.GetKeyDown(KeyCode.G)) // Interacción específica de la Granja.
-                {
-                    granja.ActivateBuilding(); // Llama al método de la Granja.
-                }
-            }
-
-            // Lógica para PersonajeBehaviour (NPC)
-            PersonajeBehaviour personaje = EstructuraSeleccionada.GetComponent<PersonajeBehaviour>();
-            if (personaje != null) {
-                if (NPCPanel != null && !NPCPanel.activeInHierarchy) {
-                    NPCPanel.SetActive(true);
-                    // Aquí podrías popular el NPCPanel con la info del 'personaje'.
-                    // Ejemplo: NPCPanel.GetComponent<NPCPanelUI>().MostrarInfo(personaje);
-                }
-            }
+            // Activar y conectar la UI del Crisol si es necesario (aunque esta UI debería ser parte del prefab del panel)
+            // Esta lógica de conectar botones es mejor si el panel del Crisol se auto-configura o UIManager lo hace.
+            Debug.Log("Panel del Crisol de Almas debería abrirse aquí.");
         }
     }
 
-    // Maneja los clics en los botones de la UI del lado derecho.
-    public void BotonesDerecha()
+    private void DeseleccionarEstructuraActual()
     {
-        if (EventSystem.current == null || EventSystem.current.currentSelectedGameObject == null)
+        if (EstructuraSeleccionadaParaInteraccion == null) return;
+
+        // CERRAR PANELES (Idealmente, esto dispara un evento y UIManager reacciona)
+        if (EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>() != null && PanelMonolito != null)
+            CerrarPanel(PanelMonolito);
+        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<PersonajeBehaviour>() != null && PanelNPC != null)
+            CerrarPanel(PanelNPC);
+
+        // Debug.Log($"'{EstructuraSeleccionadaParaInteraccion.name}' deseleccionada por GameManager.");
+        EstructuraSeleccionadaParaInteraccion = null;
+    }
+    #endregion
+
+    #region Configuración Automática de UI de Construcción (Modificado)
+    private void ConfigurarElementosUIConstruccion()
+    {
+        if (listaConfiguracionArquitecturaUI == null || listaConfiguracionArquitecturaUI.Count == 0)
         {
-            // No hay ningún objeto UI seleccionado (esto puede pasar si el clic no fue en un botón).
+            Debug.LogWarning("GameManager: 'listaConfiguracionArquitecturaUI' está vacía. No se configurarán elementos de UI de construcción.");
             return;
         }
-        GameObject UISeleccionada = EventSystem.current.currentSelectedGameObject;
 
-        // Comparar por nombre de GameObject es frágil. Si renombras el botón en el editor, esto se rompe.
-        // Es mejor asignar los métodos directamente a los eventos onClick de los botones en el Inspector.
-        // Ejemplo: En el Inspector, para ArquitecturaBtn, en su evento OnClick(), arrastras este GameManager
-        // y seleccionas una función como ToggleArquitecturaPanel().
-        if (UISeleccionada.name == "ArquitecturaBtn" && ArquitecturaPanel != null)
+        for (int i = 0; i < listaConfiguracionArquitecturaUI.Count; i++)
         {
-            ArquitecturaPanel.SetActive(!ArquitecturaPanel.activeInHierarchy); // Toggle.
-        }
-        else if (UISeleccionada.name == "AdministracionBtn")
-        {
-            Debug.Log("Menu de administración solicitado.");
-            // Aquí abrirías el panel de administración.
-        }
-        // ... y así para los otros botones.
-    }
+            ConfiguracionEntradaArquitecturaUI entrada = listaConfiguracionArquitecturaUI[i];
 
-    // Método para comprar/colocar un edificio. Parece incompleto o un stub.
-    public void ComprarEdificio() // Podría tomar un ScriptableObject de Edificio como parámetro.
-    {
-        // Lógica para seleccionar qué edificio comprar (quizás desde el ArquitecturaPanel).
-        // Luego, instanciarlo y entrar en modo de colocación (asignar a EstructuraConstruyendo).
-        // Ejemplo:
-        // BuildingDataSO edificioAComprar = UIManager.Instance.GetEdificioSeleccionadoParaCompra();
-        // if (ResourceManager.Instance.TieneSuficiente(edificioAComprar.costoRecurso, edificioAComprar.costoCantidad))
-        // {
-        //     ResourceManager.Instance.Gastar(edificioAComprar.costoRecurso, edificioAComprar.costoCantidad);
-        //     EstructurAConstruir = edificioAComprar.prefab; // Asigna el prefab del SO.
-        //     IniciarColocacionEstructura(); // Reutiliza la lógica de ComprarDado.
-        // }
-
-        GameObject tempEdificioAConstruir = GameObject.Instantiate(CrisolDeAlmasGO, new Vector3(-5,0,0), Quaternion.identity);
-        tempEdificioAConstruir.GetComponent<Building_Personajes>().ActivateBuilding();
-        tempEdificioAConstruir.GetComponent<Building_Personajes>().generarPersonajeButton = GenerarAldeanoBtn;
-        tempEdificioAConstruir.GetComponent<Building_Personajes>().generarLegendarioToggle = ToggleLegendario;
-        tempEdificioAConstruir.GetComponent<Building_Personajes>().mejorarEdificioButton = ActualizarCrisolBtn;
-    }
-
-    // Sugerencia: Un método para finalizar la construcción.
-    /*
-    public void FinalizarConstruccion(GameObject edificioConstruido)
-    {
-        // Lógica para "fijar" el edificio.
-        // Activar sus componentes de producción, añadirlo a listas de gestión, etc.
-        BaseBuilding buildingScript = edificioConstruido.GetComponent<BaseBuilding>();
-        if (buildingScript != null)
-        {
-            buildingScript.ActivateBuilding(); // Activa el edificio.
-            if (!Estructuras.Contains(edificioConstruido.transform)) // Asegúrate de que 'Estructuras' exista o se inicialice.
+            if (entrada.elementoRaizUI == null || entrada.datosDelEdificioSO == null || entrada.datosDelEdificioSO.prefabDelEdificio == null)
             {
-                Estructuras.Add(edificioConstruido.transform);
+                Debug.LogWarning($"GameManager: Entrada de arquitectura UI en el índice {i} (Nombre Editor: '{entrada.nombreEditor ?? "N/A"}') está incompleta (elementoRaizUI, datosDelEdificioSO o su prefab es nulo). Saltando.");
+                if (entrada.elementoRaizUI != null) entrada.elementoRaizUI.SetActive(false); // Ocultar si está mal configurado
+                continue;
             }
+
+            Transform panelTransform = entrada.elementoRaizUI.transform;
+            EdificioDataSO edificioData = entrada.datosDelEdificioSO;
+
+            // Asignar según el orden de hijos especificado:
+            // Hijo 0: SpriteEdificio (Image)
+            // Hijo 1: NombreEdificio (TextMeshProUGUI)
+            // Hijo 2: DescripcionEdificio (TextMeshProUGUI)
+            // Hijo 3: Button (Button)
+            // Hijo 4: CostoEdificio (TextMeshProUGUI)
+
+            // Sprite Edificio
+            if (panelTransform.childCount > 0) {
+                Image spriteEdificio = panelTransform.GetChild(0).GetComponent<Image>();
+                if (spriteEdificio != null) {
+                    if (edificioData.icono != null) {
+                        spriteEdificio.sprite = edificioData.icono;
+                        spriteEdificio.enabled = true;
+                    } else spriteEdificio.enabled = false;
+                } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 0 no tiene Image.");
+            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos (necesita al menos 1 para Sprite).");
+
+            // Nombre Edificio
+            if (panelTransform.childCount > 1) {
+                TextMeshProUGUI textoNombre = panelTransform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                if (textoNombre != null) textoNombre.text = edificioData.nombreMostrado;
+                else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 1 no tiene TextMeshProUGUI.");
+            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Nombre.");
+
+            // Descripción Edificio
+            if (panelTransform.childCount > 2) {
+                TextMeshProUGUI textoDesc = panelTransform.GetChild(2).GetComponent<TextMeshProUGUI>();
+                if (textoDesc != null) textoDesc.text = edificioData.descripcion;
+                else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 2 no tiene TextMeshProUGUI.");
+            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Descripción.");
+
+            // Botón de Construcción
+            if (panelTransform.childCount > 3) {
+                Button boton = panelTransform.GetChild(3).GetComponent<Button>();
+                if (boton != null) {
+                    boton.onClick.RemoveAllListeners();
+                    // Capturar 'edificioData' localmente para la clausura de la lambda
+                    EdificioDataSO dataParaEsteBoton = edificioData;
+                    boton.onClick.AddListener(() => IniciarConstruccionConDataSO(dataParaEsteBoton));
+                    boton.interactable = true;
+                } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 3 no tiene Button.");
+            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Botón.");
+
+            // Costo Edificio
+            if (panelTransform.childCount > 4) {
+                TextMeshProUGUI textoCosto = panelTransform.GetChild(4).GetComponent<TextMeshProUGUI>();
+                if (textoCosto != null) {
+                    BaseBuilding edificioBase = edificioData.prefabDelEdificio.GetComponent<BaseBuilding>();
+                    if (edificioBase != null && edificioBase.constructionCosts != null) {
+                        textoCosto.text = FormatearCostosSimple(edificioBase.constructionCosts);
+                    } else textoCosto.text = "N/A";
+                } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 4 no tiene TextMeshProUGUI.");
+            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Costo.");
+
+            // Activar el panel UI de la entrada por si estaba desactivado por defecto
+            entrada.elementoRaizUI.SetActive(true);
+        }
+    }
+
+    private string FormatearCostosSimple(List<ConstructionCostEntry> costos)
+    {
+        if (costos == null || costos.Count == 0) return "Gratis";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < costos.Count; i++) {
+            ConstructionCostEntry costo = costos[i];
+            if (costo.resourceSO != null) {
+                sb.Append($"{costo.resourceSO.Nombre}: {costo.amount.ToString("F0")}");
+                if (i < costos.Count - 1) sb.Append(" | "); // Separador más corto
+            }
+        }
+        return sb.ToString();
+    }
+
+    private void IniciarConstruccionConDataSO(EdificioDataSO edificioData)
+    {
+        if (edificioData == null || edificioData.prefabDelEdificio == null) return;
+        if (BuildingManager.Instance != null) {
+            BuildingManager.Instance.StartPlacementMode(edificioData.prefabDelEdificio);
+            if (PanelArquitectura != null && PanelArquitectura.activeInHierarchy) {
+                CerrarPanel(PanelArquitectura);
+            }
+        }
+    }
+    #endregion
+
+    #region UI Management (Basic)
+    // =================================================================================================================
+    // GESTIÓN BÁSICA DE UI (MOVER A UIMANAGER)
+    // =================================================================================================================
+    public void ActualizarTextoUI(TextMeshProUGUI elementoUI, string nuevoTexto) // Renombrado y modificado
+    {
+        if (elementoUI != null)
+        {
+            elementoUI.text = nuevoTexto;
+        }
+        // else Debug.LogError("GameManager: ElementoUI (TextMeshProUGUI) es nulo en ActualizarTextoUI.");
+        // La línea que reseteaba 'TodasLasEstructurasActivas' ha sido eliminada.
+    }
+
+    private void AbrirPanel(GameObject panel) { if (panel != null && !panel.activeInHierarchy) panel.SetActive(true); }
+    private void CerrarPanel(GameObject panel) { if (panel != null && panel.activeInHierarchy) panel.SetActive(false); }
+
+    // Ejemplo de método para un botón de la UI principal (como el de Arquitectura)
+    public void TogglePanelArquitectura()
+    {
+        if (PanelArquitectura != null)
+        {
+            bool estabaActivo = PanelArquitectura.activeInHierarchy;
+            DeseleccionarEstructuraActual(); // Buena práctica deseleccionar al abrir un menú principal
+            if (BuildingManager.Instance != null && BuildingManager.Instance.IsInPlacementMode) BuildingManager.Instance.CancelPlacementMode();
+            PanelArquitectura.SetActive(!estabaActivo);
+        }
+    }
+    // Crear métodos similares para otros botones de paneles principales (Administración, Investigación, etc.)
+    // y asignarlos a los onClick de los botones en el Inspector.
+    #endregion
+
+    #region Building Interaction & Deprecated/Placeholder Logic
+    // =================================================================================================================
+    // INTERACCIÓN CON EDIFICIOS Y LÓGICA ANTIGUA/PLACEHOLDER
+    // (Gran parte de esto debería moverse a los scripts de los edificios o a sistemas dedicados)
+    // =================================================================================================================
+
+    // El método 'ComprarDado' ahora debería ser reemplazado por la interacción con BuildingManager
+    // Ejemplo: Un botón en PanelArquitectura llama a BuildingManager.Instance.StartPlacementMode(prefabDelCrisol);
+    public void Obsoleto_ComprarDado()
+    {
+        if (PrefabEstructuraAGenerica == null) { /* ... */ return; }
+        if (BuildingManager.Instance != null)
+        {
+            // Aquí necesitarías lógica para que el BuildingManager sepa qué prefab usar,
+            // o este método debería pasar el prefab directamente.
+            // BuildingManager.Instance.StartPlacementMode(PrefabEstructuraAGenerica.GetComponent<BaseBuilding>());
+            Debug.LogWarning("ComprarDado es obsoleto, usar BuildingManager.StartPlacementMode con un prefab específico.");
+        }
+    }
+
+    // La lógica de Update que manejaba interacciones con F, G, etc., para estructuras seleccionadas
+    // debería moverse a los scripts de esas propias estructuras (MonolitoBehaviour, Building_Granja)
+    // o a un sistema de interacción si es muy complejo.
+    // Por ejemplo, MonolitoBehaviour.Update() podría chequear Input.GetKeyDown(KeyCode.F)
+    // solo si GameManager.Instance.EstructuraSeleccionadaParaInteraccion == this.gameObject.
+    /*
+    private void UpdateActualizarLogicaSeleccionInteraccion() {
+        if (EstructuraSeleccionadaParaInteraccion != null) {
+            MonolitoBehaviour monolito = EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>();
+            if (monolito != null && Input.GetKeyDown(KeyCode.F)) {
+                monolito.AccionPrincipalDelJugadorEnMonolito(); // Método renombrado en MonolitoBehaviour
+                // Actualizar UI de Fe si es necesario (aunque Monolito o ResourceManager deberían manejarlo con eventos)
+            }
+            Building_Granja granja = EstructuraSeleccionadaParaInteraccion.GetComponent<Building_Granja>();
+            if (granja != null && Input.GetKeyDown(KeyCode.G)) {
+                granja.ActivarEdificio(); // Renombrado en BaseBuilding
+            }
+            // etc.
         }
     }
     */
+
+    // Este método es un ejemplo de cómo podrías interactuar con el Crisol de Almas
+    // pero idealmente, la UI del Crisol llamaría directamente a los métodos de su script Building_Personajes.
+    public void AccionComprarEdificioCrisol() // Renombrado de ComprarEdificio
+    {
+        if (CrisolDeAlmasGOPrefab == null)
+        {
+            Debug.LogError("GameManager: CrisolDeAlmasGOPrefab no asignado.");
+            return;
+        }
+
+        // Esto instancia un nuevo Crisol. ¿Es esa la intención o interactuar con uno ya existente?
+        // Si es para construirlo, debería usar el BuildingManager.
+        // BuildingManager.Instance.StartPlacementMode(CrisolDeAlmasGOPrefab.GetComponent<BaseBuilding>());
+        // La siguiente lógica parece ser para conectar una UI a un Crisol YA EXISTENTE o recién instanciado.
+
+        // Ejemplo si quieres instanciar y conectar una UI específica (esto es un poco forzado aquí):
+        // GameObject crisolInstanciado = Instantiate(CrisolDeAlmasGOPrefab, new Vector3(-5, 0, 0), Quaternion.identity);
+        // Building_Personajes scriptCrisol = crisolInstanciado.GetComponent<Building_Personajes>();
+        // if (scriptCrisol != null)
+        // {
+        //     scriptCrisol.ActivarEdificio();
+        //     // Conectar botones (esto es MUY propenso a errores y acoplamiento fuerte, evitar si es posible)
+        //     // Es mejor que el panel UI del Crisol tenga su propio script que obtenga la referencia
+        //     // al Building_Personajes cuando se selecciona/abre el panel.
+        //     if (GenerarAldeanoBtn != null) GenerarAldeanoBtn.onClick.AddListener(() => scriptCrisol.GenerarPersonaje(ToggleLegendario != null ? ToggleLegendario.isOn : false));
+        //     if (ToggleLegendario != null) ToggleLegendario.onValueChanged.AddListener(scriptCrisol.SetIntentaGenerarLegendarioToggleState);
+        //     if (ActualizarCrisolBtn != null) ActualizarCrisolBtn.onClick.AddListener(scriptCrisol.IntentarActualizarEdificio);
+        //     Debug.Log("Crisol de Almas instanciado y UI (potencialmente) conectada.");
+        // }
+        Debug.LogWarning("GameManager.AccionComprarEdificioCrisol: Lógica de ejemplo, revisar e integrar con BuildingManager para construcción.");
+    }
+    #endregion
+
+    #region Building List Management (Callbacks from BaseBuilding or BuildingManager)
+    // =================================================================================================================
+    // GESTIÓN DE LA LISTA DE EDIFICIOS ACTIVOS
+    // =================================================================================================================
+    public void RegistrarEdificioConstruido(BaseBuilding edificio)
+    {
+        if (edificio != null && !TodasLasEstructurasActivas.Contains(edificio))
+        {
+            TodasLasEstructurasActivas.Add(edificio);
+            // Debug.Log($"GameManager: Edificio '{edificio.buildingName}' registrado. Total: {TodasLasEstructurasActivas.Count}");
+        }
+    }
+
+    public void DesregistrarEdificioDestruido(BaseBuilding edificio)
+    {
+        if (edificio != null && TodasLasEstructurasActivas.Contains(edificio))
+        {
+            TodasLasEstructurasActivas.Remove(edificio);
+            // Debug.Log($"GameManager: Edificio '{edificio.buildingName}' desregistrado. Total: {TodasLasEstructurasActivas.Count}");
+        }
+    }
+    #endregion
+
+
 }

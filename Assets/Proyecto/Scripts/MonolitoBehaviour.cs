@@ -381,9 +381,9 @@ public class MonolitoBehaviour : MonoBehaviour // Considerar si debería heredar
     private void OnMouseOver()
     {
         // Si se hace clic izquierdo, no hay otra estructura seleccionada, y gameManager existe.
-        if (Input.GetMouseButtonDown(0) && gameManager != null && gameManager.EstructuraSeleccionada == null)
+        if (Input.GetMouseButtonDown(0) && gameManager != null && gameManager.EstructuraSeleccionadaParaInteraccion == null)
         {
-            gameManager.EstructuraSeleccionada = this.gameObject; // Selecciona este Monolito.
+            gameManager.EstructuraSeleccionadaParaInteraccion = this.gameObject; // Selecciona este Monolito.
             // La lógica de abrir el panel del Monolito ya está en GameManager.Update().
             // Idealmente, GameManager notificaría al Monolito "has sido seleccionado"
             // y el Monolito se encargaría de su UI o de pedir a un UIManager que la muestre.
