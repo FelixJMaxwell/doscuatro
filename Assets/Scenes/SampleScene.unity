@@ -5629,7 +5629,7 @@ GameObject:
   - component: {fileID: 1164251464}
   - component: {fileID: 1164251463}
   - component: {fileID: 1164251462}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Piso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7411,8 +7411,8 @@ MonoBehaviour:
   PrefabEstructuraAGenerica: {fileID: 0}
   ContenedorDeEstructuras: {fileID: 0}
   TodasLasEstructurasActivas: []
-  PanelNPC: {fileID: 0}
-  PanelMonolito: {fileID: 0}
+  PanelNPC: {fileID: 805934266}
+  PanelMonolito: {fileID: 2070818721}
   PanelArquitectura: {fileID: 1533995694}
   TextosUIGenerales: []
   CrisolDeAlmasGOPrefab: {fileID: 0}
@@ -7618,8 +7618,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 341.59277, y: -14.317993}
-  m_SizeDelta: {x: -932.6067, y: -232.5187}
+  m_AnchoredPosition: {x: 612.81055, y: -14.317993}
+  m_SizeDelta: {x: -1475.0421, y: -232.5187}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1533995696
 MonoBehaviour:
@@ -7921,6 +7921,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1602041177}
   m_CullTransparentMesh: 1
+--- !u!4 &1636668847 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2785380219071130656, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+  m_PrefabInstance: {fileID: 8732239351673002194}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1642742826
 GameObject:
   m_ObjectHideFlags: 0
@@ -8930,7 +8935,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2070818722
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9291,17 +9296,53 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: feDataSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 43432c29c7d31694591b8bbf0ac045ee, type: 2}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
       propertyPath: FaithHolder
       value: 
       objectReference: {fileID: 14245609}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: fragmentoSO
+      value: 
+      objectReference: {fileID: 11400000, guid: a0a5ce2216a82fe458043ae75dc3cd69, type: 2}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: pilarPrefab
+      value: 
+      objectReference: {fileID: 800455135477203597, guid: 0dadb1ebd86a1684cb654e36fd2ef632, type: 3}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: textoPromptRezar
+      value: 
+      objectReference: {fileID: 438796782}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: contenedorPilaresFe
+      value: 
+      objectReference: {fileID: 14245609}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: textoCostoFragmento
+      value: 
+      objectReference: {fileID: 1259765751}
     - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
       propertyPath: CostoFragmentoBtnText
       value: 
       objectReference: {fileID: 1259765751}
     - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: panelOpcionInteraccion
+      value: 
+      objectReference: {fileID: 2070818721}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
       propertyPath: objetoAInstanciarPrefab
       value: 
       objectReference: {fileID: 302282368753951959, guid: fdcc69be61781b446b4103f67ed7a0dd, type: 3}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: objetoAInstanciarPostConvergencia
+      value: 
+      objectReference: {fileID: 302282368753951959, guid: fdcc69be61781b446b4103f67ed7a0dd, type: 3}
+    - target: {fileID: 5935525772581105351, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
+      propertyPath: puntoDeInstanciacionObjetoPostConvergencia
+      value: 
+      objectReference: {fileID: 1636668847}
     - target: {fileID: 8570419111812530736, guid: 9c701e08bb64f3f42b8d0886267d49ef, type: 3}
       propertyPath: m_Name
       value: Monolito

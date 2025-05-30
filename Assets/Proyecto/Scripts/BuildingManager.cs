@@ -180,7 +180,9 @@ public class BuildingManager : MonoBehaviour
              Debug.LogError("BuildingManager: ResourceManager no disponible para verificar/gastar recursos.");
              return;
         }
-        if (_buildingToPlacePrefabData == null) {
+        
+        if (_buildingToPlacePrefabData == null)
+        {
             Debug.LogError("BuildingManager: _buildingToPlacePrefabData es nulo. No se puede construir.");
             CancelPlacementMode();
             return;

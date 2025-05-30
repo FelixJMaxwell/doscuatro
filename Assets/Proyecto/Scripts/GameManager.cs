@@ -363,28 +363,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // La lógica de Update que manejaba interacciones con F, G, etc., para estructuras seleccionadas
-    // debería moverse a los scripts de esas propias estructuras (MonolitoBehaviour, Building_Granja)
-    // o a un sistema de interacción si es muy complejo.
-    // Por ejemplo, MonolitoBehaviour.Update() podría chequear Input.GetKeyDown(KeyCode.F)
-    // solo si GameManager.Instance.EstructuraSeleccionadaParaInteraccion == this.gameObject.
-    /*
-    private void UpdateActualizarLogicaSeleccionInteraccion() {
-        if (EstructuraSeleccionadaParaInteraccion != null) {
-            MonolitoBehaviour monolito = EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>();
-            if (monolito != null && Input.GetKeyDown(KeyCode.F)) {
-                monolito.AccionPrincipalDelJugadorEnMonolito(); // Método renombrado en MonolitoBehaviour
-                // Actualizar UI de Fe si es necesario (aunque Monolito o ResourceManager deberían manejarlo con eventos)
-            }
-            Building_Granja granja = EstructuraSeleccionadaParaInteraccion.GetComponent<Building_Granja>();
-            if (granja != null && Input.GetKeyDown(KeyCode.G)) {
-                granja.ActivarEdificio(); // Renombrado en BaseBuilding
-            }
-            // etc.
-        }
-    }
-    */
-
     // Este método es un ejemplo de cómo podrías interactuar con el Crisol de Almas
     // pero idealmente, la UI del Crisol llamaría directamente a los métodos de su script Building_Personajes.
     public void AccionComprarEdificioCrisol() // Renombrado de ComprarEdificio
