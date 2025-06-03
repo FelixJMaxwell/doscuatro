@@ -123,8 +123,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingName: Granja
   buildingIcon: {fileID: 0}
-  constructionCost: 0
+  buildingType: 0
+  constructionCosts: []
   producesResources: 1
-  RecursoProducir: {fileID: 11400000, guid: b1624a94ce1f6ae4b8039409723d0673, type: 2}
-  TasaDeProduccion: 1
-  gameManager: {fileID: 0}
+  resourceToProduceSO: {fileID: 11400000, guid: b1624a94ce1f6ae4b8039409723d0673, type: 2}
+  unitsPerProductionBatch: 1
+  intervalBetweenProduction: 5
+  isActive: 0
+  recursoAlimentoSO: {fileID: 11400000, guid: b1624a94ce1f6ae4b8039409723d0673, type: 2}
+  unidadesAlimentoPorLote: 5
+  intervaloProduccionAlimento: 10

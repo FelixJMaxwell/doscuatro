@@ -1,56 +1,78 @@
 using UnityEngine;
 
-// Esta clase representa una instancia de un recurso en el juego,
-// manteniendo su estado actual y referenciando sus datos base (RecurSO).
-[System.Serializable] // Es útil si planeas serializarlo, aunque como clase normal también funciona.
+[System.Serializable]
 public class RecursoInstancia
 {
-    public RecurSO data; // Referencia al ScriptableObject que define este recurso.
-    public float actual; // Cantidad actual de este recurso.
+    [Tooltip("Referencia al ScriptableObject que define las propiedades base de este recurso.")]
+    public RecurSO data; // El SO con la definición (nombre, máximo base, etc.)
+    [Tooltip("Cantidad actual de este recurso que posee el jugador/entidad.")]
+    public float actual; // La cantidad que se tiene.
 
-    // Propiedad para acceder fácilmente al máximo definido en el RecurSO.
-    public float Maximo => data != null ? data.Maximo : 0f; // Añadido chequeo de nulidad para 'data'.
-    // Propiedad para acceder fácilmente al valor base definido en el RecurSO.
-    public float BaseValue => data != null ? data.ValorBase : 0f; // Añadido chequeo de nulidad para 'data'.
+    // Propiedades de conveniencia
+    public string Nombre => data != null ? data.Nombre : "RECURSO_INVALIDO";
+    public float Maximo => data != null ? data.Maximo : 0f;
+    public float BaseValue => data != null ? data.ValorBase : 0f;
 
-    // Añade una cantidad al recurso, sin exceder el máximo.
+    // --- ESTE ES EL CONSTRUCTOR QUE NECESITAS ---
+    /// <summary>
+    /// Constructor para crear una nueva instancia de recurso.
+    /// </summary>
+    /// <param name="soData">El ScriptableObject (RecurSO) que define este recurso.</param>
+    /// <param name="cantidadInicial">La cantidad inicial para este recurso.</param>
+    public RecursoInstancia(RecurSO soData, float cantidadInicial)
+    {
+        this.data = soData;
+        if (this.data != null)
+        {
+            // Asegurar que la cantidad inicial no exceda el máximo definido en el SO
+            // y no sea menor que cero.
+            this.actual = Mathf.Clamp(cantidadInicial, 0, this.data.Maximo);
+        }
+        else
+        {
+            // Si no hay datos de SO, simplemente asigna la cantidad inicial (o podrías poner 0)
+            // y advierte del problema.
+            this.actual = cantidadInicial;
+            Debug.LogError("¡RecursoInstancia creada con un RecurSO nulo! Esto puede causar problemas.");
+        }
+    }
+    // --- FIN DEL CONSTRUCTOR ---
+
     public void Añadir(float cantidad)
     {
         if (data == null) {
-            Debug.LogError("Datos (RecurSO) no asignados para esta instancia de recurso. No se puede añadir.");
+            Debug.LogError($"Intento de añadir a una RecursoInstancia sin RecurSO ({Nombre}).");
             return;
         }
         if (cantidad < 0) {
-            Debug.LogWarning("Intentando añadir una cantidad negativa. Usar Gastar() en su lugar o verificar la lógica.");
-            // Opcionalmente, tratar cantidad negativa como gasto: Gastar(-cantidad);
-            // return;
+            // Considerar si esto debería llamar a Gastar o simplemente ser un error/advertencia
+            Debug.LogWarning($"Intentando añadir cantidad negativa ({cantidad}) al recurso '{Nombre}'.");
+            return;
         }
         actual = Mathf.Clamp(actual + cantidad, 0, Maximo);
     }
 
-    // Gasta una cantidad del recurso. No permite que baje de cero.
-    // Devuelve true si se pudo gastar la cantidad completa, false si no había suficiente (aunque igual gasta lo que hay).
-    public bool Gastar(float cantidad) // Cambiado a bool para indicar éxito/fallo de gasto completo.
+    public bool Gastar(float cantidad)
     {
         if (data == null) {
-            Debug.LogError("Datos (RecurSO) no asignados para esta instancia de recurso. No se puede gastar.");
+            Debug.LogError($"Intento de gastar de una RecursoInstancia sin RecurSO ({Nombre}).");
             return false;
         }
         if (cantidad < 0) {
-            Debug.LogWarning("Intentando gastar una cantidad negativa. Usar Añadir() en su lugar o verificar la lógica.");
-            // return false; // Opcional: tratar como añadir.
+            Debug.LogWarning($"Intentando gastar cantidad negativa ({cantidad}) del recurso '{Nombre}'.");
+            return true; // No se gastó, pero la operación de "gastar negativo" podría considerarse "no fallida"
         }
+        if (cantidad == 0) return true;
+
 
         float valorPrevio = actual;
-        actual = Mathf.Clamp(actual - cantidad, 0, Maximo); // Maximo aquí es por si 'cantidad' es negativa y grande.
-                                                         // Realmente, el clamp superior no debería ser necesario si 'cantidad' es positiva.
-
-        return valorPrevio - actual >= cantidad || valorPrevio == cantidad; // Indica si se pudo gastar lo solicitado.
+        actual = Mathf.Clamp(actual - cantidad, 0, Maximo);
+        return valorPrevio >= cantidad; // Devuelve true si había suficiente para cubrir el gasto solicitado
     }
 
-    // Comprueba si hay suficiente cantidad de este recurso.
     public bool TieneSuficiente(float cantidadNecesaria)
     {
+        if (cantidadNecesaria <= 0) return true; // Si no se necesita nada o una cantidad negativa, se considera que sí tiene.
         return actual >= cantidadNecesaria;
     }
 }

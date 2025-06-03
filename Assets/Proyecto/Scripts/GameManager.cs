@@ -88,9 +88,13 @@ public class GameManager : MonoBehaviour
     public Toggle ToggleLegendario;
     [Tooltip("Botón para actualizar/mejorar el Crisol de Almas.")]
     public Button ActualizarCrisolBtn;
+    // GameObject del panel que contiene estos elementos, si es un panel específico
+    [Tooltip("Panel UI que contiene los controles para el Crisol de Almas seleccionado.")]
+    public GameObject panelControlCrisol;
+    private Building_Personajes _crisolSeleccionadoActual = null;
     #endregion
 
-     #region Arquitectura y Configuración Automática de UI
+    #region Arquitectura y Configuración Automática de UI
     // =================================================================================================================
     // CONFIGURACIÓN AUTOMÁTICA DE LA UI DE ARQUITECTURA
     // =================================================================================================================
@@ -168,37 +172,130 @@ public class GameManager : MonoBehaviour
 
     public void SeleccionarEstructura(GameObject estructuraObj)
     {
-        if (EstructuraSeleccionadaParaInteraccion == estructuraObj) return;
+        // Primero, limpiar la UI del objeto anteriormente seleccionado
+        if (EstructuraSeleccionadaParaInteraccion != null)
+        {
+            if (EstructuraSeleccionadaParaInteraccion.GetComponent<Building_Personajes>() != null)
+            {
+                LimpiarUICrisol(); // Desconecta listeners y oculta panel del Crisol
+            }
+            // ... (lógica para otros tipos de paneles como Monolito, NPC) ...
+        }
 
-        DeseleccionarEstructuraActual();
+        DeseleccionarEstructuraActual(); // Esto ya oculta otros paneles genéricos y pone la variable a null
+
         EstructuraSeleccionadaParaInteraccion = estructuraObj;
+
+        if (EstructuraSeleccionadaParaInteraccion == null) return;
+
         // Debug.Log($"'{EstructuraSeleccionadaParaInteraccion.name}' seleccionada por GameManager.");
 
-        // ABRIR PANELES (Idealmente, esto dispara un evento y UIManager reacciona)
-        if (EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>() != null && PanelMonolito != null)
-            AbrirPanel(PanelMonolito); // Actualizar TextosUI[0] y [1] se haría al abrir el panel, preferiblemente por UIManager
-        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<PersonajeBehaviour>() != null && PanelNPC != null)
-            AbrirPanel(PanelNPC);
-        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<Building_Personajes>() != null && CrisolDeAlmasGOPrefab != null) // Asumiendo PanelCrisol no existe
+        Building_Personajes crisolSeleccionado = EstructuraSeleccionadaParaInteraccion.GetComponent<Building_Personajes>();
+        if (crisolSeleccionado != null)
         {
-            // Activar y conectar la UI del Crisol si es necesario (aunque esta UI debería ser parte del prefab del panel)
-            // Esta lógica de conectar botones es mejor si el panel del Crisol se auto-configura o UIManager lo hace.
-            Debug.Log("Panel del Crisol de Almas debería abrirse aquí.");
+            ConfigurarUICrisol(crisolSeleccionado); // Configura y muestra la UI del Crisol
         }
+        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>() != null && PanelMonolito != null)
+        {
+            AbrirPanel(PanelMonolito);
+            // Configurar UI del Monolito aquí...
+        }
+        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<PersonajeBehaviour>() != null && PanelNPC != null)
+        {
+            AbrirPanel(PanelNPC);
+            // Configurar UI del NPC aquí...
+        }
+        // ... más lógica para otros tipos de selección ...
     }
 
-    private void DeseleccionarEstructuraActual()
+    public void DeseleccionarEstructuraActual() // Este método se llama ANTES de una nueva selección o con Escape
     {
         if (EstructuraSeleccionadaParaInteraccion == null) return;
 
-        // CERRAR PANELES (Idealmente, esto dispara un evento y UIManager reacciona)
-        if (EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>() != null && PanelMonolito != null)
+        if (EstructuraSeleccionadaParaInteraccion.GetComponent<Building_Personajes>() != null)
+        {
+            LimpiarUICrisol();
+        }
+        else if (EstructuraSeleccionadaParaInteraccion.GetComponent<MonolitoBehaviour>() != null && PanelMonolito != null)
+        {
             CerrarPanel(PanelMonolito);
+        }
         else if (EstructuraSeleccionadaParaInteraccion.GetComponent<PersonajeBehaviour>() != null && PanelNPC != null)
+        {
             CerrarPanel(PanelNPC);
+        }
+        // ... más lógica para otros paneles ...
 
-        // Debug.Log($"'{EstructuraSeleccionadaParaInteraccion.name}' deseleccionada por GameManager.");
         EstructuraSeleccionadaParaInteraccion = null;
+    }
+    
+    private void ConfigurarUICrisol(Building_Personajes crisol)
+    {
+        if (crisol == null)
+        {
+            LimpiarUICrisol();
+            return;
+        }
+        _crisolSeleccionadoActual = crisol; // Guardar referencia al crisol actual
+
+        if (GenerarAldeanoBtn != null)
+        {
+            GenerarAldeanoBtn.onClick.RemoveAllListeners();
+            GenerarAldeanoBtn.onClick.AddListener(() => _crisolSeleccionadoActual.IntentarGenerarPersonajeDesdeUI());
+            // La interactividad del botón se manejará en un UpdateUI específico si es necesario, o siempre activo.
+            GenerarAldeanoBtn.interactable = true; // O basarlo en condiciones del crisol
+        }
+
+        if (ToggleLegendario != null)
+        {
+            ToggleLegendario.onValueChanged.RemoveAllListeners();
+            // Establecer el estado inicial del toggle basado en el estado interno del crisol
+            // Necesitarías una forma de que Building_Personajes exponga su '_intentaGenerarLegendarioToggleState'
+            // Por ejemplo, con una propiedad pública get: public bool IntentaGenerarLegendario => _intentaGenerarLegendarioToggleState;
+            // ToggleLegendario.isOn = _crisolSeleccionadoActual.IntentaGenerarLegendario;
+            ToggleLegendario.onValueChanged.AddListener((value) => {
+                if (_crisolSeleccionadoActual != null) // Chequeo extra
+                    _crisolSeleccionadoActual.SetIntentaGenerarLegendarioToggleState(value);
+            });
+            // La interactividad del toggle se maneja en Building_Personajes.AplicarConfiguracionDeNivelActual
+            // Pero GameManager también podría forzarla si el crisol no puede generar legendarios aún.
+            // ToggleLegendario.interactable = _crisolSeleccionadoActual._puedeGenerarLegendariosActual; (necesitaría acceso)
+        }
+
+        if (ActualizarCrisolBtn != null)
+        {
+            ActualizarCrisolBtn.onClick.RemoveAllListeners();
+            ActualizarCrisolBtn.onClick.AddListener(() => _crisolSeleccionadoActual.IntentarActualizarEdificio());
+            // La interactividad se podría basar en si el crisol puede mejorarse (recursos, nivel max)
+            ActualizarCrisolBtn.interactable = true; // O basarlo en condiciones
+        }
+
+        if (panelControlCrisol != null)
+        {
+            AbrirPanel(panelControlCrisol);
+        }
+        // Aquí también podrías llamar a un método para actualizar cualquier texto en panelControlCrisol
+        // que muestre información del _crisolSeleccionadoActual (ej. su nivel, producción, etc.)
+        // UpdateTextosPanelCrisol(_crisolSeleccionadoActual);
+    }
+
+    private void LimpiarUICrisol()
+    {
+        if (GenerarAldeanoBtn != null) GenerarAldeanoBtn.onClick.RemoveAllListeners();
+        if (ToggleLegendario != null) ToggleLegendario.onValueChanged.RemoveAllListeners();
+        if (ActualizarCrisolBtn != null) ActualizarCrisolBtn.onClick.RemoveAllListeners();
+
+        // Opcional: Desactivar botones si no hay crisol seleccionado
+        if (GenerarAldeanoBtn != null) GenerarAldeanoBtn.interactable = false;
+        if (ToggleLegendario != null) ToggleLegendario.interactable = false;
+        if (ActualizarCrisolBtn != null) ActualizarCrisolBtn.interactable = false;
+
+
+        if (panelControlCrisol != null)
+        {
+            CerrarPanel(panelControlCrisol);
+        }
+        _crisolSeleccionadoActual = null;
     }
     #endregion
 
@@ -233,52 +330,72 @@ public class GameManager : MonoBehaviour
             // Hijo 4: CostoEdificio (TextMeshProUGUI)
 
             // Sprite Edificio
-            if (panelTransform.childCount > 0) {
+            if (panelTransform.childCount > 0)
+            {
                 Image spriteEdificio = panelTransform.GetChild(0).GetComponent<Image>();
-                if (spriteEdificio != null) {
-                    if (edificioData.icono != null) {
+                if (spriteEdificio != null)
+                {
+                    if (edificioData.icono != null)
+                    {
                         spriteEdificio.sprite = edificioData.icono;
                         spriteEdificio.enabled = true;
-                    } else spriteEdificio.enabled = false;
-                } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 0 no tiene Image.");
-            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos (necesita al menos 1 para Sprite).");
+                    }
+                    else spriteEdificio.enabled = false;
+                }
+                else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 0 no tiene Image.");
+            }
+            else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos (necesita al menos 1 para Sprite).");
 
             // Nombre Edificio
-            if (panelTransform.childCount > 1) {
+            if (panelTransform.childCount > 1)
+            {
                 TextMeshProUGUI textoNombre = panelTransform.GetChild(1).GetComponent<TextMeshProUGUI>();
                 if (textoNombre != null) textoNombre.text = edificioData.nombreMostrado;
                 else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 1 no tiene TextMeshProUGUI.");
-            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Nombre.");
+            }
+            else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Nombre.");
 
             // Descripción Edificio
-            if (panelTransform.childCount > 2) {
+            if (panelTransform.childCount > 2)
+            {
                 TextMeshProUGUI textoDesc = panelTransform.GetChild(2).GetComponent<TextMeshProUGUI>();
                 if (textoDesc != null) textoDesc.text = edificioData.descripcion;
                 else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 2 no tiene TextMeshProUGUI.");
-            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Descripción.");
+            }
+            else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Descripción.");
 
             // Botón de Construcción
-            if (panelTransform.childCount > 3) {
+            if (panelTransform.childCount > 3)
+            {
                 Button boton = panelTransform.GetChild(3).GetComponent<Button>();
-                if (boton != null) {
+                if (boton != null)
+                {
                     boton.onClick.RemoveAllListeners();
                     // Capturar 'edificioData' localmente para la clausura de la lambda
                     EdificioDataSO dataParaEsteBoton = edificioData;
                     boton.onClick.AddListener(() => IniciarConstruccionConDataSO(dataParaEsteBoton));
                     boton.interactable = true;
-                } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 3 no tiene Button.");
-            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Botón.");
+                }
+                else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 3 no tiene Button.");
+            }
+            else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Botón.");
 
             // Costo Edificio
-            if (panelTransform.childCount > 4) {
+            if (panelTransform.childCount > 4)
+            {
                 TextMeshProUGUI textoCosto = panelTransform.GetChild(4).GetComponent<TextMeshProUGUI>();
-                if (textoCosto != null) {
+                if (textoCosto != null)
+                {
                     BaseBuilding edificioBase = edificioData.prefabDelEdificio.GetComponent<BaseBuilding>();
-                    if (edificioBase != null && edificioBase.constructionCosts != null) {
+                    if (edificioBase != null && edificioBase.constructionCosts != null)
+                    {
                         textoCosto.text = FormatearCostosSimple(edificioBase.constructionCosts);
-                    } else textoCosto.text = "N/A";
-                } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 4 no tiene TextMeshProUGUI.");
-            } else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Costo.");
+                    }
+                    else textoCosto.text = "N/A";
+                }
+                else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': Hijo 4 no tiene TextMeshProUGUI.");
+            }
+            else Debug.LogWarning($"Entrada UI '{entrada.nombreEditor}': No tiene suficientes hijos para Costo.");
 
             // Activar el panel UI de la entrada por si estaba desactivado por defecto
             entrada.elementoRaizUI.SetActive(true);

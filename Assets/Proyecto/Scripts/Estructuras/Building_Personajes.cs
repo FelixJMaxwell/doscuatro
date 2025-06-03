@@ -123,24 +123,6 @@ public class Building_Personajes : BaseBuilding
 
         AplicarConfiguracionDeNivelActual(); // Aplica los parámetros del nivel 1 y desbloqueos.
 
-        // Configuración de la UI.
-        if (generarPersonajeButton != null)
-        {
-            generarPersonajeButton.onClick.AddListener(IntentarGenerarPersonajeDesdeUI);
-        } else Debug.LogError($"Edificio '{buildingName}': generarPersonajeButton no asignado.");
-
-        if (generarLegendarioToggle != null)
-        {
-            generarLegendarioToggle.onValueChanged.AddListener(SetIntentaGenerarLegendarioToggleState);
-            generarLegendarioToggle.isOn = _intentaGenerarLegendarioToggleState;
-            generarLegendarioToggle.interactable = _puedeGenerarLegendariosActual; // Basado en el desbloqueo del nivel.
-        } else Debug.LogError($"Edificio '{buildingName}': generarLegendarioToggle no asignado.");
-
-        if (mejorarEdificioButton != null) {
-            mejorarEdificioButton.onClick.AddListener(IntentarActualizarEdificio);
-        } else Debug.LogWarning($"Edificio '{buildingName}': mejorarEdificioButton no asignado (mejora manual no disponible).");
-
-
         tiempoTranscurridoDesdeUltimaGeneracion = TiempoEntreGeneracionesActual; // Para permitir generación inmediata si es posible.
         UpdateUIInteractables();
     }
@@ -154,7 +136,7 @@ public class Building_Personajes : BaseBuilding
         UpdateGenerarButtonInteractable();
     }
 
-    private void IntentarGenerarPersonajeDesdeUI()
+    public void IntentarGenerarPersonajeDesdeUI()
     {
         GenerarPersonaje(_intentaGenerarLegendarioToggleState);
     }
@@ -441,13 +423,25 @@ public class Building_Personajes : BaseBuilding
         UpdateGenerarButtonInteractable(); // Actualizar el botón cuando cambia el toggle.
     }
 
-    void OnMouseOver()
+    // En Building_Personajes.cs (y similar para otros edificios seleccionables)
+
+    private void OnMouseDown() // OnMouseDown se llama solo en el frame que se presiona el botón sobre el Collider.
     {
-        if (GameManager.Instance == null) return;
-        if (Input.GetMouseButtonDown(0) && GameManager.Instance.EstructuraSeleccionadaParaInteraccion == null) {
-            GameManager.Instance.EstructuraSeleccionadaParaInteraccion = this.gameObject;
-            Debug.Log($"Edificio '{buildingName}' seleccionado.");
-            // UIManager.Instance.AbrirPanelGeneradorPersonajes(this);
+        // Evitar la selección si el clic fue sobre un elemento de la UI que podría estar superpuesto.
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            // Llama al método del GameManager para manejar la selección.
+            // GameManager se encargará de deseleccionar lo anterior y seleccionar esto.
+            GameManager.Instance.SeleccionarEstructura(this.gameObject);
+        }
+        else
+        {
+            Debug.LogError("GameManager.Instance no encontrado en OnMouseDown de " + gameObject.name);
         }
     }
 }
