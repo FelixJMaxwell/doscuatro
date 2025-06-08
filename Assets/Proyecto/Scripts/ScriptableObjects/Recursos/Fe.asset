@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Fe
   m_EditorClassIdentifier: 
   Nombre: Fe
-  Maximo: 10000
-  ValorBase: 100
+  Maximo: 10
+  ValorBase: 0
   requiereNivel: 1
   recursoRequeridoParaNivel: Fe
   factorNivel: 0.75

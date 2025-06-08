@@ -51,9 +51,14 @@ public class MonolitoBehaviour : MonoBehaviour
     [Tooltip("Transform al que las partículas convergerán durante la extracción de fragmentos. Puede ser el propio Monolito.")]
     public Transform puntoConvergenciaParticulasMonolito;
     [Tooltip("Prefab del GameObject que se instanciará después de la convergencia de partículas durante la extracción de fragmento.")]
-    public GameObject objetoAInstanciarPostConvergencia; // Renombrado de objetoAInstanciarPrefab
-    [Tooltip("Transform que define la posición y rotación para instanciar el objeto post-convergencia. Si es nulo, se usará la posición del Monolito.")]
-    public Transform puntoDeInstanciacionObjetoPostConvergencia; // Renombrado
+    public GameObject fragmentoMonolitoGO; // Renombrado de objetoAInstanciarPrefab
+    [Tooltip("Punto donde aparecerá inicialmente el fragmento visual.")]
+    public Transform spawnPointFragmento; // Renombrado
+    [Tooltip("Punto final al que se moverá el fragmento visual antes de ser 'recolectado'.")]
+    public Transform destinoFragmentoTransform; // NUEVA VARIABLE
+
+    [Tooltip("Velocidad a la que se moverá el fragmento visual hacia su destino.")]
+    public float velocidadMovimientoFragmento = 4.0f; // NUEVA VARIABLE
 
     [Header("UI y Referencias Externas")]
     [Tooltip("Referencia al TextMeshProUGUI que muestra el costo actual para extraer un fragmento.")]
@@ -182,7 +187,7 @@ public class MonolitoBehaviour : MonoBehaviour
         }
         if (!ValidarRecursosParaExtraccion()) return;
 
-        StartCoroutine(ProcesoExtraerFragmentoCoroutine());
+        StartCoroutine(ProcesoExpulsarFragmentoCoroutine());
     }
 
     /// <summary>
@@ -257,7 +262,7 @@ public class MonolitoBehaviour : MonoBehaviour
         if (textoCostoFragmento == null) Debug.LogError($"Monolito ({gameObject.name}): TextoCostoFragmento no asignado.");
         if (controladorDeParticulas == null) Debug.LogWarning($"Monolito ({gameObject.name}): ControladorDeParticulas no asignado. Las animaciones de partículas no funcionarán.");
         if (puntoConvergenciaParticulasMonolito == null && controladorDeParticulas != null) Debug.LogWarning($"Monolito ({gameObject.name}): PuntoConvergenciaParticulasMonolito no asignado.");
-        if (objetoAInstanciarPostConvergencia == null) Debug.LogWarning($"Monolito ({gameObject.name}): 'objetoAInstanciarPostConvergencia' no asignado.");
+        if (fragmentoMonolitoGO == null) Debug.LogWarning($"Monolito ({gameObject.name}): 'objetoAInstanciarPostConvergencia' no asignado.");
         if (panelOpcionInteraccion == null) Debug.LogWarning($"Monolito ({gameObject.name}): 'panelOpcionInteraccion' no asignado.");
         if (textoPromptRezar == null) Debug.LogWarning($"Monolito ({gameObject.name}): 'textoPromptRezar' no asignado.");
         if (textoCostoFragmento == null) Debug.LogWarning($"Monolito ({gameObject.name}): 'textoCostoFragmento' no asignado.");
@@ -326,54 +331,94 @@ public class MonolitoBehaviour : MonoBehaviour
         return true;
     }
 
-    private IEnumerator ProcesoExtraerFragmentoCoroutine()
+    /// <summary>
+    /// Este método es llamado por el script 'FragmentoRecolectable' cuando el jugador lo recoge.
+    /// Su ÚNICA responsabilidad ahora es añadir el recurso y actualizar la UI del costo.
+    /// </summary>
+    public void ConfirmarRecoleccionDelFragmento() // Renombrado y simplificado
+    {
+        // 1. AÑADIR FRAGMENTO AL RECURSO DEL JUGADOR
+        if (ResourceManager.Instance != null && fragmentoSO != null)
+        {
+            ResourceManager.Instance.Añadir(fragmentoSO.Nombre, 1);
+            _contadorFragmentosExtraidos++;
+            Debug.Log($"Monolito: ¡Fragmento No. {_contadorFragmentosExtraidos} RECOLECTADO! Total: {ResourceManager.Instance.GetCantidad(fragmentoSO.Nombre)}");
+        }
+        else
+        {
+            Debug.LogError("Monolito: ResourceManager o FragmentoSO no asignados. No se pudo añadir el fragmento recolectado.");
+        }
+
+        // 2. ACTUALIZAR UI DEL COSTO DEL SIGUIENTE FRAGMENTO
+        ActualizarUICostoFragmento();
+    }
+
+    /// <summary>
+    /// Corutina que maneja el costo, la convergencia de partículas, la expulsión del fragmento
+    /// Y AHORA TAMBIÉN el inicio del retorno de las partículas.
+    /// </summary>
+    private IEnumerator ProcesoExpulsarFragmentoCoroutine()
     {
         _estaExtrayendoFragmento = true;
-        // Debug.Log("Monolito: Iniciando proceso de extracción de fragmento...");
+        // Debug.Log("Monolito: Iniciando proceso de expulsión de fragmento...");
 
         // 1. GASTAR FE
         ResourceManager.Instance.Gastar(feDataSO.Nombre, CostoActualFragmento);
-        // Debug.Log($"Monolito: {CostoActualFragmento:F0} de Fe gastada para fragmento No. {_contadorFragmentosExtraidos + 1}.");
+        // Debug.Log($"Monolito: {CostoActualFragmento:F0} de Fe gastada.");
 
         // 2. ANIMACIÓN DE CONVERGENCIA DE PARTÍCULAS
-        if (controladorDeParticulas != null && puntoConvergenciaParticulasMonolito != null) {
-            // Debug.Log("Monolito: Iniciando convergencia de partículas...");
+        if (controladorDeParticulas != null && puntoConvergenciaParticulasMonolito != null)
+        {
             Coroutine convergeCoroutine = controladorDeParticulas.CongelarYConvergerParticulas(puntoConvergenciaParticulasMonolito);
             if (convergeCoroutine != null) yield return convergeCoroutine;
-            // Debug.Log("Monolito: Convergencia completada.");
-        } else {
-            // yield return new WaitForSeconds(1.5f); // Espera simbólica si no hay partículas
+        }
+        else
+        {
+            yield return new WaitForSeconds(1.5f);
         }
 
-        // 3. INSTANCIAR OBJETO POST-CONVERGENCIA
-        if (objetoAInstanciarPostConvergencia != null) {
-            Transform spawnPoint = (puntoDeInstanciacionObjetoPostConvergencia != null) ? puntoDeInstanciacionObjetoPostConvergencia : this.transform;
-            Instantiate(objetoAInstanciarPostConvergencia, spawnPoint.position, spawnPoint.rotation);
-            // Debug.Log($"Monolito: Objeto '{objetoAInstanciarPostConvergencia.name}' instanciado.");
+        // 3. INSTANCIAR Y MOVER EL FRAGMENTO VISUAL
+        GameObject fragmentoInstanciado = null;
+        if (fragmentoMonolitoGO != null)
+        {
+            Transform spawnPoint = (spawnPointFragmento != null) ? spawnPointFragmento : this.transform;
+            fragmentoInstanciado = Instantiate(fragmentoMonolitoGO, spawnPoint.position, spawnPoint.rotation);
+
+            MonolitoFragmento recolectable = fragmentoInstanciado.GetComponent<MonolitoFragmento>();
+            if (recolectable == null) recolectable = fragmentoInstanciado.AddComponent<MonolitoFragmento>();
+            recolectable.monolitoDeOrigen = this; // Pasar la referencia de este Monolito
+
+            if (destinoFragmentoTransform != null)
+            {
+                Transform fragmentoTransform = fragmentoInstanciado.transform;
+                while (Vector3.Distance(fragmentoTransform.position, destinoFragmentoTransform.position) > 0.1f)
+                {
+                    fragmentoTransform.position = Vector3.MoveTowards(fragmentoTransform.position, destinoFragmentoTransform.position, velocidadMovimientoFragmento * Time.deltaTime);
+                    yield return null;
+                }
+                fragmentoTransform.position = destinoFragmentoTransform.position;
+            }
+            Debug.Log("Monolito: Fragmento visual expulsado y listo para ser recolectado.");
+        }
+        else
+        {
+            Debug.LogWarning("Monolito: 'fragmentoMonolitoGO' no está asignado.");
         }
 
-        // 4. AÑADIR FRAGMENTO
-        if (ResourceManager.Instance != null && fragmentoSO != null) {
-            ResourceManager.Instance.Añadir(fragmentoSO.Nombre, 1);
-            _contadorFragmentosExtraidos++;
-            // Debug.Log($"Monolito: ¡Fragmento No. {_contadorFragmentosExtraidos} obtenido! Total: {ResourceManager.Instance.GetCantidad(fragmentoSO.Nombre)}");
-        } else {
-            Debug.LogError("Monolito: ResourceManager o FragmentoSO no asignado. No se pudo añadir fragmento.");
-        }
-
-        // 5. ACTUALIZAR UI DEL COSTO
-        ActualizarUICostoFragmento();
-
-        // 6. ANIMACIÓN DE RETORNO DE PARTÍCULAS
-        if (controladorDeParticulas != null) {
-            // Debug.Log("Monolito: Iniciando retorno de partículas...");
+        // --- CAMBIO PRINCIPAL ---
+        // 4. INICIAR EL RETORNO DE LAS PARTÍCULAS INMEDIATAMENTE
+        // Esto ahora es independiente de si el jugador recoge el fragmento.
+        if (controladorDeParticulas != null)
+        {
+            // Debug.Log("Monolito: Iniciando retorno de partículas a su origen...");
             Coroutine returnCoroutine = controladorDeParticulas.DevolverParticulasASuOrigen();
-            if (returnCoroutine != null) yield return returnCoroutine;
+            if (returnCoroutine != null) yield return returnCoroutine; // Esperar a que las partículas terminen de volver
             // Debug.Log("Monolito: Retorno de partículas completado.");
         }
-        // else { yield return new WaitForSeconds(0.5f); }
-
-        // Debug.Log("Monolito: Proceso de extracción de fragmento finalizado.");
+        
+        // FIN DEL PROCESO DE EXPULSIÓN Y ANIMACIÓN
+        // La lógica de añadir el fragmento y actualizar el costo se ha movido a CompletarRecoleccionDeFragmento()
+        Debug.Log("Monolito: Secuencia de animación de expulsión finalizada.");
         _estaExtrayendoFragmento = false;
     }
 
@@ -385,13 +430,54 @@ public class MonolitoBehaviour : MonoBehaviour
         }
     }
 
-    // Este método centraliza la adición de Fe (por rezo, acción del jugador, etc.) y la generación de pilares.
-    private void AñadirFeAlSistema(float cantidad) // Era público, pero parece más un helper interno ahora. Hacerlo público si es necesario.
+    /// <summary>
+    /// Método central para añadir Fe al sistema, generando pilares solo si la cantidad de Fe aumenta realmente.
+    /// </summary>
+    /// <param name="cantidad">La cantidad de Fe que se intenta añadir.</param>
+    private void AñadirFeAlSistema(float cantidad)
     {
-        if (feDataSO == null || ResourceManager.Instance == null || cantidad <= 0) return;
+        // 1. Verificaciones iniciales para asegurar que todo está listo.
+        if (feDataSO == null || ResourceManager.Instance == null || cantidad <= 0)
+        {
+            return;
+        }
+
+        // 2. Obtener el estado de la Fe ANTES de realizar la adición.
+        float feActualAntesDeAnadir = ResourceManager.Instance.GetCantidad(feDataSO.Nombre);
+        float feMaxima = ResourceManager.Instance.GetMaximo(feDataSO.Nombre);
+
+        // 3. Comprobar si ya se alcanzó el límite.
+        if (feActualAntesDeAnadir >= feMaxima)
+        {
+            Debug.Log("Monolito: Se intentó añadir Fe, pero el almacenamiento ya está al máximo. No se generarán nuevos pilares.");
+            // No es necesario hacer nada más, porque aunque llamáramos a Añadir,
+            // la cantidad no cambiaría debido al Clamp.
+            return;
+        }
+
+        // 4. Añadir la Fe al ResourceManager.
+        // El ResourceManager se encargará de que la cantidad no supere el máximo.
         ResourceManager.Instance.Añadir(feDataSO.Nombre, cantidad);
-        int pilaresAGenerar = Mathf.FloorToInt(cantidad) * 3;
-        for(int i=0; i < pilaresAGenerar; i++) GenerarPilar();
+
+        // 5. Obtener la nueva cantidad de Fe para ver cuánto se añadió realmente.
+        float feActualDespuesDeAnadir = ResourceManager.Instance.GetCantidad(feDataSO.Nombre);
+        float cantidadRealmenteAnadida = feActualDespuesDeAnadir - feActualAntesDeAnadir;
+
+        // 6. Generar pilares SOLO en base a la cantidad que realmente se pudo añadir.
+        if (cantidadRealmenteAnadida > 0)
+        {
+            // Calcular pilares a generar (3 por cada unidad entera de Fe añadida).
+            int pilaresAGenerar = Mathf.FloorToInt(cantidadRealmenteAnadida) * 3;
+            
+            if (pilaresAGenerar > 0)
+            {
+                Debug.Log($"Monolito: Se añadieron {cantidadRealmenteAnadida:F2} de Fe. Generando {pilaresAGenerar} pilares.");
+                for(int i = 0; i < pilaresAGenerar; i++)
+                {
+                    GenerarPilar();
+                }
+            }
+        }
     }
 
     public void GenerarPilar() // Hecho público por si algo externo necesita forzarlo, aunque usualmente es interno.
@@ -405,7 +491,7 @@ public class MonolitoBehaviour : MonoBehaviour
         float x = transform.position.x + Mathf.Cos(angulo) * distancia;
         float z = transform.position.z + Mathf.Sin(angulo) * distancia;
         float randomYOffset = Random.Range(-0.3f, 0.5f);
-        float initialYPos = transform.position.y -1.5f; // Posición inicial de emergencia más abajo
+        float initialYPos = transform.position.y -0.5f; // Posición inicial de emergencia más abajo
 
         Vector3 posicionFinalPilar = new Vector3(x, transform.position.y + randomYOffset, z);
         Vector3 posicionInicialPilar = new Vector3(x, initialYPos, z);

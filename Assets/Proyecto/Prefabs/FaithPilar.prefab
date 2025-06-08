@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8758215142554329465}
   - component: {fileID: 3843133923458036631}
   - component: {fileID: 765870651601040474}
+  - component: {fileID: 577663977268337919}
   m_Layer: 0
   m_Name: FaithPilar
   m_TagString: Untagged
@@ -121,5 +122,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b53a7467d86d6346a49451ad4839b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Posicion: {x: 0, y: 0, z: 0}
+  PosicionObjetivoAlSubir: {x: 0, y: 0, z: 0}
   Bajar: 0
+  VelocidadMovimiento: 1
+  PosicionYAlBajar: -3
+--- !u!208 &577663977268337919
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800455135477203597}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.1, y: 0.5, z: 0.1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
