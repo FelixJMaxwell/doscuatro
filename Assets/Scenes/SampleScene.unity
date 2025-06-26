@@ -8264,10 +8264,16 @@ MonoBehaviour:
   panelMonolito: {fileID: 2070818721}
   panelInformacionEdificio: {fileID: 0}
   panelControlCrisol: {fileID: 805934266}
-  textoRecursoFe: {fileID: 1244944798}
+  currentFaithProgressText: {fileID: 0}
   textoRecursoFragmentos: {fileID: 0}
-  feDataSO: {fileID: 11400000, guid: 43432c29c7d31694591b8bbf0ac045ee, type: 2}
+  maxFaithLimitText: {fileID: 0}
+  upgradeFaithCostText: {fileID: 0}
+  upgradeFaithLimitButton: {fileID: 0}
+  feRecurSO: {fileID: 0}
   fragmentoSO: {fileID: 11400000, guid: a0a5ce2216a82fe458043ae75dc3cd69, type: 2}
+  faithUpgradeCostResource: {fileID: 0}
+  faithUpgradeCostAmount: 50
+  faithLimitIncrementAmount: 200
 --- !u!1 &1507261899
 GameObject:
   m_ObjectHideFlags: 0
@@ -10048,7 +10054,7 @@ GameObject:
   - component: {fileID: 2076811052}
   - component: {fileID: 2076811051}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: UpgradeDevotionLimit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -14,11 +14,14 @@ public class RecurSO : ScriptableObject
     [Tooltip("Nombre único identificador del recurso (ej. Fe, Madera, Comida). Usado como clave en ResourceManager.")]
     public string Nombre;
 
+    [Tooltip("¿Este recurso tiene un límite de almacenamiento configurable? Si es falso, el límite es virtualmente infinito (float.MaxValue).")]
+    public bool esLimitado = false; // NUEVA PROPIEDAD: Indica si el recurso tiene un límite
+
     [Tooltip("Cantidad máxima de este recurso que se puede almacenar. Considera usar float.MaxValue si es ilimitado.")]
-    public float Maximo = 1000f; // Valor por defecto
+    public float LimiteInicial = 1000f; // Valor por defecto
 
     [Tooltip("Valor inicial del recurso al empezar el juego o cuando el recurso se introduce por primera vez.")]
-    public float ValorBase = 0f; // Valor por defecto
+    public float CantidadInicial = 0f; // Valor por defecto
     #endregion
 
     #region Sistema de Niveles del Recurso (Opcional)

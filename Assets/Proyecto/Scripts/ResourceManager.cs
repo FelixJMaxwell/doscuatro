@@ -15,6 +15,12 @@ public class ResourceManager : MonoBehaviour
 
     public static event Action<string, float, float> OnRecursoActualizado;
 
+    /// <summary>
+    /// Evento disparado específicamente cuando el límite máximo del recurso "Fe" cambia.
+    /// Parámetro: (float nuevoLimiteDeFe).
+    /// </summary>
+    public static event Action<float> OnFaithLimitChanged;
+
     // ... (UI Temporal: FeUIText, faithPillarsHolder) ...
     [Header("UI Específica (Temporal - Mover a UIManager)")]
     public TextMeshProUGUI FeUIText;
@@ -22,6 +28,72 @@ public class ResourceManager : MonoBehaviour
     [Header("Configuración de SOs (para UI interna)")]
     [SerializeField] private RecurSO feDataSO;
 
+    // Clase interna para manejar cada instancia de recurso
+    [System.Serializable]
+    public class RecursoInstancia // Hecho 'public' si otras clases necesitan instanciarlo o acceder a sus propiedades directamente.
+    {
+        public RecurSO data;
+        [SerializeField] private float _actual;
+        [SerializeField] private float _maximo; // Este es el límite máximo configurable
+
+        // Constructor
+        public RecursoInstancia(RecurSO dataSO, float valorBaseInicial)
+        {
+            data = dataSO;
+            _actual = valorBaseInicial;
+            // Inicializar el máximo. Si el SO tiene un límite, úsalo, si no, es ilimitado (float.MaxValue)
+            _maximo = dataSO.esLimitado ? dataSO.LimiteInicial : float.MaxValue;
+        }
+
+        public float actual
+        {
+            get => _actual;
+            set
+            {
+                float oldAmount = _actual;
+                // Asegura que la cantidad no sea menor que 0 ni exceda el máximo
+                _actual = Mathf.Clamp(value, 0, _maximo); 
+                // La invocación de OnRecursoActualizado se hace en ResourceManager.Añadir/Gastar
+                // para tener el control de cuándo se notifica después de cualquier cambio real.
+            }
+        }
+
+        public float Maximo // Propiedad pública para acceder al límite máximo
+        {
+            get => _maximo;
+            set
+            {
+                float oldMax = _maximo;
+                _maximo = Mathf.Max(0, value); // Asegura que el límite no sea negativo
+
+                // Si el nuevo límite es menor que la cantidad actual, ajusta la cantidad
+                if (_actual > _maximo)
+                {
+                    actual = _maximo; // Esto hará que el setter de 'actual' se encargue del clamp
+                }
+                
+                // =====================================================================================================
+                // INVOCA EL NUEVO EVENTO OnFaithLimitChanged SI ESTE RECURSO ES "FE" Y SU LÍMITE HA CAMBIADO
+                // =====================================================================================================
+                if (_maximo != oldMax) // Solo invoca si el valor realmente cambió
+                {
+                    if (data != null && data.Nombre == "Fe") // Asegúrate de que el nombre de tu recurso de Fe sea "Fe"
+                    {
+                        OnFaithLimitChanged?.Invoke(_maximo);
+                    }
+                }
+            }
+        }
+
+        public void Añadir(float cantidad) { actual += cantidad; } // Usa el setter
+        public bool Gastar(float cantidad) {
+            if (_actual >= cantidad) {
+                actual -= cantidad; // Usa el setter
+                return true;
+            }
+            return false;
+        }
+    }
 
     // --- NUEVO MÉTODO PÚBLICO PARA EL EDITOR ---
     /// <summary>
@@ -49,14 +121,26 @@ public class ResourceManager : MonoBehaviour
         _recursos.Clear();
         if (recursosInicialesSOs == null || recursosInicialesSOs.Count == 0) return;
         foreach (var recursoSO in recursosInicialesSOs) {
-            // Asumiendo que ValidarRecurSO existe y funciona
-            // if (ValidarRecurSO(recursoSO)) {
+            if (ValidarRecurSO(recursoSO)) {
                 if (!_recursos.ContainsKey(recursoSO.Nombre)) {
-                    _recursos[recursoSO.Nombre] = new RecursoInstancia(recursoSO, recursoSO.ValorBase);
+                    // Crea la instancia de recurso, el constructor ya maneja el límite inicial
+                    _recursos[recursoSO.Nombre] = new RecursoInstancia(recursoSO, recursoSO.CantidadInicial); 
+                    
+                    // =====================================================================================================
+                    // INVOCA LOS EVENTOS PARA INICIALIZAR LA UI AL PRINCIPIO
+                    // =====================================================================================================
+                    // Notifica la cantidad y el máximo actual al inicio
                     OnRecursoActualizado?.Invoke(recursoSO.Nombre, _recursos[recursoSO.Nombre].actual, _recursos[recursoSO.Nombre].Maximo);
-                    ActualizarRecursoUI(recursoSO.Nombre);
+                    
+                    // Disparar el nuevo evento de límite de Fe al inicio si es el recurso "Fe"
+                    if (recursoSO.Nombre == "Fe") // Asegúrate de que el nombre de tu recurso de Fe sea "Fe"
+                    {
+                         OnFaithLimitChanged?.Invoke(_recursos[recursoSO.Nombre].Maximo);
+                    }
+                    
+                    ActualizarRecursoUI(recursoSO.Nombre); // Temporal: Esto debería ir en UIManager
                 }
-            // }
+            }
         }
     }
     
@@ -109,8 +193,55 @@ public class ResourceManager : MonoBehaviour
         return false;
     }
 
-    private void ActualizarRecursoUI(string nombreRecurso) {
-        if (feDataSO != null && nombreRecurso == feDataSO.Nombre && FeUIText != null) {
+    // =================================================================================================================
+    // NUEVO MÉTODO PÚBLICO PARA INCREMENTAR EL LÍMITE MÁXIMO DE UN RECURSO
+    // =================================================================================================================
+    /// <summary>
+    /// Incrementa el límite máximo de un recurso específico.
+    /// Este método es llamado por la UI o por lógica de progresión.
+    /// </summary>
+    /// <param name="nombreRecurso">El nombre del recurso cuyo límite máximo se va a incrementar.</param>
+    /// <param name="cantidadAIncrementar">La cantidad en la que se aumentará el límite.</param>
+    public void IncrementarLimiteMaximoRecurso(string nombreRecurso, float cantidadAIncrementar)
+    {
+        if (string.IsNullOrEmpty(nombreRecurso))
+        {
+            Debug.LogError("ResourceManager: Nombre de recurso no válido para incrementar el límite máximo.");
+            return;
+        }
+
+        if (_recursos.TryGetValue(nombreRecurso, out RecursoInstancia instancia))
+        {
+            // Solo permitir el incremento si el RecurSO asociado indica que es un recurso limitado
+            if (instancia.data.esLimitado) 
+            {
+                float oldMax = instancia.Maximo;
+                instancia.Maximo += cantidadAIncrementar; // Usa el setter de la propiedad Maximo
+                
+                // El setter de 'Maximo' dentro de RecursoInstancia ya invoca OnFaithLimitChanged si es "Fe".
+                // Aquí solo necesitamos invocar OnRecursoActualizado para que las barras de progreso u otras
+                // UIs que usen esa información también se actualicen, asegurando la consistencia.
+                if (instancia.Maximo != oldMax) // Solo si el límite realmente cambió
+                {
+                    OnRecursoActualizado?.Invoke(nombreRecurso, instancia.actual, instancia.Maximo);
+                    Debug.Log($"Límite máximo de {nombreRecurso} incrementado a {instancia.Maximo:F0}.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"El recurso '{nombreRecurso}' no está configurado como limitado en su ScriptableObject. No se puede incrementar su límite.");
+            }
+        }
+        else
+        {
+            Debug.LogError($"Recurso '{nombreRecurso}' no encontrado en el ResourceManager. No se puede incrementar su límite.");
+        }
+    }
+
+    private void ActualizarRecursoUI(string nombreRecurso)
+    {
+        if (feDataSO != null && nombreRecurso == feDataSO.Nombre && FeUIText != null)
+        {
             FeUIText.text = $"Fe: {GetCantidad(feDataSO.Nombre):F0} / {GetMaximo(feDataSO.Nombre):F0}";
         }
     }
@@ -136,7 +267,7 @@ public class ResourceManager : MonoBehaviour
 
         // 2. Calcular cuántos pilares afectar: 3 pilares por cada unidad ENTERA de Fe gastada.
         int pilaresAAfectar = Mathf.FloorToInt(cantidadFeGastadaReal) * 3;
-        
+
         if (pilaresAAfectar == 0)
         {
             // Si se gastó menos de 1.0 de Fe, con esta regla no se afecta ningún pilar.
@@ -165,7 +296,7 @@ public class ResourceManager : MonoBehaviour
             {
                 PilarBehaviour pilarBehaviour = pilarTransform.GetComponent<PilarBehaviour>();
                 // Solo afectar pilares que tengan el script y que no estén ya en proceso de bajar.
-                if (pilarBehaviour != null && !pilarBehaviour.Bajar) 
+                if (pilarBehaviour != null && !pilarBehaviour.Bajar)
                 {
                     pilarBehaviour.EstablecerEstadoBajada(true); // Usar el método explícito para iniciar el descenso
                     pilaresRealmenteAfectados++;

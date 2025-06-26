@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System; // Necesario para List y Dictionary
+using UnityEngine.AI;
 
 // Estados posibles para el NPC
 public enum EstadoNPC
@@ -110,6 +111,23 @@ public class PersonajeBehaviour : MonoBehaviour
     private float _timerEstadoActual = 0f;
     private float _duracionRezo = 10f; // Ejemplo: cuánto tiempo reza el NPC
 
+    // --- Necesidades del NPC (NUEVO) ---
+    [Header("Necesidades del NPC")]
+    [SerializeField][Range(0, 100)] private int _hambre = 100; // 100 es lleno, 0 es hambriento
+    public int Hambre => _hambre;
+    [SerializeField][Range(0, 100)] private int _energia = 100; // 100 es descansado, 0 es cansado
+    public int Energia => _energia;
+
+    [Tooltip("Tasa de decremento de hambre por segundo")]
+    public float tasaDecrementoHambre = 1f; // Pierde 1 punto de hambre cada segundo
+    [Tooltip("Tasa de decremento de energía por segundo")]
+    public float tasaDecrementoEnergia = 1f; // Pierde 1 punto de energía cada segundo
+
+    // Umbrales para que el NPC decida actuar
+    public int umbralHambreCritico = 30;
+    public int umbralEnergiaCritico = 30;
+    public int umbralFeCritico = 40;
+
     // --- Eventos ---
     public static event Action<PersonajeBehaviour> OnPersonajeMuertoGlobal;
     public event Action<PersonajeBehaviour> OnEstePersonajeMuerto;
@@ -126,6 +144,22 @@ public class PersonajeBehaviour : MonoBehaviour
 
     private float _timerSiguientePulsoRezo = 0f;
 
+
+    // --- Componentes y Configuración de Movimiento ---
+    [Header("Configuración de Movimiento")]
+    private NavMeshAgent _navMeshAgent; // Referencia al componente NavMeshAgent
+    [SerializeField]
+    private float _distanciaMinimaDestino = 0.5f; // Distancia para considerar que llegó al destino
+
+    private void Awake() // Usar Awake para obtener componentes
+    {
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        if (_navMeshAgent == null)
+        {
+            Debug.LogError($"'{name}': No se encontró un NavMeshAgent en el GameObject.", this);
+        }
+    }
+
     private void Start()
     {
         CambiarEstado(EstadoNPC.Ocioso);
@@ -133,6 +167,7 @@ public class PersonajeBehaviour : MonoBehaviour
 
     private void Update()
     {
+        ActualizarNecesidades();
         ActualizarFSM();
     }
 
@@ -166,14 +201,64 @@ public class PersonajeBehaviour : MonoBehaviour
         }
     }
 
+    // --- Métodos de Modificación de Necesidades (NUEVO) ---
+    public void ModificarHambre(int cantidad)
+    {
+        _hambre = Mathf.Clamp(_hambre + cantidad, 0, 100);
+        // Podrías tener un evento OnHambreCambiada si la UI lo necesita.
+    }
+
+    public void ModificarEnergia(int cantidad)
+    {
+        _energia = Mathf.Clamp(_energia + cantidad, 0, 100);
+        // Podrías tener un evento OnEnergiaCambiada si la UI lo necesita.
+    }
+
+    private void ActualizarNecesidades()
+    {
+        ModificarHambre((int)(-tasaDecrementoHambre * Time.deltaTime));
+        ModificarEnergia((int)(-tasaDecrementoEnergia * Time.deltaTime));
+        // Aquí podrías añadir lógica de ModificarFelicidad en base a las necesidades
+        // (ej. si el hambre o la energía están muy bajas, reduce la felicidad).
+    }
+
     private void CambiarEstado(EstadoNPC nuevoEstado)
     {
         if (_estadoActualNPC == nuevoEstado) return;
+
+        // Lógica de SALIDA del estado anterior (si es necesario)
+        switch (_estadoActualNPC)
+        {
+            case EstadoNPC.MoviendoseAlTrabajo:
+            case EstadoNPC.MoviendoseACasa:
+            case EstadoNPC.MoviendoseAlMonolito:
+                if (_navMeshAgent != null && _navMeshAgent.enabled)
+                {
+                    _navMeshAgent.isStopped = true; // Detener el movimiento al salir de un estado de movimiento
+                }
+                break;
+            // Otros estados si necesitan lógica al salir
+        }
+
         EstadoNPC estadoAnterior = _estadoActualNPC;
         _estadoActualNPC = nuevoEstado;
         _timerEstadoActual = 0f;
         OnEstadoNPCCambiado?.Invoke(estadoAnterior, _estadoActualNPC);
-        // Debug.Log($"'{Nombre}' cambió de {estadoAnterior} a {nuevoEstado}");
+        Debug.Log($"'{nombre}' cambió de {estadoAnterior} a {nuevoEstado}");
+
+        // Lógica de ENTRADA al nuevo estado (si es necesario)
+        switch (_estadoActualNPC)
+        {
+            case EstadoNPC.MoviendoseAlTrabajo:
+            case EstadoNPC.MoviendoseACasa:
+            case EstadoNPC.MoviendoseAlMonolito:
+                if (_navMeshAgent != null)
+                {
+                    _navMeshAgent.isStopped = false; // Permitir el movimiento
+                }
+                break;
+            // Otros estados si necesitan lógica al entrar
+        }
     }
 
     // Inicializa al personaje con datos de un ScriptableObject.
@@ -207,22 +292,74 @@ public class PersonajeBehaviour : MonoBehaviour
         Debug.Log($"Personaje '{nombre}' inicializado. Edad: {edad}, Género: {genero}, Legendario: {esLegendario}, Trabajo: {trabajo}");
     }
 
-    // --- Lógica de cada Estado ---
     private void ActualizarEstadoOcioso()
     {
-        // Podría decidir ir a rezar si su fe es baja o si no hay trabajo
-        // if (_timerEstadoActual > 5f) { // Cada 5 segundos, tomar una decisión
-        //     if (FeIndividual < 40 && GameManager.Instance != null && GameManager.Instance.MonolitoPrincipal != null) {
-        //         OrdenarRezarAlMonolito(GameManager.Instance.MonolitoPrincipal);
-        //     }
-        //     _timerEstadoActual = 0f;
-        // }
+        // En Ocioso, el NPC decide qué hacer basándose en sus necesidades o prioridades.
+        if (Hambre <= umbralHambreCritico)
+        {
+            // Podríamos buscar un lugar para comer (ej. Building_Granja, o una despensa)
+            // Por ahora, solo simular que se mueve a casa a "comer" si no hay lugar específico.
+            if (casaAsignada != null)
+            {
+                Debug.Log($"'{nombre}' tiene hambre. Irá a casa a \"comer\".");
+                CambiarEstado(EstadoNPC.MoviendoseACasa); // Asumimos que come en casa por ahora
+                return;
+            }
+        }
+        if (Energia <= umbralEnergiaCritico)
+        {
+            if (casaAsignada != null)
+            {
+                Debug.Log($"'{nombre}' está cansado. Irá a casa a \"descansar\".");
+                CambiarEstado(EstadoNPC.MoviendoseACasa); // Asumimos que descansa en casa por ahora
+                return;
+            }
+        }
+        if (FeIndividual <= umbralFeCritico && _monolitoObjetivoRezo == null && GameManager.Instance != null && GameManager.Instance.MonolitoPrincipal != null)
+        {
+            Debug.Log($"'{nombre}' tiene poca fe. Irá a rezar al Monolito.");
+            OrdenarRezarAlMonolito(GameManager.Instance.MonolitoPrincipal);
+            return;
+        }
+
+        // Si no hay necesidades críticas, podría buscar trabajo si no lo tiene.
+        if (string.IsNullOrEmpty(_trabajoDefinido) || _edificioDeTrabajoActual == null)
+        {
+            // Aquí buscaría un Building_Granja disponible o similar.
+            // Por ahora, no lo implementamos para no añadir mucha complejidad de búsqueda.
+            // Podrías tener un PopulationManager que le asigne trabajo.
+            // Debug.Log($"'{nombre}' está ocioso y sin trabajo.");
+        }
+
+        // Si no hay nada que hacer, simplemente espera o deambula un poco.
+        // Puedes añadir un timer para cambiar a un estado de "paseo aleatorio" si lo deseas.
     }
 
     private void ActualizarEstadoMoviendoseAlTrabajo()
     {
-        // Debug.Log($"'{Nombre}' llegó conceptualmente a '{_edificioDeTrabajoActual?.buildingName ?? "su trabajo"}'.");
-        CambiarEstado(EstadoNPC.Trabajando);
+        if (_edificioDeTrabajoActual == null || _navMeshAgent == null || !_navMeshAgent.enabled)
+        {
+            Debug.LogWarning($"'{nombre}': Edificio de trabajo o NavMeshAgent no válido. Volviendo a Ocioso.");
+            CambiarEstado(EstadoNPC.Ocioso);
+            return;
+        }
+
+        // Si aún no hemos establecido el destino, hazlo.
+        if (_navMeshAgent.destination != _edificioDeTrabajoActual.transform.position)
+        {
+            _navMeshAgent.SetDestination(_edificioDeTrabajoActual.transform.position);
+            _navMeshAgent.isStopped = false;
+        }
+
+        // Verifica si ha llegado al destino.
+        if (!_navMeshAgent.pathPending && _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance + _distanciaMinimaDestino)
+        {
+            if (!_navMeshAgent.hasPath || _navMeshAgent.velocity.sqrMagnitude == 0f) // Asegura que no se esté moviendo
+            {
+                Debug.Log($"'{nombre}' llegó a '{_edificioDeTrabajoActual.buildingName}'.");
+                CambiarEstado(EstadoNPC.Trabajando);
+            }
+        }
     }
 
     private void ActualizarEstadoTrabajando()
@@ -232,38 +369,107 @@ public class PersonajeBehaviour : MonoBehaviour
             CambiarEstado(EstadoNPC.Ocioso);
             return;
         }
-        // if (_timerEstadoActual > 3.0f) {
-        //     // Debug.Log($"'{Nombre}' completó ciclo de trabajo en '{_edificioDeTrabajoActual.buildingName}'.");
-        //     _timerEstadoActual = 0f;
-        // }
+
+        // Lógica de trabajo real
+        // Aquí es donde el NPC interactúa con el edificio para producir algo
+        // Puedes llamar a un método en el edificio, por ejemplo:
+        if (_edificioDeTrabajoActual is Building_Granja granja) // Ejemplo específico para la granja
+        {
+            // Granja podría tener un método para que el trabajador contribuya a la producción
+            granja.ContribuirProduccion(this); // Necesitarías implementar esto en Building_Granja
+            // Debug.Log($"'{nombre}' trabajando en {granja.buildingName}.");
+        }
+        else
+        {
+            // Lógica genérica de trabajo o para otros tipos de edificios.
+            // Para la demostración, solo simular que pasa el tiempo.
+            // Debug.Log($"'{nombre}' trabajando en '{_edificioDeTrabajoActual.buildingName}'.");
+        }
+
+        // Después de un tiempo o si las necesidades cambian, el NPC debería irse a casa.
+        // Por ahora, solo si está demasiado cansado o hambriento.
+        if (Energia <= umbralEnergiaCritico || Hambre <= umbralHambreCritico)
+        {
+            Debug.Log($"'{nombre}' está muy cansado o hambriento, dejando el trabajo.");
+            QuitarDelTrabajoActual(); // Esto lo pondrá en MoviendoseACasa o Ocioso.
+            return;
+        }
     }
+
     private void ActualizarEstadoMoviendoseACasa()
     {
-        if (_casaAsignada == null) { CambiarEstado(EstadoNPC.Ocioso); return; }
-        // Debug.Log($"'{Nombre}' llegó conceptualmente a su casa '{_casaAsignada.buildingName}'.");
-        CambiarEstado(EstadoNPC.EnCasa);
+        if (_casaAsignada == null || _navMeshAgent == null || !_navMeshAgent.enabled)
+        {
+            Debug.LogWarning($"'{nombre}': Casa asignada o NavMeshAgent no válido. Volviendo a Ocioso.");
+            CambiarEstado(EstadoNPC.Ocioso);
+            return;
+        }
+
+        if (_navMeshAgent.destination != _casaAsignada.transform.position)
+        {
+            _navMeshAgent.SetDestination(_casaAsignada.transform.position);
+            _navMeshAgent.isStopped = false;
+        }
+
+        if (!_navMeshAgent.pathPending && _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance + _distanciaMinimaDestino)
+        {
+            if (!_navMeshAgent.hasPath || _navMeshAgent.velocity.sqrMagnitude == 0f)
+            {
+                Debug.Log($"'{nombre}' llegó a su casa '{_casaAsignada.buildingName}'.");
+                CambiarEstado(EstadoNPC.EnCasa);
+            }
+        }
     }
 
     private void ActualizarEstadoEnCasa()
     {
-        // if (_timerEstadoActual > 10f) {
-        //     ModificarFelicidad(2);
-        //     _timerEstadoActual = 0f;
-        // }
+        // En casa, el NPC recupera energía y satisface el hambre.
+        ModificarEnergia(5); // Recupera 5 de energía por segundo (ejemplo)
+        ModificarHambre(2); // Recupera 2 de hambre por segundo (ejemplo)
+        ModificarFelicidad(1); // Pequeño bonus de felicidad por estar en casa
+
+        // Si sus necesidades están satisfechas, podría ir a trabajar o rezar.
+        if (Hambre >= 90 && Energia >= 90) // Si está bien descansado y alimentado
+        {
+            // Por ahora, si tiene trabajo, que vaya a trabajar.
+            // Más adelante, el PopulationManager podría decidir su siguiente acción.
+            if (_edificioDeTrabajoActual != null)
+            {
+                Debug.Log($"'{nombre}' está recuperado y listo para ir a trabajar.");
+                CambiarEstado(EstadoNPC.MoviendoseAlTrabajo);
+            }
+            else
+            {
+                // Si no tiene trabajo, vuelve a ocioso para decidir.
+                Debug.Log($"'{nombre}' está recuperado pero no tiene trabajo. Volviendo a Ocioso.");
+                CambiarEstado(EstadoNPC.Ocioso);
+            }
+        }
     }
 
-    private void ActualizarEstadoMoviendoseAlMonolito() // NUEVO MÉTODO
+    private void ActualizarEstadoMoviendoseAlMonolito()
     {
-        if (_monolitoObjetivoRezo == null)
+        if (_monolitoObjetivoRezo == null || _navMeshAgent == null || !_navMeshAgent.enabled)
         {
-            Debug.LogWarning($"'{nombre}' intentando moverse al Monolito, pero no hay objetivo. Volviendo a Ocioso.");
+            Debug.LogWarning($"'{nombre}': Monolito objetivo o NavMeshAgent no válido. Volviendo a Ocioso.");
             CambiarEstado(EstadoNPC.Ocioso);
             return;
         }
-        // En esta versión básica, el movimiento es instantáneo.
-        // Debug.Log($"'{Nombre}' llegó conceptualmente al Monolito '{_monolitoObjetivoRezo.name}'.");
-        CambiarEstado(EstadoNPC.RezandoAlMonolito);
-        // Futuro: Lógica de movimiento hacia _monolitoObjetivoRezo.transform.position
+
+        if (_navMeshAgent.destination != _monolitoObjetivoRezo.transform.position)
+        {
+            _navMeshAgent.SetDestination(_monolitoObjetivoRezo.transform.position);
+            _navMeshAgent.isStopped = false;
+        }
+
+        if (!_navMeshAgent.pathPending && _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance + _distanciaMinimaDestino)
+        {
+            if (!_navMeshAgent.hasPath || _navMeshAgent.velocity.sqrMagnitude == 0f)
+            {
+                Debug.Log($"'{nombre}' llegó al Monolito '{_monolitoObjetivoRezo.name}'.");
+                CambiarEstado(EstadoNPC.RezandoAlMonolito);
+            }
+        }
     }
 
     private void ActualizarEstadoRezandoAlMonolito()
@@ -275,71 +481,83 @@ public class PersonajeBehaviour : MonoBehaviour
             return;
         }
 
-        // El NPC permanece en este estado durante _duracionRezo
-        // Debug.Log($"'{Nombre}' está rezando al Monolito '{_monolitoObjetivoRezo.name}'... (Tiempo Total: {_timerEstadoActual:F1}/{_duracionRezo:F1})");
-
         // Lógica de pulso de rezo
         _timerSiguientePulsoRezo += Time.deltaTime;
         if (_timerSiguientePulsoRezo >= intervaloPulsoRezo)
         {
             _monolitoObjetivoRezo.RecibirContribucionDeRezo(progresoPorPulsoDeRezo);
-            // Debug.Log($"'{Nombre}' envió pulso de rezo (+{progresoPorPulsoDeRezo*100}%) al Monolito.");
-            _timerSiguientePulsoRezo = 0f; // Resetear timer para el siguiente pulso
+            ModificarFeIndividual(1); // El NPC también recupera su propia Fe individual al rezar
+            Debug.Log($"'{nombre}' envió pulso de rezo al Monolito y recuperó Fe individual. Fe: {FeIndividual}");
+            _timerSiguientePulsoRezo = 0f;
         }
 
+        // Duración total del rezo
         if (_timerEstadoActual >= _duracionRezo)
         {
-            // El NPC ya no contribuye con Fe Individual directamente, sino al progreso del Monolito.
-            // Podrías darle una pequeña recompensa de felicidad o mantener/aumentar su Fe Individual aquí si aún la tiene.
-            ModificarFelicidad(5); // Ejemplo: Gana algo de felicidad por completar el rezo.
-            // Debug.Log($"'{Nombre}' terminó su sesión de rezo de {_duracionRezo}s.");
+            ModificarFelicidad(5);
+            Debug.Log($"'{nombre}' terminó su sesión de rezo de {_duracionRezo}s.");
 
             if (casaAsignada != null) CambiarEstado(EstadoNPC.MoviendoseACasa);
             else CambiarEstado(EstadoNPC.Ocioso);
         }
     }
 
-    // --- Métodos para Controlar la FSM desde Fuera ---
     public void AsignarTrabajo(BaseBuilding puestoDeTrabajo)
     {
-        // ... (código existente) ...
-        if (puestoDeTrabajo == null) return;
+        if (puestoDeTrabajo == null)
+        {
+            Debug.LogWarning($"'{name}': Intentando asignar trabajo nulo. Volviendo a Ocioso.");
+            if (_casaAsignada != null) CambiarEstado(EstadoNPC.MoviendoseACasa);
+            else CambiarEstado(EstadoNPC.Ocioso);
+            return;
+        }
+
         // Quitar de trabajo/rezo anterior
-        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable) { ((ITrabajable)_edificioDeTrabajoActual).QuitarTrabajador(this); }
-        _monolitoObjetivoRezo = null; // Dejar de tener el monolito como objetivo si estaba rezando/yendo a rezar
+        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable)
+        {
+            ((ITrabajable)_edificioDeTrabajoActual).QuitarTrabajador(this);
+        }
+        _monolitoObjetivoRezo = null; // Si iba a rezar, ya no
 
         _edificioDeTrabajoActual = puestoDeTrabajo;
-        _trabajoDefinido = puestoDeTrabajo.buildingName;
-        if (puestoDeTrabajo is ITrabajable it) it.AnadirTrabajador(this);
+        _trabajoDefinido = puestoDeTrabajo.buildingName; // Asigna el nombre del edificio como trabajo
+
+        if (puestoDeTrabajo is ITrabajable it)
+        {
+            it.AnadirTrabajador(this);
+        }
+
         CambiarEstado(EstadoNPC.MoviendoseAlTrabajo);
     }
 
     public void QuitarDelTrabajoActual()
     {
-        // ... (código existente) ...
-        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable it) {
+        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable it)
+        {
             it.QuitarTrabajador(this);
         }
         _edificioDeTrabajoActual = null;
+        _trabajoDefinido = "Ninguno"; // Resetea el nombre del trabajo
+
         if (_casaAsignada != null) CambiarEstado(EstadoNPC.MoviendoseACasa);
         else CambiarEstado(EstadoNPC.Ocioso);
     }
 
-    public void OrdenarRezarAlMonolito(MonolitoBehaviour monolitoARezar) // NUEVO MÉTODO
+    public void OrdenarRezarAlMonolito(MonolitoBehaviour monolitoARezar)
     {
         if (monolitoARezar == null)
         {
-            Debug.LogWarning($"'{nombre}': Se intentó ordenar rezar a un Monolito nulo.");
+            Debug.LogWarning($"'{name}': Se intentó ordenar rezar a un Monolito nulo.");
             return;
         }
         // Quitar de trabajo anterior si lo tuviera
-        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable it) {
+        if (_edificioDeTrabajoActual != null && _edificioDeTrabajoActual is ITrabajable it)
+        {
             it.QuitarTrabajador(this);
             _edificioDeTrabajoActual = null;
         }
 
         _monolitoObjetivoRezo = monolitoARezar;
-        // Debug.Log($"'{Nombre}' ha recibido la orden de ir a rezar al Monolito '{_monolitoObjetivoRezo.name}'.");
         CambiarEstado(EstadoNPC.MoviendoseAlMonolito);
     }
 
@@ -353,14 +571,6 @@ public class PersonajeBehaviour : MonoBehaviour
             OnFeIndividualCambiada?.Invoke(_feIndividual);
             // Debug.Log($"Fe Individual de '{Nombre}' cambió a {_feIndividual}.");
         }
-    }
-
-    // Interfaz hipotética para edificios que aceptan trabajadores (si no la tienes ya)
-    public interface ITrabajable {
-        bool AnadirTrabajador(PersonajeBehaviour trabajador);
-        void QuitarTrabajador(PersonajeBehaviour trabajador);
-        // int GetMaxTrabajadores();
-        // int GetTrabajadoresActuales();
     }
 
     // Aplica daño al personaje y maneja la muerte si la salud llega a cero.

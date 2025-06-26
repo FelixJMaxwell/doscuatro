@@ -15,17 +15,16 @@ public class ResourceManagerEditor : Editor
         if (Application.isPlaying && resourceManager != null)
         {
             // Usar el nuevo método para obtener los recursos
-            IReadOnlyDictionary<string, RecursoInstancia> runtimeRecursos = resourceManager.GetRuntimeRecursos();
+            IReadOnlyDictionary<string, ResourceManager.RecursoInstancia> runtimeRecursos = resourceManager.GetRuntimeRecursos();
 
             if (runtimeRecursos != null && runtimeRecursos.Count > 0)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Recursos Almacenados (En Ejecución)", EditorStyles.boldLabel);
 
-                // Iterar sobre la copia de solo lectura
-                foreach (KeyValuePair<string, RecursoInstancia> pair in runtimeRecursos)
+                foreach (KeyValuePair<string, ResourceManager.RecursoInstancia> pair in runtimeRecursos) // Y aquí también
                 {
-                    if (pair.Value != null && pair.Value.data != null) // Chequeo adicional de nulidad
+                    if (pair.Value != null && pair.Value.data != null)
                     {
                         EditorGUILayout.LabelField($"{pair.Key} ({pair.Value.data.Nombre}): {pair.Value.actual.ToString("F2")} / {pair.Value.Maximo.ToString("F0")}");
                     }
@@ -34,21 +33,20 @@ public class ResourceManagerEditor : Editor
                         EditorGUILayout.LabelField($"{pair.Key}: (Datos de instancia o RecurSO nulos)");
                     }
                 }
-                Repaint(); // Solicitar que se redibuje el inspector para ver cambios en tiempo real
+                Repaint(); 
             }
             else if (runtimeRecursos != null && runtimeRecursos.Count == 0)
             {
                 EditorGUILayout.HelpBox("No hay recursos instanciados actualmente en ejecución.", MessageType.Info);
             }
-            else if (runtimeRecursos == null) // Si GetRuntimeRecursos devolviera null por alguna razón
+            else if (runtimeRecursos == null) 
             {
-                 EditorGUILayout.HelpBox("El diccionario de recursos en ejecución es nulo.", MessageType.Warning);
+                EditorGUILayout.HelpBox("El diccionario de recursos en ejecución es nulo.", MessageType.Warning);
             }
         }
         else if (!Application.isPlaying)
         {
             EditorGUILayout.HelpBox("Entra en modo de ejecución para ver las cantidades de recursos almacenados.", MessageType.Info);
         }
-        // El caso de resourceManager == null ya lo maneja el !Application.isPlaying o el primer if.
     }
 }

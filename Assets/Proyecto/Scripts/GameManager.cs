@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI; // Necesario para Button y Toggle (aunque se acceden por GameObject en tu código, el tipo es de UI)
 
 // Esta clase se puede definir dentro de GameManager.cs o en su propio archivo .cs

@@ -1,8 +1,9 @@
 // Archivo: Building_Granja.cs
 using UnityEngine;
 using UnityEngine.EventSystems; // Para EventSystem.current.IsPointerOverGameObject()
+using System.Collections.Generic; // Necesario para List
 
-public class Building_Granja : BaseBuilding
+public class Building_Granja : BaseBuilding, ITrabajable
 {
     #region Configuration
     // =================================================================================================================
@@ -13,14 +14,20 @@ public class Building_Granja : BaseBuilding
     [SerializeField] private RecurSO recursoAlimentoSO; // Ejemplo, asigna el SO de "Comida"
 
     [Tooltip("Cuántas unidades de alimento produce la granja por cada lote/evento.")]
-    [SerializeField] private float unidadesAlimentoPorLote = 5f;
-
+    [SerializeField] private float unidadesAlimentoPorLoteBase = 5f; // Renombrado a 'Base'
     [Tooltip("Tiempo en segundos entre cada lote de producción de alimento.")]
-    [SerializeField] private float intervaloProduccionAlimento = 10f;
+    [SerializeField] private float intervaloProduccionAlimentoBase = 10f; // Renombrado a 'Base'
 
-    // Ejemplo de necesidad de trabajadores (conceptual)
-    // [SerializeField] private int trabajadoresNecesariosParaMaxEficiencia = 3;
-    // private List<PersonajeBehaviour> _trabajadoresActuales = new List<PersonajeBehaviour>();
+    [Header("Gestión de Trabajadores")]
+    [Tooltip("El número máximo de personajes que pueden trabajar en esta granja.")]
+    public int maxTrabajadores = 3; // Límite de trabajadores
+    private List<PersonajeBehaviour> _trabajadoresActuales = new List<PersonajeBehaviour>();
+
+    // --- NUEVAS PROPIEDADES PARA EFECTO DE TRABAJADORES ---
+    [Tooltip("Modificador a la producción por cada trabajador adicional después del primero.")]
+    [SerializeField] private float bonusProduccionPorTrabajador = 0.5f; // Ej: 0.5 unidades extra por trabajador
+    [Tooltip("Modificador al intervalo de producción por cada trabajador (negativo para hacerlo más rápido).")]
+    [SerializeField] private float reduccionIntervaloPorTrabajador = 0.5f; // Ej: 0.5 segundos menos por trabajador
     #endregion
 
     #region Unity Lifecycle Methods
@@ -38,20 +45,25 @@ public class Building_Granja : BaseBuilding
         }
         buildingType = BuildingType.Estructura.Granja; // Asigna el tipo de estructura correcto
 
-        // Configurar la producción de recursos
+        // Configurar la producción de recursos (valores base)
         producesResources = true; // Indicar que este edificio produce recursos
 
         if (recursoAlimentoSO != null)
         {
             resourceToProduceSO = recursoAlimentoSO; // Asigna el SO del recurso a producir (de BaseBuilding)
-            unitsPerProductionBatch = unidadesAlimentoPorLote; // Asigna las unidades por lote (de BaseBuilding)
-            intervalBetweenProduction = intervaloProduccionAlimento; // Asigna el intervalo (de BaseBuilding)
+            unitsPerProductionBatch = unidadesAlimentoPorLoteBase; // Asigna las unidades por lote (de BaseBuilding)
+            intervalBetweenProduction = intervaloProduccionAlimentoBase; // Asigna el intervalo (de BaseBuilding)
         }
         else
         {
             Debug.LogError($"'{buildingName}': No se ha asignado 'recursoAlimentoSO'. La granja no producirá.");
             producesResources = false; // Desactivar producción si no está bien configurada
         }
+
+        // Llamamos a esto en Start para que se calculen los valores iniciales
+        // (incluso si no hay trabajadores, aseguramos que 'unitsPerProductionBatch' y 'intervalBetweenProduction'
+        // tengan los valores base del Inspector).
+        ActualizarProduccionBasadaEnTrabajadores();
 
         // La activación (isActive = true) se maneja ahora a través de BuildingManager
         // al finalizar la construcción, llamando a buildingScript.ActivateBuilding().
@@ -73,18 +85,13 @@ public class Building_Granja : BaseBuilding
         if (resourceToProduceSO == null || unitsPerProductionBatch <= 0 || intervalBetweenProduction <= 0)
         {
             Debug.LogWarning($"'{buildingName}': No se puede activar la producción. Parámetros de producción no configurados correctamente.");
-            // No llamar a base.ActivateBuilding() si no puede producir, o manejar 'isActive' de forma diferente.
-            // Opcionalmente, permitir que se active pero no produzca.
-            // Por ahora, si está mal configurada, no se activará la producción de BaseBuilding.
-            // Pero el edificio sí puede estar "activo" para otras interacciones.
             this.isActive = true; // Marcar como activo para selección, etc.
-                                  // pero la lógica de Update() en BaseBuilding no producirá.
             Debug.Log($"Edificio '{buildingName}' activado, pero la producción de recursos puede no funcionar debido a configuración incompleta.");
             return;
         }
 
         base.ActivateBuilding(); // Llama a la lógica base (pone isActive = true, resetea timer de producción).
-        // Debug.Log($"La granja '{buildingName}' ha comenzado su producción de '{resourceToProduceSO.Nombre}'.");
+        Debug.Log($"La granja '{buildingName}' ha comenzado su producción de '{resourceToProduceSO.Nombre}'.");
         // Aquí podrías iniciar animaciones, efectos visuales de granja activa, etc.
     }
 
@@ -94,25 +101,19 @@ public class Building_Granja : BaseBuilding
     /// </summary>
     protected override void ExecuteProduction()
     {
-        // Ejemplo de condición adicional: ¿La granja necesita agua para producir comida?
-        // string aguaResourceName = "Agua"; // Asumir que tienes un recurso "Agua"
-        // float aguaNecesariaPorLote = 1.0f;
-        // if (ResourceManager.Instance != null && ResourceManager.Instance.TieneSuficiente(aguaResourceName, aguaNecesariaPorLote))
-        // {
-        //     ResourceManager.Instance.Gastar(aguaResourceName, aguaNecesariaPorLote);
-        //     base.ExecuteProduction(); // Llama a la lógica de producción de BaseBuilding (que añade 'resourceToProduceSO')
-        //     Debug.Log($"'{buildingName}' produjo alimento consumiendo {aguaNecesariaPorLote} de {aguaResourceName}.");
-        // }
-        // else
-        // {
-        //    Debug.LogWarning($"'{buildingName}': No hay suficiente '{aguaResourceName}' para producir. Producción detenida este ciclo.");
-        //    // Aquí podrías querer que el _productionTimer de BaseBuilding no se resetee completamente,
-        //    // o que la granja entre en un estado de "esperando recursos" y muestre un ícono.
-        //    // Por ahora, si no se llama a base.ExecuteProduction(), simplemente no se produce nada en este ciclo.
-        // }
+        // Condición de producción: ¿Hay al menos 1 trabajador?
+        // Puedes ajustar esto si quieres que produzca algo incluso sin trabajadores, pero con menos eficiencia.
+        if (_trabajadoresActuales.Count == 0)
+        {
+            // Opcional: Producir una cantidad muy pequeña o nada si no hay trabajadores.
+            // Debug.Log($"'{buildingName}': No hay trabajadores asignados. Producción mínima o nula.");
+            // Si no queremos que produzca nada, simplemente retornamos.
+            return;
+        }
 
-        // Si no hay condiciones especiales, simplemente llama a la producción base:
+        // Llama a la lógica de producción de BaseBuilding
         base.ExecuteProduction();
+        Debug.Log($"'{buildingName}' produjo {unitsPerProductionBatch} de {resourceToProduceSO.Nombre} con {_trabajadoresActuales.Count} trabajadores.");
     }
     #endregion
 
@@ -151,38 +152,96 @@ public class Building_Granja : BaseBuilding
     }
     #endregion
 
-    #region Farm-Specific Logic (Ejemplos para futuro)
+    #region ITrabajable Implementation
     // =================================================================================================================
-    // LÓGICA ESPECÍFICA DE LA GRANJA (PARA FUTURAS AMPLIACIONES)
+    // IMPLEMENTACIÓN DE LA INTERFAZ ITrabajable
     // =================================================================================================================
-    /*
-    public bool AsignarTrabajador(PersonajeBehaviour trabajador)
+
+    /// <summary>
+    /// Añade un personaje a la lista de trabajadores de esta granja.
+    /// </summary>
+    /// <param name="trabajador">El PersonajeBehaviour que se va a añadir.</param>
+    /// <returns>True si el trabajador fue añadido, false si ya estaba o si la granja está llena.</returns>
+    public bool AnadirTrabajador(PersonajeBehaviour trabajador)
     {
-        if (_trabajadoresActuales.Count < trabajadoresNecesariosParaMaxEficiencia)
+        if (_trabajadoresActuales.Count >= maxTrabajadores)
+        {
+            Debug.LogWarning($"'{trabajador.nombre}' no puede ser añadido a '{buildingName}'. Máximo de trabajadores ({maxTrabajadores}) alcanzado.");
+            return false;
+        }
+        if (!_trabajadoresActuales.Contains(trabajador))
         {
             _trabajadoresActuales.Add(trabajador);
-            ActualizarEficienciaProduccion();
+            Debug.Log($"'{trabajador.nombre}' ha sido añadido como trabajador a '{buildingName}'. Trabajadores: {_trabajadoresActuales.Count}/{maxTrabajadores}");
+            ActualizarProduccionBasadaEnTrabajadores(); // Recalcula la producción al añadir
             return true;
         }
         return false;
     }
 
+    /// <summary>
+    /// Quita un personaje de la lista de trabajadores de esta granja.
+    /// </summary>
+    /// <param name="trabajador">El PersonajeBehaviour que se va a quitar.</param>
     public void QuitarTrabajador(PersonajeBehaviour trabajador)
     {
         if (_trabajadoresActuales.Remove(trabajador))
         {
-            ActualizarEficienciaProduccion();
+            Debug.Log($"'{trabajador.nombre}' ha sido quitado como trabajador de '{buildingName}'. Trabajadores: {_trabajadoresActuales.Count}/{maxTrabajadores}");
+            ActualizarProduccionBasadaEnTrabajadores(); // Recalcula la producción al quitar
         }
     }
 
-    private void ActualizarEficienciaProduccion()
+    /// <summary>
+    /// Método para que los NPCs "contribuyan" a la granja.
+    /// Este método puede ser llamado por PersonajeBehaviour cuando está en estado "Trabajando".
+    /// Aquí simplemente confirmamos que el NPC está trabajando y la lógica de producción está en ExecuteProduction.
+    /// </summary>
+    /// <param name="trabajador">El personaje que está contribuyendo.</param>
+    public void ContribuirProduccion(PersonajeBehaviour trabajador)
     {
-        // Lógica para cambiar 'unitsPerProductionBatch' o 'intervalBetweenProduction'
-        // basado en el número de '_trabajadoresActuales'.
-        // Ejemplo:
-        // float eficienciaBase = 5f; // Unidades si está llena
-        // unitsPerProductionBatch = eficienciaBase * ((float)_trabajadoresActuales.Count / trabajadoresNecesariosParaMaxEficiencia);
+        if (!_trabajadoresActuales.Contains(trabajador))
+        {
+            Debug.LogWarning($"'{trabajador.nombre}' intentó contribuir a '{buildingName}' pero no es un trabajador asignado.");
+            return;
+        }
+        // No necesitamos hacer la llamada a ResourceManager.Instance.AddResource aquí
+        // porque la lógica de producción ya está en ExecuteProduction() de BaseBuilding,
+        // que se llama cada 'intervalBetweenProduction'.
+        // Aquí podríamos, por ejemplo, mejorar la "habilidad" del trabajador o su felicidad.
+        // trabajador.ModificarHabilidadTrabajo(0.1f); // Ejemplo
     }
-    */
+    #endregion
+
+    #region Farm-Specific Production Logic
+    // =================================================================================================================
+    // LÓGICA DE PRODUCCIÓN ESPECÍFICA DE LA GRANJA (AFECTADA POR TRABAJADORES)
+    // =================================================================================================================
+
+    /// <summary>
+    /// Actualiza los valores de producción y el intervalo basados en el número de trabajadores.
+    /// </summary>
+    private void ActualizarProduccionBasadaEnTrabajadores()
+    {
+        float trabajadoresActivos = _trabajadoresActuales.Count;
+
+        // Calcular la producción por lote
+        // Si no hay trabajadores, quizás la producción es 0 o muy baja.
+        if (trabajadoresActivos == 0)
+        {
+            unitsPerProductionBatch = 0; // No produce nada sin trabajadores
+        }
+        else
+        {
+            // Producción base + (trabajadores - 1) * bonus por trabajador adicional
+            unitsPerProductionBatch = unidadesAlimentoPorLoteBase + (trabajadoresActivos * bonusProduccionPorTrabajador);
+        }
+
+        // Calcular el intervalo de producción (se reduce con más trabajadores)
+        // Asegurarse de que el intervalo no sea negativo o cero.
+        intervalBetweenProduction = Mathf.Max(1f, intervaloProduccionAlimentoBase - (trabajadoresActivos * reduccionIntervaloPorTrabajador));
+
+        // Debug.Log($"Granja '{buildingName}' actualizada. Trabajadores: {trabajadoresActivos}, Producción/Lote: {unitsPerProductionBatch:F2}, Intervalo: {intervalBetweenProduction:F2}s");
+    }
     #endregion
 }

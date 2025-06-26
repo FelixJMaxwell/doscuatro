@@ -10,8 +10,8 @@ public class RecursoInstancia
 
     // Propiedades de conveniencia
     public string Nombre => data != null ? data.Nombre : "RECURSO_INVALIDO";
-    public float Maximo => data != null ? data.Maximo : 0f;
-    public float BaseValue => data != null ? data.ValorBase : 0f;
+    public float Maximo => data != null ? data.LimiteInicial : 0f;
+    public float BaseValue => data != null ? data.CantidadInicial : 0f;
 
     // --- ESTE ES EL CONSTRUCTOR QUE NECESITAS ---
     /// <summary>
@@ -26,7 +26,7 @@ public class RecursoInstancia
         {
             // Asegurar que la cantidad inicial no exceda el máximo definido en el SO
             // y no sea menor que cero.
-            this.actual = Mathf.Clamp(cantidadInicial, 0, this.data.Maximo);
+            this.actual = Mathf.Clamp(cantidadInicial, 0, this.data.LimiteInicial);
         }
         else
         {
