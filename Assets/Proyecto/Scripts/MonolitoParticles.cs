@@ -258,7 +258,6 @@ public class MonolitoParticles : MonoBehaviour
     {
         _modoEspecialActivo = true;
         int coroutineInstanceID = Random.Range(1000, 9999);
-        Debug.Log($"MonolitoParticles ({Time.frameCount}) [{coroutineInstanceID}]: INICIANDO ProcesoDevolverAOrigenGradual. Velocidad: {velocidadMovimientosEspeciales}");
         yield return null; // Frame para aplicar pausa de Update
 
         if (configuracionParticulas == null || configuracionParticulas.Count == 0)
@@ -267,8 +266,6 @@ public class MonolitoParticles : MonoBehaviour
             _modoEspecialActivo = false; _corutinaMovimientoEspecial = null; yield break;
         }
 
-        // --- NUEVO: Fase de Dispersión X Aleatoria ---
-        Debug.Log($"MonolitoParticles ({Time.frameCount}) [{coroutineInstanceID}]: Aplicando dispersión X aleatoria antes del retorno.");
         foreach (MonolitoParticleConfig config in configuracionParticulas)
         {
             if (config.particleObject != null && config.particleObject.activeInHierarchy)
@@ -343,8 +340,6 @@ public class MonolitoParticles : MonoBehaviour
             if (particulasQueAunNecesitanMoverse == 0) break;
             yield return null;
         }
-
-        Debug.Log($"MonolitoParticles ({Time.frameCount}) [{coroutineInstanceID}]: Movimiento gradual a origen completado después de {framesDeMovimiento} frames.");
 
         // Asegurar posiciones finales y actualizar bases de oscilación
         foreach (MonolitoParticleConfig config in configuracionParticulas)

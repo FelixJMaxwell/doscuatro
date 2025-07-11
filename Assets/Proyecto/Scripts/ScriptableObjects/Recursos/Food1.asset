@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: Food1
   m_EditorClassIdentifier: 
   Nombre: Food1
-  Maximo: 10
-  ValorActual: 0
-  ValorBase: 0
+  esLimitado: 1
+  LimiteInicial: 1000
+  CantidadInicial: 0
+  requiereNivel: 0
+  recursoRequeridoParaNivel: 
+  factorNivel: 0.75
+  costoBaseNivel: 10
+  incrementoPorNivel: 1.5

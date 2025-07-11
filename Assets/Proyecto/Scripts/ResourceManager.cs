@@ -147,9 +147,6 @@ public class ResourceManager : MonoBehaviour
     // Dummy ValidarRecurSO si no lo tienes completo
     private bool ValidarRecurSO(RecurSO r) { return r!= null && !string.IsNullOrEmpty(r.Nombre); }
 
-
-    // ... (tus métodos Añadir, Gastar, GetCantidad, GetMaximo, TieneSuficiente, ActualizarRecursoUI, GestionarPilaresDeFe) ...
-    // Estos métodos deben usar '_recursos' internamente.
     public void Añadir(string nombreRecurso, float cantidad) {
         if (string.IsNullOrEmpty(nombreRecurso)) return;
         if (cantidad < 0) { Gastar(nombreRecurso, -cantidad); return; }

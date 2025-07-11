@@ -8151,7 +8151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PuntosGlobales: 0
-  MonolitoPrincipal: {fileID: 0}
+  MonolitoPrincipal: {fileID: 1946623290}
   EstructuraEnModoColocacion: {fileID: 0}
   EstructuraSeleccionadaParaInteraccion: {fileID: 0}
   PrefabEstructuraAGenerica: {fileID: 0}
@@ -8269,9 +8269,9 @@ MonoBehaviour:
   maxFaithLimitText: {fileID: 0}
   upgradeFaithCostText: {fileID: 0}
   upgradeFaithLimitButton: {fileID: 0}
-  feRecurSO: {fileID: 0}
+  feRecurSO: {fileID: 11400000, guid: 43432c29c7d31694591b8bbf0ac045ee, type: 2}
   fragmentoSO: {fileID: 11400000, guid: a0a5ce2216a82fe458043ae75dc3cd69, type: 2}
-  faithUpgradeCostResource: {fileID: 0}
+  faithUpgradeCostResource: {fileID: 11400000, guid: 43432c29c7d31694591b8bbf0ac045ee, type: 2}
   faithUpgradeCostAmount: 50
   faithLimitIncrementAmount: 200
 --- !u!1 &1507261899
@@ -9982,7 +9982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2070818722
 RectTransform:
   m_ObjectHideFlags: 0

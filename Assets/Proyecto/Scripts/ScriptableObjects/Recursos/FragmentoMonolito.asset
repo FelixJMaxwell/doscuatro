@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: FragmentoMonolito
   m_EditorClassIdentifier: 
   Nombre: Fragmento
-  Maximo: 100
-  ValorBase: 0
+  esLimitado: 1
+  LimiteInicial: 1000
+  CantidadInicial: 0
   requiereNivel: 1
   recursoRequeridoParaNivel: 
   factorNivel: 0.75
