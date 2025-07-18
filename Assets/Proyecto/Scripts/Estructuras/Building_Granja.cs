@@ -133,21 +133,35 @@ public class Building_Granja : BaseBuilding, ITrabajable
             return;
         }
 
-        // Si el GameManager existe y no está en modo de colocar este mismo edificio.
+        // 1. Verificar si BuildingManager está en modo de colocación.
+        // Si BuildingManager.Instance existe y está en modo de colocación,
+        // esto significa que el jugador está intentando colocar UN edificio,
+        // y no debería seleccionar uno ya existente.
+        if (BuildingManager.Instance != null && BuildingManager.Instance.IsInPlacementMode)
+        {
+            // Opcional: Podrías querer que solo se ignore si el edificio que se está colocando es este mismo tipo
+            // Para eso, necesitarías exponer el prefab que se está colocando desde BuildingManager.
+            // Por ahora, con IsInPlacementMode, es suficiente para evitar la selección de edificios existentes.
+            return;
+        }
+
+        // Si el GameManager existe, llama a su método de selección.
         if (GameManager.Instance != null)
         {
-            if (GameManager.Instance.EstructuraEnModoColocacion == this.gameObject)
-            {
-                // El jugador está intentando colocar este edificio, no seleccionarlo para interacción.
-                return;
-            }
-
             // Llama al método de selección del GameManager.
             GameManager.Instance.SeleccionarEstructura(this.gameObject);
             // Debug.Log($"'{buildingName}' (Granja) clickeado y enviado a GameManager para selección.");
 
             // Aquí podrías, por ejemplo, decirle a un UIManager que abra el panel específico de la Granja:
             // UIManager.Instance?.AbrirPanelInfoGranja(this);
+            // Si tienes un panel específico para la granja en el UIManager, lo activarías aquí.
+            // Por ejemplo, si tu UIManager tiene un PanelInformacionEdificio genérico que recibe un BaseBuilding:
+            if (UIManager.Instance != null && UIManager.Instance.PanelInformacionEdificio != null)
+            {
+                 UIManager.Instance.AbrirPanel(UIManager.Instance.PanelInformacionEdificio);
+                 // Y luego un método en UIManager para configurar ese panel genérico con los datos de esta granja
+                 // UIManager.Instance.ConfigurarPanelInformacionEdificio(this);
+            }
         }
     }
     #endregion
