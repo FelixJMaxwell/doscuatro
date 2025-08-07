@@ -61,6 +61,7 @@ public class UIManager : MonoBehaviour
     [Header("Configuración UI de Arquitectura")]
     [Tooltip("Lista de entradas para la UI de arquitectura. Cada entrada vincula un GameObject de UI con su EdificioDataSO.")]
     public List<ConfiguracionEntradaArquitecturaUI> listaConfiguracionArquitecturaUI;
+    public GameObject PanelCheats;
     #endregion
 
     #region Unity Lifecycle Methods
@@ -132,6 +133,11 @@ public class UIManager : MonoBehaviour
         {
             panel.SetActive(!panel.activeInHierarchy);
         }
+    }
+
+    public void TogglePanelCheats()
+    {
+        TogglePanel(PanelCheats);
     }
 
     /// <summary>
@@ -256,7 +262,7 @@ public class UIManager : MonoBehaviour
     /// Método llamado cuando un botón de construcción es presionado.
     /// Delega la acción de iniciar la construcción al BuildingManager.
     /// </summary>
-    private void OnBuildButtonClicked(EdificioDataSO edificioData)
+    public void OnBuildButtonClicked(EdificioDataSO edificioData)
     {
         if (edificioData == null || edificioData.prefabDelEdificio == null)
         {

@@ -207,6 +207,20 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
+    // Método para disminuir el límite
+    public void DisminuirLimiteMaximoRecurso(string nombreRecurso, float cantidadADisminuir)
+    {
+        if (nombreRecurso == "Fe" && _recursos.TryGetValue(nombreRecurso, out RecursoInstancia instancia))
+        {
+            instancia.Maximo -= cantidadADisminuir;
+            if (instancia.Maximo < instancia.data.LimiteInicial)
+            {
+                instancia.Maximo = instancia.data.LimiteInicial;
+            }
+            OnFaithLimitChanged?.Invoke(instancia.Maximo);
+        }
+    }
+
     // Dejar aquí si ResourceManager sigue actualizando la UI directamente (no recomendado a largo plazo)
     private void ActualizarRecursoUI(string nombreRecurso)
     {
@@ -215,7 +229,7 @@ public class ResourceManager : MonoBehaviour
             FeUIText.text = $"Fe: {GetCantidad(feDataSO.Nombre):F0} / {GetMaximo(feDataSO.Nombre):F0}";
         }
     }
-    
+
     // Dejar aquí si ResourceManager sigue gestionando los pilares directamente (no recomendado a largo plazo)
     private void GestionarPilaresDeFe(float cantidadFeGastadaReal)
     {
@@ -250,5 +264,14 @@ public class ResourceManager : MonoBehaviour
     {
         if (cantidadNecesaria <= 0) return true;
         return GetCantidad(nombreRecurso) >= cantidadNecesaria;
+    }
+    
+    public RecursoInstancia ObtenerRecurso(string nombre)
+    {
+        if (_recursos.TryGetValue(nombre, out RecursoInstancia instancia))
+        {
+            return instancia;
+        }
+        return null; // O lanza una excepción, dependiendo de tu manejo de errores.
     }
 }

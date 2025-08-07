@@ -115,6 +115,16 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            // Pide al UIManager que se encargue de abrir/cerrar el panel de cheats
+            if (UIManager.Instance != null && UIManager.Instance.PanelCheats != null)
+            {
+                UIManager.Instance.TogglePanelCheats();
+                Debug.Log("GameManager: Presionado 'C', UIManager toggling Cheats Panel.");
+            }
+        }
     }
 
     public void SeleccionarEstructura(GameObject estructuraObj)

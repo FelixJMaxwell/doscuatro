@@ -3795,13 +3795,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1495065923}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ComprarEdificio
-        m_Mode: 1
+      - m_Target: {fileID: 1495065927}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnBuildButtonClicked
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 377bdcba7d066c941bd765fcc2fdb32d, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EdificioDataSO, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7659,13 +7659,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1495065923}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ComprarEdificio
-        m_Mode: 1
+      - m_Target: {fileID: 1495065927}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnBuildButtonClicked
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 23d905f780a40b246849bd1224bedbf5, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EdificioDataSO, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8227,6 +8227,7 @@ MonoBehaviour:
   toggleLegendario: {fileID: 0}
   actualizarCrisolBtn: {fileID: 0}
   listaConfiguracionArquitecturaUI: []
+  PanelCheats: {fileID: 243725087}
 --- !u!1 &1507261899
 GameObject:
   m_ObjectHideFlags: 0
@@ -8873,13 +8874,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1495065923}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ComprarEdificio
-        m_Mode: 1
+      - m_Target: {fileID: 1495065927}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnBuildButtonClicked
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 2d3201bcaaf1f774ebf45d5350517ba3, type: 2}
+          m_ObjectArgumentAssemblyTypeName: EdificioDataSO, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -9935,7 +9936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2070818722
 RectTransform:
   m_ObjectHideFlags: 0

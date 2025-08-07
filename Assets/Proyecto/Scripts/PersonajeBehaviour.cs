@@ -151,6 +151,10 @@ public class PersonajeBehaviour : MonoBehaviour
     [SerializeField]
     private float _distanciaMinimaDestino = 0.5f; // Distancia para considerar que llegó al destino
 
+    [Header("Impacto en la Capacidad de Fe")]
+    [Tooltip("Cantidad en que este NPC incrementa la capacidad máxima de Fe del Monolito.")]
+    public float faithCapacityIncrease = 5f; // Valor por defecto para NPC (pequeño incremento)
+
     private void Awake() // Usar Awake para obtener componentes
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -163,6 +167,13 @@ public class PersonajeBehaviour : MonoBehaviour
     private void Start()
     {
         CambiarEstado(EstadoNPC.Ocioso);
+
+        // *** NUEVA LÓGICA: Incrementa el límite de Fe al iniciar el NPC ***
+        if (ResourceManager.Instance != null && faithCapacityIncrease > 0)
+        {
+            ResourceManager.Instance.IncrementarLimiteMaximoRecurso("Fe", faithCapacityIncrease);
+            Debug.Log($"'{nombre}' (NPC) ha incrementado el límite de Fe en {faithCapacityIncrease}. Nuevo límite: {ResourceManager.Instance.ObtenerRecurso("Fe").Maximo}");
+        }
     }
 
     private void Update()
@@ -621,6 +632,22 @@ public class PersonajeBehaviour : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // *** NUEVA LÓGICA: Disminuye el límite de Fe al destruir el NPC ***
+    // Esto es muy importante si los NPC's pueden morir o ser eliminados
+    private void OnDestroy()
+    {
+        if (ResourceManager.Instance != null && faithCapacityIncrease > 0)
+        {
+            ResourceManager.Instance.DisminuirLimiteMaximoRecurso("Fe", faithCapacityIncrease);
+            Debug.Log($"'{nombre}' (NPC) ha disminuido el límite de Fe en {faithCapacityIncrease} al ser destruido. Nuevo límite: {ResourceManager.Instance.ObtenerRecurso("Fe").Maximo}");
+        }
+
+        // ... Tu lógica existente de OnPersonajeMuerto, etc.
+        // Asegúrate de que esta lógica se ejecute DESPUÉS de ajustar el límite de Fe
+        // si Morir() es llamado y va a destruir el GameObject.
+        // OnPersonajeMuerto?.Invoke(this); // Si ya lo tenías aquí.
+    }
+
     // Método para que otros NPCs actualicen sus relaciones cuando este muere.
     public void EliminarRelacionConPersonajeMuerto(PersonajeBehaviour personajeMuerto)
     {
@@ -755,4 +782,5 @@ public class PersonajeBehaviour : MonoBehaviour
             // otroNPC.OlvidarNPC(this); // ¡Cuidado con bucles infinitos aquí! Necesita una condición de parada.
         }
     }
+    
 }

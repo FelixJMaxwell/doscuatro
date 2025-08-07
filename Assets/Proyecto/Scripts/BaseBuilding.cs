@@ -41,6 +41,11 @@ public abstract class BaseBuilding : MonoBehaviour
     [SerializeField] protected float unitsPerProductionBatch = 1f; // Antes unidadesPorLoteDeProduccion
     [Tooltip("Tiempo en segundos entre cada lote/evento de producción.")]
     [SerializeField] protected float intervalBetweenProduction = 5f; // Antes intervaloEntreLotesProduccion
+
+    [Header("Impacto en la Capacidad de Fe")]
+    [Tooltip("Cantidad en que este edificio incrementa la capacidad máxima de Fe.")]
+    public float faithCapacityIncrease = 10f; // Valor por defecto para edificios comunes
+
     #endregion
 
     #region Internal State
@@ -118,7 +123,13 @@ public abstract class BaseBuilding : MonoBehaviour
         if (isActive) return;
         isActive = true;
         _productionTimer = 0f; // Reiniciar el timer al activar.
-        // Debug.Log($"Edificio '{buildingName}' activado.");
+                               // Debug.Log($"Edificio '{buildingName}' activado.");
+
+        // Añade el incremento de Fe aquí
+        if (ResourceManager.Instance != null && faithCapacityIncrease > 0)
+        {
+            ResourceManager.Instance.IncrementarLimiteMaximoRecurso("Fe", faithCapacityIncrease);
+        }
     }
 
     /// <summary>
@@ -214,5 +225,14 @@ public abstract class BaseBuilding : MonoBehaviour
     //     // Podría ser más específico en clases derivadas.
     //     Debug.Log($"Intentando mejorar {buildingName}...");
     // }
+    
+    // Esto es crucial para manejar la destrucción de edificios
+    public virtual void OnDestroy()
+    {
+        if (ResourceManager.Instance != null && faithCapacityIncrease > 0)
+        {
+            ResourceManager.Instance.DisminuirLimiteMaximoRecurso("Fe", faithCapacityIncrease);
+        }
+    }
     #endregion
 }
