@@ -145,8 +145,9 @@ public class Building_Personajes : BaseBuilding
     {
         if (!isActive) return;
         // ... (Validaciones de cooldown, límite de personajes)
-        if (tiempoTranscurridoDesdeUltimaGeneracion < TiempoEntreGeneracionesActual) { /* ... log y return ... */ return; }
-        if (personajesGeneradosCount >= MaxPersonajesPermitidosActual) { /* ... log y return ... */ return; }
+        if (tiempoTranscurridoDesdeUltimaGeneracion < TiempoEntreGeneracionesActual) {
+            Debug.Log("Esperando para nueva generacion"); return; }
+        if (personajesGeneradosCount >= MaxPersonajesPermitidosActual) { Debug.Log("NPC's generados: " + personajesGeneradosCount + "/" + MaxPersonajesPermitidosActual); return; }
 
         if (_requiereObjetosProfesionActual && !CumplirRequisitosObjetosProfesionParaGeneracion())
         {

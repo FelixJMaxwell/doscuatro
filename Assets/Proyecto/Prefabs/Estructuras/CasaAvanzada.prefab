@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 320043533474265705}
   - component: {fileID: 2051640047205375053}
   - component: {fileID: 3528069005678160852}
+  - component: {fileID: 172941395241194960}
   m_Layer: 0
   m_Name: CasaAvanzada
   m_TagString: Untagged
@@ -123,9 +124,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingName: Casa Avanzada
   buildingIcon: {fileID: 0}
-  constructionCost: 0
+  buildingType: 0
+  constructionCosts: []
   producesResources: 0
-  resourceTypeProduced: 0
-  productionRate: 0
+  resourceToProduceSO: {fileID: 0}
+  unitsPerProductionBatch: 1
+  intervalBetweenProduction: 5
+  faithCapacityIncrease: 10
+  isActive: 0
   CapacidadMaxima: 0
   Habitantes: []
+--- !u!208 &172941395241194960
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400471293087808663}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.2, y: 0.5, z: 0.2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

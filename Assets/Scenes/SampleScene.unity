@@ -5030,7 +5030,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &805934267
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8222,10 +8222,10 @@ MonoBehaviour:
   panelMonolito: {fileID: 2070818721}
   panelInformacionEdificio: {fileID: 0}
   panelControlCrisol: {fileID: 805934266}
-  panelNPC: {fileID: 0}
-  generarAldeanoBtn: {fileID: 0}
-  toggleLegendario: {fileID: 0}
-  actualizarCrisolBtn: {fileID: 0}
+  panelNPC: {fileID: 805934266}
+  generarAldeanoBtn: {fileID: 364488740}
+  toggleLegendario: {fileID: 1442780834}
+  actualizarCrisolBtn: {fileID: 507715323}
   listaConfiguracionArquitecturaUI: []
   PanelCheats: {fileID: 243725087}
 --- !u!1 &1507261899
