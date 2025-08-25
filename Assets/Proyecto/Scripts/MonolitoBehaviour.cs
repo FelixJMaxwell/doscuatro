@@ -75,6 +75,12 @@ public class MonolitoBehaviour : MonoBehaviour
     public List<GameObject> estructurasConectadas;
     public float tickerActual = 0f; // Renombrado de Ticker
     public float limiteTicker = 5f; // Renombrado de TickerLimit
+
+    [Header("Generación de Pilares - Exclusión")]
+    [Tooltip("Ángulo de exclusión para el camino (en grados). Un valor de 30 crea un camino de 30 grados de ancho.")]
+    public float anguloExclusionCentral = 60f;
+    [Tooltip("Orientación del centro del camino (en grados). 0 es hacia Z positivo, 90 es hacia X positivo.")]
+    public float anguloOrientacionCamino = 0f;
     #endregion
 
     #region Propiedades Públicas (Calculadas)
@@ -185,8 +191,17 @@ public class MonolitoBehaviour : MonoBehaviour
             Debug.Log("Monolito: Ya se está extrayendo un fragmento.");
             return;
         }
+        // Primero, gasta los recursos del jugador.
         if (!ValidarRecursosParaExtraccion()) return;
-
+        ResourceManager.Instance.Gastar(feDataSO.Nombre, CostoActualFragmento);
+        
+        // --- CAMBIO PRINCIPAL ---
+        // AHORA INCREMENTAMOS EL CONTADOR Y ACTUALIZAMOS EL COSTO
+        // AQUÍ, ANTES DE INICIAR LA CORRUTINA.
+        _contadorFragmentosExtraidos++;
+        ActualizarUICostoFragmento();
+        
+        // Finalmente, inicia la corutina del proceso visual.
         StartCoroutine(ProcesoExpulsarFragmentoCoroutine());
     }
 
@@ -348,25 +363,18 @@ public class MonolitoBehaviour : MonoBehaviour
         {
             Debug.LogError("Monolito: ResourceManager o FragmentoSO no asignados. No se pudo añadir el fragmento recolectado.");
         }
-
-        // 2. ACTUALIZAR UI DEL COSTO DEL SIGUIENTE FRAGMENTO
-        ActualizarUICostoFragmento();
     }
 
     /// <summary>
-    /// Corutina que maneja el costo, la convergencia de partículas, la expulsión del fragmento
-    /// Y AHORA TAMBIÉN el inicio del retorno de las partículas.
+    /// Corutina que maneja la animación de convergencia, la expulsión del fragmento
+    /// y el retorno de las partículas.
+    /// Ya no maneja la lógica de costos.
     /// </summary>
     private IEnumerator ProcesoExpulsarFragmentoCoroutine()
     {
         _estaExtrayendoFragmento = true;
-        // Debug.Log("Monolito: Iniciando proceso de expulsión de fragmento...");
-
-        // 1. GASTAR FE
-        ResourceManager.Instance.Gastar(feDataSO.Nombre, CostoActualFragmento);
-        // Debug.Log($"Monolito: {CostoActualFragmento:F0} de Fe gastada.");
-
-        // 2. ANIMACIÓN DE CONVERGENCIA DE PARTÍCULAS
+        
+        // 1. ANIMACIÓN DE CONVERGENCIA DE PARTÍCULAS
         if (controladorDeParticulas != null && puntoConvergenciaParticulasMonolito != null)
         {
             Coroutine convergeCoroutine = controladorDeParticulas.CongelarYConvergerParticulas(puntoConvergenciaParticulasMonolito);
@@ -377,7 +385,7 @@ public class MonolitoBehaviour : MonoBehaviour
             yield return new WaitForSeconds(1.5f);
         }
 
-        // 3. INSTANCIAR Y MOVER EL FRAGMENTO VISUAL
+        // 2. INSTANCIAR Y MOVER EL FRAGMENTO VISUAL
         GameObject fragmentoInstanciado = null;
         if (fragmentoMonolitoGO != null)
         {
@@ -386,7 +394,7 @@ public class MonolitoBehaviour : MonoBehaviour
 
             MonolitoFragmento recolectable = fragmentoInstanciado.GetComponent<MonolitoFragmento>();
             if (recolectable == null) recolectable = fragmentoInstanciado.AddComponent<MonolitoFragmento>();
-            recolectable.monolitoDeOrigen = this; // Pasar la referencia de este Monolito
+            recolectable.monolitoDeOrigen = this;
 
             if (destinoFragmentoTransform != null)
             {
@@ -404,23 +412,18 @@ public class MonolitoBehaviour : MonoBehaviour
         {
             Debug.LogWarning("Monolito: 'fragmentoMonolitoGO' no está asignado.");
         }
-
-        // --- CAMBIO PRINCIPAL ---
-        // 4. INICIAR EL RETORNO DE LAS PARTÍCULAS INMEDIATAMENTE
-        // Esto ahora es independiente de si el jugador recoge el fragmento.
+        
+        // 3. INICIAR EL RETORNO DE LAS PARTÍCULAS
         if (controladorDeParticulas != null)
         {
-            // Debug.Log("Monolito: Iniciando retorno de partículas a su origen...");
             Coroutine returnCoroutine = controladorDeParticulas.DevolverParticulasASuOrigen();
-            if (returnCoroutine != null) yield return returnCoroutine; // Esperar a que las partículas terminen de volver
-            // Debug.Log("Monolito: Retorno de partículas completado.");
+            if (returnCoroutine != null) yield return returnCoroutine;
         }
         
-        // FIN DEL PROCESO DE EXPULSIÓN Y ANIMACIÓN
-        // La lógica de añadir el fragmento y actualizar el costo se ha movido a CompletarRecoleccionDeFragmento()
         Debug.Log("Monolito: Secuencia de animación de expulsión finalizada.");
         _estaExtrayendoFragmento = false;
     }
+
 
     private void ActualizarUICostoFragmento()
     {
@@ -480,18 +483,45 @@ public class MonolitoBehaviour : MonoBehaviour
         }
     }
 
-    public void GenerarPilar() // Hecho público por si algo externo necesita forzarlo, aunque usualmente es interno.
+    public void GenerarPilar()
     {
-        if (pilarPrefab == null || contenedorPilaresFe == null) {
-            // Debug.LogError("Monolito: PilarPrefab o ContenedorPilaresFe no asignado.");
+        if (pilarPrefab == null || contenedorPilaresFe == null)
+        {
             return;
         }
-        float angulo = Random.Range(0f, 360f) * Mathf.Deg2Rad;
-        float distancia = Random.Range(radioMinimoAparicionPilar, radioMaximoAparicionPilar);
-        float x = transform.position.x + Mathf.Cos(angulo) * distancia;
-        float z = transform.position.z + Mathf.Sin(angulo) * distancia;
+
+        float angulo;
+        float distancia;
+
+        // --- LÓGICA DE EXCLUSIÓN PARA CREAR EL CAMINO ---
+        do
+        {
+            angulo = Random.Range(0f, 360f);
+            distancia = Random.Range(radioMinimoAparicionPilar, radioMaximoAparicionPilar);
+
+            // Convertir el ángulo a un rango de -180 a 180 para facilitar el cálculo.
+            float anguloRelativo = angulo - anguloOrientacionCamino;
+            if (anguloRelativo < -180f) anguloRelativo += 360f;
+            if (anguloRelativo > 180f) anguloRelativo -= 360f;
+
+            // Comprobar si el ángulo relativo está fuera del rango de exclusión.
+            // Si el valor absoluto del ángulo relativo es mayor que la mitad del ángulo de exclusión,
+            // entonces el pilar puede ser generado.
+            if (Mathf.Abs(anguloRelativo) > anguloExclusionCentral / 2.0f)
+            {
+                break; // Salir del bucle, el ángulo es válido.
+            }
+        } while (true); // Bucle infinito hasta encontrar un ángulo válido.
+
+        // Convertir el ángulo válido a radianes para los cálculos de posición.
+        float anguloEnRadianes = angulo * Mathf.Deg2Rad;
+
+        // --- CÁLCULO DE POSICIÓN FINAL DEL PILAR ---
+        float x = transform.position.x + Mathf.Cos(anguloEnRadianes) * distancia;
+        float z = transform.position.z + Mathf.Sin(anguloEnRadianes) * distancia;
+
         float randomYOffset = Random.Range(-0.3f, 0.5f);
-        float initialYPos = transform.position.y -0.5f; // Posición inicial de emergencia más abajo
+        float initialYPos = transform.position.y - 0.5f;
 
         Vector3 posicionFinalPilar = new Vector3(x, transform.position.y + randomYOffset, z);
         Vector3 posicionInicialPilar = new Vector3(x, initialYPos, z);
@@ -499,10 +529,15 @@ public class MonolitoBehaviour : MonoBehaviour
         GameObject pilarObj = Instantiate(pilarPrefab, posicionInicialPilar, Quaternion.identity, contenedorPilaresFe);
         pilarObj.name = "PilarFe_" + contenedorPilaresFe.childCount;
         PilarBehaviour pilarScript = pilarObj.GetComponent<PilarBehaviour>();
-        if (pilarScript != null) {
+        if (pilarScript != null)
+        {
             pilarScript.PosicionObjetivoAlSubir = posicionFinalPilar;
             pilarScript.EstablecerEstadoBajada(false);
-        } else Debug.LogWarning("Prefab de Pilar no tiene script PilarBehaviour.");
+        }
+        else
+        {
+            Debug.LogWarning("Prefab de Pilar no tiene script PilarBehaviour.");
+        }
     }
     #endregion
 }
